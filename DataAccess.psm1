@@ -5,7 +5,8 @@
 function Get-JobCsvPath {
   if ($Global:JobCsvPath) {
     $Global:JobCsvPath
-  } else {
+  }
+  else {
     "$pwd\Database\Job.csv"
   }
 }
@@ -13,46 +14,30 @@ function Get-JobCsvPath {
 function Get-TransactionCsvPath {
   if ($Global:TansactionCsvPath) {
     $Global:TansactionCsvPath
-  } else {
+  }
+  else {
     "$pwd\Database\Transaction.csv"
   }
 }
 
-# create jobs csv if not exists
-function Initialize-JobsDb {
-  $csvFile = Get-JobCsvPath
-  $exists = Test-Path $csvFile -PathType Leaf
-  if (!$exists) {
-    $headers = "Type", "Id", "Title", "Rate"
-    $psObject = New-Object psobject
-    foreach ($header in $headers) {
-      Add-Member -InputObject $psobject -MemberType noteproperty `
-        -Name $header -Value ""
-    }
-    $psObject | Export-Csv $csvfile -NoTypeInformation
-  }
-}
-
-# create transactions csv if not exits
-function Initialize-TransactionsDb {
-  $csvFile = Get-TransactionCsvPath
-  $exists = Test-Path $csvFile -PathType Leaf
-  if (!$exists) {
-    $headers = "Date", "JobId", "Change", "Log", "Note"
-    $psObject = New-Object psobject
-    foreach ($header in $headers) {
-      Add-Member -InputObject $psobject -MemberType noteproperty `
-        -Name $header -Value ""
-    }
-    $psObject | Export-Csv $csvfile -NoTypeInformation
-  }
-}
 
 # get all jobs from db
 function Get-JobsDb {
-  Initialize-JobsDb
   $csvFile = Get-JobCsvPath
-  Import-Csv $csvFile -Header Type, Id, Title, Rate
+  $exists = Test-Path $csvFile -PathType Leaf
+  $jobs = @()
+  if ($exists) {
+    $imported = Import-Csv $csvFile
+    foreach ($job in $imported) {
+      $jobs += [PSCustomObject]@{
+        Type  = $job.Type
+        Id    = [int]$job.Id
+        Title = $job.Title
+        Rate  = [decimal]$job.Rate
+      }
+    }
+  }
+  return , $jobs
 }
 
 # set all jobs in db
@@ -63,9 +48,9 @@ function Set-JobsDb {
     [array]
     $Jobs
   )
-  Initialize-JobsDb
   $csvFile = Get-JobCsvPath
   $Jobs | Export-Csv $csvFile -NoTypeInformation -Force
+  $true
 }
 
 # append job to jobs db
@@ -73,10 +58,29 @@ function Add-JobDb {
   Param(
     # new job
     [Parameter(Mandatory = $true, Position = 0)]
-    [hashtable]$Job
+    $Job
   )
+
+  # get next id for job
+  [int]$newId = 0;
+  $Jobs = Get-JobsDb
+  if ($Jobs.Length -gt 0) {
+    foreach ($_job in $Jobs) {
+      $id = $_job.Id
+      if ($id -gt $newId) {
+        $newId = $id
+      }
+    }
+  }
+
+  # set job id
+  $newId++
+  $Job.Id = ($newId)
+
+  # add to csv
   $csvFile = Get-JobCsvPath
-  $Job | Export-Csv $csvFile -NoTypeInformation -Force -Append
+  $Job | Export-Csv $csvFile -NoTypeInformation -Append -Force
+  $newId
 }
 
 function Set-JobDb {
@@ -87,29 +91,26 @@ function Set-JobDb {
 
     # new job
     [Parameter(Mandatory = $true, Position = 1)]
-    [hashtable]$Job
+    $Job
   )
-  Initialize-JobsDb
 
   $jobFound = $false
-  $jobs = Get-JobsDb | ForEach {
-    if ($_.Id -eq $JobId) {
+  $jobs = Get-JobsDb
+  foreach ($_job in $jobs) {
+    if ($_job.Id -eq $JobId) {
       $jobFound = $true
-      $_.Type = $Job.Type
-      $_.Title = $Job.Title
-      $_.Rate = $Job.Rate
+      $_job.Type = $Job.Type
+      $_job.Title = $Job.Title
+      $_job.Rate = $Job.Rate
     }
-    $_
   }
 
   # set jobs and return success
   if ($jobFound) {
-    Write-Host "New jobs:"
-    Write-Host $jobs
-    Write-Host "does this look right? if so uncomment set jobs db"
-    # Set-JobsDb $jobs
+    Set-JobsDb $jobs
     $true
-  } else {
+  }
+  else {
     $false
   }
 }
@@ -120,14 +121,15 @@ function Get-JobDb {
     [Parameter(Mandatory = $true, Position = 0)]
     [int]$JobId
   )
-  Initialize-JobsDb
 
-  $job = Get-JobsDb | Where{$_.Id -eq $JobId}
+  $Jobs = Get-JobsDb
+  $job = $Jobs | Where-Object { $_.Id -eq $JobId }
 
   # return job or failure
   if ($job) {
     $job
-  } else {
+  }
+  else {
     $false
   }
 }
@@ -138,42 +140,55 @@ function Remove-JobDb {
     [Parameter(Mandatory = $true, Position = 0)]
     [int]$JobId
   )
-  Initialize-JobsDb
 
   # build new jobs array without specified job
   $jobFound = $false
-  $jobs = Get-JobsDb | ForEach {
-    if ($_.Id -ne $JobId){
-      $_
-    } else {
+  $prevJobs = Get-JobsDb
+  $jobs = @()
+  foreach ($job in $prevJobs) {
+    if ($job.Id -ne $JobId) {
+      $jobs += $job
+    }
+    else {
       $jobFound = $true
     }
   }
 
-  # foreach ($job in $jobs) {
-  #   if ($job.Id -ne $JobId) {
-  #     $newJobs += $job
-  #   } else {
-  #     $jobFound = $true
-  #   }
-  # }
-
   # set jobs and return success
   if ($jobFound) {
-    Write-Host "New jobs:"
-    Write-Host $jobs
-    Write-Host "does this look right? if so uncomment set jobs db"
-    # Set-JobsDb $jobs
+    Set-JobsDb $jobs
     $true
-  } else {
+  }
+  else {
     $false
   }
+}
+
+function Get-TransactionsDb {
+  $csvFile = Get-TransactionCsvPath
+  $exists = Test-Path $csvFile -PathType Leaf
+  $transactions = @()
+  if ($exists) {
+    foreach ($item in Import-Csv $csvFile) {
+      $transactions += [PSCustomObject]@{
+        Date   = $item.Date
+        JobId  = [int]$item.JobId
+        Change = [decimal]$item.Change
+        Log    = $item.Log
+        Note   = $item.Note
+      }
+    }
+  }
+  return , $transactions
 }
 
 function Add-TransactionDb {
   Param(
     # transaction
     [Parameter(Mandatory = $true, Position = 0)]
-    [hashtable]$Transaction
+    $Transaction
   )
+  $csvFile = Get-TransactionCsvPath
+  $Transaction | Export-Csv $csvFile -NoTypeInformation -Force -Append
+  $true
 }

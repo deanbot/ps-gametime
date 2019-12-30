@@ -1,16 +1,8 @@
-
-
-function Show-Menu {
-  Clear-Host
-  Write-Host "================ Welcome to Game Time ================"
-
-  Write-Host "1: List all jobs"
-  Write-Host "2: Log job completion"
-  Write-Host "3: Add job"
-  Write-Host "4: Edit job"
-  Write-Host "5: Remove job"
-  Write-Host "G: Game time"
-  Write-Host "Q: Quit"
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
 }
 
 $JobTypeQuest = 'Quest'
@@ -24,10 +16,11 @@ function Get-TypeIsValid {
     [string]$Type
   )
   if ($Type -eq $JobTypeQuest `
-    -or $Type -eq $JobTypeDaily `
-    -or $Type -eq $JobTypeRare) {
+      -or $Type -eq $JobTypeDaily `
+      -or $Type -eq $JobTypeRare) {
     $true
-  } else {
+  }
+  else {
     $false
   }
 }
@@ -36,78 +29,67 @@ function Get-MessageNoJobFound {
   Param(
     [decimal]$JobId
   )
-  "No job found for id: $JobId"
+  "No job found for id: $JobId."
 }
 
 function Get-MessageInvalidJobType {
   Param(
     [string]$Type
   )
-  "Invalid job type: $Type"
+  "Invalid job type: $Type."
 }
 
-function Prompt-NewTransaction {
-
+function Get-Jobs {
+  return Get-JobsDb
 }
 
-function New-Transaction {
+function Get-Transactions {
+  Get-TransactionsDb
+}
+
+function Get-Balance {
+  $balance = Get-TransactionsDb | Select-Object Change | Measure-Object Change -Sum
+  $balance.Sum
+}
+
+function Get-Job {
   Param(
-    # id of job being performed
+    # id of job to get
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]
-    $JobId,
-
-    # duration (hours) job is performed (for quest type jobs)
-    [Parameter(Mandatory = $false, Position = 1)]
-    [decimal]
-    $Duration = 1,
-
-    # note
-    [Parameter(Mandatory = $false, Position = 2)]
-    [string]$Note = ""
+    [int]$JobId
   )
-
-  $job = Get-JobDb $JobId
-  if ($job) {
-    $date = Get-Date
-    $change = $Duration * $job.Rate
-    $log = "$($job.Type)_$($job.Title)_$($job.Rate)_$Duration)"
-    $transaction = [PSCustomObject]@{
-      Date = $date
-      JobId = $job.Id
-      Change = $change
-      Log = $log
-      Note = $Note
+  $Job = Get-JobDb $JobId
+  if ($Job) {
+    $Job
+  }
+  else {
+    Throw $(Get-MessageNoJobFound)
+    if (!$Global:SilentStatusReturn) {
+      $false
     }
-    $success = Add-TransactionDb $transaction
-    if ($success) {
-      Write-Host "Transaction created successfully"
-    } else {
-      Write-Host "Transaction not created"
-    }
-  } else {
-    Write-Error Get-MessageNoJobFound
   }
 }
 
-function Prompt-NewJob {
-
-}
 
 function New-Job {
   Param(
     # title of job
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true, Position = 0)]
     [string]$Title,
 
     # job type: Quest, Daily, or Rare
-    [Parameter(Mandatory = $true)]
-    [string]$Type
+    [Parameter(Mandatory = $true, Position = 1)]
+    [string]$Type,
 
     # rate of return (per hour)
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, Position = 2)]
     [decimal]$Rate = 1
   )
+
+  # normalize
+  if ($Rate -eq "") {
+    $Rate = 1
+  }
 
   # validate
   $valid = $true
@@ -119,95 +101,180 @@ function New-Job {
   # create new job
   if ($valid) {
     $job = [PSCustomObject]@{
-      Type = $Type
+      Type  = $Type
+      Id    = 0
       Title = $Title
-      $Rate = $Rate
+      Rate  = [decimal]$Rate
     }
     $success = Add-JobDb $job
     if ($success) {
-      Write-Host "Job created successfully"
-    } else {
-      Write-Host "Job not created"
+      Write-Debug "Job created successfully."
     }
-  } else {
-    Write-Error Get-MessageInvalidJobType
-    Write-Host "Job not created"
+    else {
+      Write-Debug "Job not created."
+    }
+    if (!$Global:SilentStatusReturn) {
+      return $success
+    }
+  }
+  else {
+    Throw $(Get-MessageInvalidJobType)
+    Write-Debug "Job not created."
+    if (!$Global:SilentStatusReturn) {
+      return $false
+    }
   }
 }
 
-function Prompt-EditJob {
-
-}
 
 function Edit-Job {
   Param(
     # id of job to edit
-    [Parameter(Mandatory = $true, Position = 1)]
+    [Parameter(Mandatory = $true, Position = 0)]
     [int]$JobId,
 
     # title of job
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $false, Position = 1)]
     [string]$Title,
 
     # job type: Quest, Daily, or Rare
-    [Parameter(Mandatory = $true)]
-    [string]$Type
+    [Parameter(Mandatory = $false, Position = 2)]
+    [string]$Type,
 
     # rate of return (per hour)
-    [Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false, Position = 3)]
     [decimal]$Rate = 1
   )
 
   # validate
   $valid = $true
-  $validType = Get-TypeIsValid $Type
-  if (!$validType) {
-    $valid = $false
+  if ($Type) {
+    $validType = Get-TypeIsValid $Type
+    if (!$validType) {
+      $valid = $false
+    }
   }
-  $jobExists = Get-JobDb $JobId
-  if (!$jobExists) {
+  $previousJob = Get-JobDb $JobId
+  if (!$previousJob) {
     $valid = $false
   }
 
   if ($valid) {
     $job = [PSCustomObject]@{
-      Type = $Type
-      Title = $Title
-      Rate = $Rate
+      Type  = if ($Type) { $Type } else { $previousJob.Type }
+      Id    = $JobId
+      Title = if ($Title) { $Title } else { $previousJob.Title }
+      Rate  = if ($Rate) { $Rate } else { $previousJob.Rate }
     }
     $success = Set-JobDb $JobId $job
     if ($success) {
-      Write-Host "Job editted successfully"
-    } else {
-      Write-Host "Job not editted"
+      Write-Debug "Job editted successfully."
     }
-  } else {
-    if (!$jobExists) {
-      Write-Error Get-MessageNoJobFound
-    } elseif (!$validType) {
-      Write-Error Get-MessageInvalidJobType
+    else {
+      Write-Debug "Job not editted."
     }
-    Write-Host "Job not editted"
+    if (!$Global:SilentStatusReturn) {
+      return $success
+    }
   }
-}
-
-function Prompt-RemoveJob {
-
+  else {
+    if (!$jobExists) {
+      Throw $(Get-MessageNoJobFound)
+    }
+    elseif (!$validType) {
+      Throw $(Get-MessageInvalidJobType)
+    }
+    Write-Debug "Job not editted."
+    if (!$Global:SilentStatusReturn) {
+      return $false
+    }
+  }
 }
 
 function Remove-Job {
   Param(
     # id of job to remove
-    [Parameter(Mandatory = $true, Position = 1)]
-    [int]
-    $JobId
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int]$JobId
   )
 
   $success = Remove-JobDb $JobId
   if ($success) {
-    Write-Host "Job removed successfully."
-  } else {
-    Write-Error Get-MessageNoJobFound
+    Write-Debug "Job removed successfully."
+  }
+  else {
+    Throw $(Get-MessageNoJobFound)
+  }
+  if (!$Global:SilentStatusReturn) {
+    $success
   }
 }
 
+
+
+function New-Transaction {
+  Param(
+    # id of job being performed
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int]$JobId,
+
+    # duration (hours) job is performed (for quest type jobs)
+    [Parameter(Mandatory = $false, Position = 1)]
+    [decimal]$Duration = 1,
+
+    # note
+    [Parameter(Mandatory = $false, Position = 2)]
+    [string]$Note = ""
+  )
+
+  $valid = $true
+  $job = Get-JobDb $JobId
+  if (!$job) {
+    $valid = $false
+  }
+  $isDaily = $job.Type -eq $JobTypeDaily
+  $dailyJobAlreadyAdded = $false
+  $date = Get-Date -format 'MM/dd/yyyy'
+  if ($isDaily) {
+    # check transactions for same day same job id
+    $transactions = Get-TransactionsDb
+    $foundTransaction = $transactions | Where-Object { $_.Date -eq $Date }
+    if ($foundTransaction) {
+      $dailyJobAlreadyAdded = $true
+    }
+  }
+
+  if ($valid) {
+    $change = $Duration * $job.Rate
+    $log = "$($job.Type)_$($job.Title)_$($job.Rate)_$Duration"
+    $transaction = [PSCustomObject]@{
+      Date   = $date
+      JobId  = $job.Id
+      Change = $change
+      Log    = $log
+      Note   = $Note
+    }
+    $success = Add-TransactionDb $transaction
+    if ($success) {
+      Write-Debug "Transaction created successfully."
+    }
+    else {
+      Write-Debug "Transaction not created."
+    }
+    if (!$Global:SilentStatusReturn) {
+      return $success
+    }
+  }
+  else {
+    if (!$job) {
+      Throw $(Get-MessageNoJobFound)
+    }
+    elseif ($dailyJobAlreadyAdded) {
+      Throw "Daily transaction already created for date: $date"
+    }
+    Write-Debug "Transaction not created."
+    if (!$Global:SilentStatusReturn) {
+      return $false
+    }
+  }
+}

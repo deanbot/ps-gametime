@@ -1,17 +1,20 @@
 # import game time utilities
+$Global:Debug = "Continue"
+$Global:SilentStatusReturn = $false
 Import-Module $pwd\DataAccess.psm1 -Force
 Import-Module $pwd\Utilities.psm1 -Force
+Import-Module $pwd\UI.psm1 -Force
 
-do
-{
+do {
   Show-Menu
+  Write-Host ""
   $selection = Read-Host "Please make a selection"
-  switch ($selection)
-  {
+  switch ($selection) {
     '1' {
       # List all jobs
       Clear-Host
-      "List all jobs"
+      $jobs = Get-Jobs
+      $jobs | format-table
     } '2' {
       # Log job completion
       Clear-Host
@@ -19,7 +22,7 @@ do
     } '3' {
       # Add job
       Clear-Host
-      "Add job"
+      Show-PromptNewJob
     } '4' {
       # Edit job
       Clear-Host
@@ -28,12 +31,22 @@ do
       # Remove job
       Clear-Host
       "Remove job"
+    } 'b' {
+      # balance
+      Clear-Host
+      $balance = Get-Balance
+
+      Write-Host "Balance: $balance"
     } 'g' {
       # game time
       Clear-Host
       "Game Time"
     }
   }
-  pause
+  if ($selection -ne 'q') {
+    pause
+  }
 }
-until ($selection -eq 'q')
+until ($selection -eq 'q' -or $selection -eq '')
+
+$Global:Debug = ""
