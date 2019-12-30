@@ -5,8 +5,8 @@ function Show-Menu {
   Write-Host "1: List all jobs"
   Write-Host "2: Log job completion"
   Write-Host "3: Add job"
-  Write-Host "4: Edit job"
-  Write-Host "5: Remove job"
+  # Write-Host "4: Edit job"
+  # Write-Host "5: Remove job"
   Write-Host "B: Balance"
   Write-Host "G: Game time"
   Write-Host "Q: Quit"
@@ -30,9 +30,9 @@ function Show-PromptNewJob {
   # get type
   Write-Host ""
   Write-Host "Enter Job Type"
-  Write-Host "1: Quest"
-  Write-Host "2: Daily"
-  Write-Host "3: Rare"
+  Write-Host "1: Quest (can complete multiple times per day or for an amount of time)"
+  Write-Host "2: Daily (can complete once a day)"
+  Write-Host "3: Rare (can complete once)"
   do {
     $Type = Read-Host "Please make a selection"
   }
@@ -44,13 +44,13 @@ function Show-PromptNewJob {
     return
   }
   elseif ($Type -eq 1) {
-    $Type = 'Quest (can complete multiple times per day or for an amount of time)'
+    $Type = 'Quest'
   }
   elseif ($Type -eq 2) {
-    $Type = 'Daily (can complete once a day)'
+    $Type = 'Daily'
   }
   elseif ($Type -eq 3) {
-    $Type = 'Rare (can complete once)'
+    $Type = 'Rare'
   }
 
   # get rate
@@ -87,5 +87,8 @@ function Show-PromptRemoveJob {
 }
 
 function Show-PromptNewTransaction {
+  Clear-Host
+  Write-Host "================ Log Job Completion ================"
 
+  Write-Host ''
 }
