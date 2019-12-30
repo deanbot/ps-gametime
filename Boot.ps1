@@ -18,7 +18,7 @@ do {
     } '2' {
       # Log job completion
       Clear-Host
-      "Log job completion"
+      Show-PromptNewTransaction
     } '3' {
       # Add job
       Clear-Host

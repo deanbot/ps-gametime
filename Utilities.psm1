@@ -48,7 +48,8 @@ function Get-Transactions {
 }
 
 function Get-Balance {
-  $balance = Get-TransactionsDb | Select-Object Change | Measure-Object Change -Sum
+  $transactions = Get-TransactionsDb
+  $balance = $transactions | Select-Object Change, @{Name="CastedChange"; Expression={[decimal]$_.Change}} | Measure-Object CastedChange -Sum
   $balance.Sum
 }
 
@@ -209,8 +210,6 @@ function Remove-Job {
     $success
   }
 }
-
-
 
 function New-Transaction {
   Param(
