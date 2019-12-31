@@ -48,7 +48,7 @@ function Get-Transactions {
 }
 
 function Get-Balance {
-  $transactions = Get-TransactionsDb
+  $transactions = Get-Transactions
   $balance = $transactions | Select-Object Change, @{Name="CastedChange"; Expression={[decimal]$_.Change}} | Measure-Object CastedChange -Sum
   $balance.Sum
 }
