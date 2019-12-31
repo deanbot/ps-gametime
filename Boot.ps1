@@ -17,20 +17,16 @@ do {
       $jobs | format-table
     } '2' {
       # Log job completion
-      Clear-Host
       Show-PromptNewTransaction
     } '3' {
       # Add job
-      Clear-Host
       Show-PromptNewJob
     } '4' {
       # Edit job
-      Clear-Host
-      "Edit job"
+      Show-PromptEditJob
     } '5' {
       # Remove job
-      Clear-Host
-      "Remove job"
+      Show-PromptRemoveJob
     } 'b' {
       # balance
       Clear-Host
@@ -39,7 +35,6 @@ do {
       Write-Host "Balance: $balance | Available Balance: $available"
     } 'g' {
       # game time
-      Clear-Host
       Show-PromptGameTime
     }
   }

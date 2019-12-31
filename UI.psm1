@@ -5,8 +5,8 @@ function Show-Menu {
   Write-Host "1: List all jobs"
   Write-Host "2: Log job completion"
   Write-Host "3: Add job"
-  # Write-Host "4: Edit job"
-  # Write-Host "5: Remove job"
+  Write-Host "4: Edit job"
+  Write-Host "5: Remove job"
   Write-Host "B: Balance"
   Write-Host "G: Spend Game Time points"
   Write-Host "Q: Quit"
@@ -14,6 +14,7 @@ function Show-Menu {
 
 
 function Show-PromptNewJob {
+  Clear-Host
   Write-Host "================ Create Job ================"
   Write-Host "Follow prompts (at any time enter Q to Quit)."
 
@@ -59,7 +60,6 @@ function Show-PromptNewJob {
     $Rate = Read-Host "Enter Job Rate (amount returned for completion or per hour)"
   }
   until ($Rate -eq 'q' `
-      -or $Rate -eq '' `
       -or [decimal]$Rate -is [decimal] `
   )
   if ($Rate -eq 'q') {
@@ -79,23 +79,204 @@ function Show-PromptNewJob {
 
 
 function Show-PromptEditJob {
+  Clear-Host
+  Write-Host "================ Edit Job ================"
+  Write-Host "Follow prompts (at any time enter Q to Quit)."
 
-}
-
-function Show-PromptRemoveJob {
-
-}
-
-function Show-PromptNewTransaction {
   do {
-    Clear-Host
-    Write-Host "================ Log Job Completion ================"
-    Write-Host "Follow prompts (at any time enter L to list Jobs or Q to Quit)."
+    Write-Host ""
+    Write-Host "Enter L to list Jobs"
+    Write-Host ""
     if ($JobId -eq 'l') {
       Get-Jobs | Format-Table
     }
+    $JobId = Read-Host "Select Job by Id"
+  }
+  until(
+    $JobId -ne 'l' `
+      -or $JobId -eq 'q'
+  )
+  if ($JobId -eq 'q') {
+    return;
+  }
+
+  $valid = $true
+  if (!$JobId) {
+    $valid = $false
+  }
+  else {
+    try {
+      $JobId = [int]$JobId
+    }
+    catch {
+      $valid = $false
+    }
+  }
+  if (!$valid) {
+    Write-Host "Enter a valid job id."
+    return;
+  }
+
+  $job = Get-Job $JobId
+  if ($job) {
+    $job | Format-Table
+
+    # get title
+    Write-Host "Job Title"
+    do {
+      Write-Host "(Original: $($job.Title))"
+      $Title = Read-Host "Enter Job Title (leave blank to use original)"
+    }
+    until ($Title -eq 'q' -or !$Title)
+    if ($Title -eq 'q') {
+      return
+    }
+    elseif (!$Title) {
+      $Title = $job.Title
+    }
+
+    # get type
+    Write-Host ""
+    Write-Host "Enter Job Type"
+    Write-Host "1: Quest (can complete multiple times per day or for an amount of time)"
+    Write-Host "2: Daily (can complete once a day)"
+    Write-Host "3: Rare (can complete once)"
+    do {
+      Write-Host "(Original: $($job.Type))"
+      $Type = Read-Host "Please make a selection (leave blank to use original)"
+    }
+    until ($Type -eq 'q' `
+        -or $Type -eq 1 `
+        -or $Type -eq 2 `
+        -or $Type -eq 3 `
+        -or !$Type)
+    if ($Type -eq 'q') {
+      return
+    }
+    elseif (!$Type) {
+      $Type = $job.Type
+    }
+    elseif ($Type -eq 1) {
+      $Type = 'Quest'
+    }
+    elseif ($Type -eq 2) {
+      $Type = 'Daily'
+    }
+    elseif ($Type -eq 3) {
+      $Type = 'Rare'
+    }
+
+    # get rate
+    Write-Host ""
+    Write-Host "Job Rate (amount returned for completion or per hour)"
+    do {
+      Write-Host "(Original: $($job.Rate))"
+      $Rate = Read-Host "Enter Job Rate (leave blank to use original)"
+    }
+    until ($Rate -eq 'q' `
+        -or !$Rate `
+        -or [decimal]$Rate -is [decimal] `
+    )
+    if ($Rate -eq 'q') {
+      return
+    }
+    elseif (!$Rate) {
+      $Rate = $job.Rate
+    }
+
+    if ($Title -eq $job.Title `
+        -and $Type -eq $job.Type `
+        -and $Rate -eq $job.Rate) {
+      Write-Host "Nothing Changed."
+      return
+    }
+
+    Write-Host ""
+    $confirm = Read-Host "Are you sure (y/Y)"
+    if ($confirm -eq 'y') {
+      $success = Edit-Job $JobId $Title $Type $Rate
+      if ($success) {
+        Write-Host "Job editted successfully."
+      }
+      else {
+        Write-Host "Job not editted."
+      }
+    }
     else {
-      Write-Host ""
+      Write-Host "Job not removed."
+    }
+
+  }
+}
+
+function Show-PromptRemoveJob {
+  Clear-Host
+  Write-Host "================ Remove Job ================"
+  Write-Host "Follow prompts (at any time enter Q to Quit)."
+
+  do {
+    Write-Host ""
+    Write-Host "Enter L to list Jobs"
+    Write-Host ""
+    if ($JobId -eq 'l') {
+      Get-Jobs | Format-Table
+    }
+    $JobId = Read-Host "Select Job by Id"
+  }
+  until(
+    $JobId -ne 'l' `
+      -or $JobId -eq 'q'
+  )
+  if ($JobId -eq 'q') {
+    return;
+  }
+
+  $valid = $true
+  if (!$JobId) {
+    $valid = $false
+  }
+  else {
+    try {
+      $JobId = [int]$JobId
+    }
+    catch {
+      $valid = $false
+    }
+  }
+  if (!$valid) {
+    Write-Host "Enter a valid job id."
+    return;
+  }
+
+  $job = Get-Job $JobId
+  if ($job) {
+    $job | Format-Table
+
+    $confirm = Read-Host "Are you sure (y/Y)"
+    if ($confirm -eq 'y') {
+      $success = Remove-Job $JobId
+      if ($success) {
+        Write-Host "Job removed successfully."
+      } else {
+        Write-Host "Job not removed."
+      }
+    }
+    else {
+      Write-Host "Job not removed."
+    }
+  }
+}
+
+function Show-PromptNewTransaction {
+  Clear-Host
+  Write-Host "================ Log Job Completion ================"
+  Write-Host "Follow prompts (at any time enter Q to Quit)."
+  do {
+    Write-Host ""
+    Write-Host "Enter L to list Jobs"
+    Write-Host ""
+    if ($JobId -eq 'l') {
+      Get-Jobs | Format-Table
     }
     $JobId = Read-Host "Select Job by Id"
   }
@@ -143,9 +324,9 @@ function Show-PromptNewTransaction {
       )
     }
     else {
-      $Duration = 1
+      $Degree = 1
     }
-    if ($Duration -eq 'q') {
+    if ($Degree -eq 'q') {
       return
     }
     $Note = Read-Host 'Enter note (optional)'
