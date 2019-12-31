@@ -93,14 +93,15 @@ function Show-PromptNewTransaction {
     Write-Host "Follow prompts (at any time enter L to list Jobs or Q to Quit)."
     if ($JobId -eq 'l') {
       Get-Jobs | Format-Table
-    } else {
+    }
+    else {
       Write-Host ""
     }
     $JobId = Read-Host "Select Job by Id"
   }
   until(
     $JobId -ne 'l' `
-    -or $JobId -eq 'q'
+      -or $JobId -eq 'q'
   )
   if ($JobId -eq 'q') {
     return;
@@ -109,10 +110,12 @@ function Show-PromptNewTransaction {
   $valid = $true
   if (!$JobId) {
     $valid = $false
-  } else {
+  }
+  else {
     try {
       $JobId = [int]$JobId
-    } catch {
+    }
+    catch {
       $valid = $false
     }
   }
@@ -122,23 +125,26 @@ function Show-PromptNewTransaction {
   }
 
   $job = Get-Job $JobId
+  $isDaily = $job.Type -eq 'Daily'
+  $isRare = $job.Type -eq 'Rare'
   if ($job) {
     $job | Format-Table
     if ($job.Type -eq 'Quest') {
       $isDecimal = $false
-      do
-      {
-        $Duration = Read-Host "Enter Duration (in hours, i.e. 1 or .75)"
+      do {
+        $Degree = Read-Host "Enter Duration (in hours, i.e. 1 or .75)"
         try {
-          $test = [decimal]$Duration
+          $test = [decimal]$Degree
           $isDecimal = $test -is [decimal]
-        } catch {
+        }
+        catch {
           Write-Host "Enter a valid duration"
         }
       } until (
-        $isDecimal -or $Duration -eq 'q'
+        $isDecimal -or $Degree -eq 'q'
       )
-    } else {
+    }
+    else {
       $Duration = 1
     }
     if ($Duration -eq 'q') {
@@ -148,14 +154,25 @@ function Show-PromptNewTransaction {
 
     $confirm = Read-Host "Are you sure (y/Y)"
     if ($confirm -eq 'y') {
-      $success = New-Transaction $JobId -Duration $Duration -Note $Note
-      if ($Success) {
+      try {
+        $success = New-Transaction $JobId -Degree $Degree -Note $Note
+      }
+      catch {
+        Write-Host "An error occurred:"
+        Write-Host $_
+      }
+      if ($success) {
         Write-Host "Job completion logged successfully."
-      } else {
+      }
+      else {
         Write-Host "Job completion not logged."
       }
     }
-  } else {
+    else {
+      Write-Host "Job completion not logged."
+    }
+  }
+  else {
     Write-Host "Job not found"
   }
 }

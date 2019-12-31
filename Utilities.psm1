@@ -27,6 +27,7 @@ function Get-TypeIsValid {
 
 function Get-MessageNoJobFound {
   Param(
+    [Parameter(Mandatory = $true, Position = 0)]
     [decimal]$JobId
   )
   "No job found for id: $JobId."
@@ -34,9 +35,60 @@ function Get-MessageNoJobFound {
 
 function Get-MessageInvalidJobType {
   Param(
+    [Parameter(Mandatory = $true, Position = 0)]
     [string]$Type
   )
   "Invalid job type: $Type."
+}
+
+function Get-MessageTooFewPoints {
+  Param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int]$Available
+  )
+  "Not enough game time points (available balance: $Available)"
+}
+
+function Get-MessageDeductTransactionLog {
+  param(
+    # degree of transaction
+    [Parameter(Mandatory = $true, Position = 0)]
+    [decimal]$Degree
+  )
+  "Spent $Degree Game Time points."
+}
+
+function Get-MessageTransactionLog {
+  param(
+    # type of job
+    [Parameter(Mandatory = $false)]
+    [string]$JobType = "",
+
+    # title of job
+    [Parameter(Mandatory = $false)]
+    [string]$JobTitle = "",
+
+    # rate of job
+    [Parameter(Mandatory = $false)]
+    [decimal]$JobRate,
+
+    # degree of transaction
+    [Parameter(Mandatory = $false)]
+    [decimal]$Degree = 1
+  )
+
+  $message = ""
+  $value = $Degree * $JobRate
+  switch ($JobType) {
+    'Quest' {
+      $message = "Completed Quest, '$JobTitle', for $Degree hours. Awarded $value points (rated at $JobRate per hour)."
+    } 'Daily' {
+      $message = "Completed Daily Quest, '$JobTitle'. Awarded $value points."
+    } 'Rare' {
+      $message = "Completed Rare Quest, '$JobTitle'. Awarded $value points."
+    }
+  }
+  $message
 }
 
 function Get-Jobs {
@@ -49,8 +101,13 @@ function Get-Transactions {
 
 function Get-Balance {
   $transactions = Get-Transactions
-  $balance = $transactions | Select-Object Change, @{Name="CastedChange"; Expression={[decimal]$_.Change}} | Measure-Object CastedChange -Sum
+  $balance = $transactions | Select-Object Change, @{Name = "CastedChange"; Expression = { [decimal]$_.Change } } | Measure-Object CastedChange -Sum
   $balance.Sum
+}
+
+function Get-AvailableBalance {
+  $balance = Get-Balance
+  [Math]::Floor([decimal]($balance))
 }
 
 function Get-Job {
@@ -211,15 +268,41 @@ function Remove-Job {
   }
 }
 
+
 function New-Transaction {
   Param(
-    # id of job being performed
+    # id of job being performed. use -1 to deduct from balance instead
     [Parameter(Mandatory = $true, Position = 0)]
     [int]$JobId,
 
     # duration (hours) job is performed (for quest type jobs)
     [Parameter(Mandatory = $false, Position = 1)]
-    [decimal]$Duration = 1,
+    $Degree = 1,
+
+    # note
+    [Parameter(Mandatory = $false, Position = 2)]
+    [string]$Note = ""
+  )
+
+  if ($JobId -eq -1) {
+    $TransactionDegree = [int]$Degree
+    return New-DeductTransaction $TransactionDegree $Note
+  }
+  else {
+    $TransactionDegree = [decimal]$Degree
+    return New-JobTransaction $JobId $TransactionDegree $Note
+  }
+}
+
+function New-JobTransaction {
+  Param(
+    # id of job being performed. use -1 to deduct from balance instead
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int]$JobId,
+
+    # duration (hours) job is performed (for quest type jobs)
+    [Parameter(Mandatory = $false, Position = 1)]
+    [decimal]$Degree = 1,
 
     # note
     [Parameter(Mandatory = $false, Position = 2)]
@@ -232,6 +315,7 @@ function New-Transaction {
     $valid = $false
   }
   $isDaily = $job.Type -eq $JobTypeDaily
+  $isRare = $job.Type -eq $JobTypeRare
   $dailyJobAlreadyAdded = $false
   $date = Get-Date -format 'MM/dd/yyyy'
   if ($isDaily) {
@@ -244,11 +328,11 @@ function New-Transaction {
   }
 
   if ($valid) {
-    $change = $Duration * $job.Rate
-    $log = "$($job.Type)_$($job.Title)_$($job.Rate)_$Duration"
+    $change = $Degree * $job.Rate
+    $log = Get-MessageTransactionLog -JobType $job.Type -JobTitle $job.Title -JobRate $job.Rate -Degree $Degree
     $transaction = [PSCustomObject]@{
       Date   = $date
-      JobId  = $job.Id
+      JobId  = $JobId
       Change = $change
       Log    = $log
       Note   = $Note
@@ -256,12 +340,26 @@ function New-Transaction {
     $success = Add-TransactionDb $transaction
     if ($success) {
       Write-Debug "Transaction created successfully."
+      if ($isRare) {
+        $removeJobSuccess = Remove-Job $JobId
+        if ($removeJobSuccess) {
+          Write-Debug "Rare job removed successfully."
+        }
+        else {
+          Write-Debug "Rare job not removed"
+        }
+      }
     }
     else {
       Write-Debug "Transaction not created."
     }
     if (!$Global:SilentStatusReturn) {
-      return $success
+      if ($isRare -and $success) {
+        return $removeJobSuccess
+      }
+      else {
+        return $success
+      }
     }
   }
   else {
@@ -274,6 +372,47 @@ function New-Transaction {
     Write-Debug "Transaction not created."
     if (!$Global:SilentStatusReturn) {
       return $false
+    }
+  }
+}
+
+function New-DeductTransaction {
+  param(
+    # amount of game time points to use
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int]$Degree,
+
+    # note
+    [Parameter(Mandatory = $false, Position = 1)]
+    [string]$Note = ""
+  )
+
+  $available = Get-AvailableBalance
+  if ($Degree -lt 1) {
+    throw "Must spend at least one point"
+  }
+  elseif ($Degree -gt $available) {
+    throw $(Get-MessageTooFewPoints $available)
+  }
+  else {
+    $date = Get-Date -format 'MM/dd/yyyy'
+    $log = Get-MessageDeductTransactionLog $Degree
+    $transaction = [PSCustomObject]@{
+      Date   = $date
+      JobId  = -1
+      Change = ($Degree * -1)
+      Log    = $log
+      Note   = $Note
+    }
+    $success = Add-TransactionDb $transaction
+    if ($success) {
+      Write-Debug "Transaction created successfully."
+    }
+    else {
+      Write-Debug "Transaction not created."
+    }
+    if (!$Global:SilentStatusReturn) {
+      return $success
     }
   }
 }
