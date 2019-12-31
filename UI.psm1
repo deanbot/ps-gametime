@@ -8,7 +8,7 @@ function Show-Menu {
   # Write-Host "4: Edit job"
   # Write-Host "5: Remove job"
   Write-Host "B: Balance"
-  Write-Host "G: Game time"
+  Write-Host "G: Spend Game Time points"
   Write-Host "Q: Quit"
 }
 
@@ -125,8 +125,6 @@ function Show-PromptNewTransaction {
   }
 
   $job = Get-Job $JobId
-  $isDaily = $job.Type -eq 'Daily'
-  $isRare = $job.Type -eq 'Rare'
   if ($job) {
     $job | Format-Table
     if ($job.Type -eq 'Quest') {
@@ -155,17 +153,15 @@ function Show-PromptNewTransaction {
     $confirm = Read-Host "Are you sure (y/Y)"
     if ($confirm -eq 'y') {
       try {
-        $success = New-Transaction $JobId -Degree $Degree -Note $Note
+        $transaction = New-Transaction $JobId -Degree $Degree -Note $Note
       }
       catch {
         Write-Host "An error occurred:"
         Write-Host $_
       }
-      if ($success) {
-        Write-Host "Job completion logged successfully."
-      }
-      else {
-        Write-Host "Job completion not logged."
+      if ($transaction) {
+        Write-Host "Success!"
+        Write-Host $($transaction.Log)
       }
     }
     else {
@@ -174,5 +170,71 @@ function Show-PromptNewTransaction {
   }
   else {
     Write-Host "Job not found"
+  }
+}
+
+function Show-PromptGameTime {
+  Clear-Host
+  Write-Host "================ Spend Game Time Points ================"
+  Write-Host "Follow prompts (at any time enter Q to Quit)."
+  Write-Host ""
+
+  $available = Get-AvailableBalance
+  Write-Host "Balance $(Get-Balance) | Available Balance $Available"
+  WRite-Host "1 point = 20 minutes of gaming"
+  WRite-Host ""
+
+  if ($available -ge 1) {
+    do {
+      $spend = Read-Host "Points to spend "
+      $isInt = $false
+      $isAvailable = $false
+      try {
+        $val = [int32]$spend
+        $isInt = $val -is [int32]
+      }
+      catch {
+      }
+      if ($isInt) {
+        $isAvailable = $val -le $available
+        if (!$isAvailable) {
+          Write-Host "Spend from your available balance (available: $available)"
+        }
+      }
+      else {
+        Write-host "Enter valid point value. Points must be a whole number (i.e. 1 or 2)."
+        Write-host ""
+      }
+    }
+    until (
+      $spend -eq 'q' `
+        -or ($isInt -and - $isAvailable)
+    )
+    if ($spend -ne 'q') {
+      Write-host ""
+      $Note = Read-Host 'Enter note (optional)'
+      Write-host ""
+
+      $confirm = Read-Host "Are you sure (y/Y)"
+      if ($confirm -eq 'y') {
+        try {
+          $transaction = New-Transaction -1 -Degree $spend -Note $Note
+        }
+        catch {
+          Write-Host "An error occurred:"
+          Write-Host $_
+        }
+        if ($transaction) {
+          Write-Host "Success!"
+          Write-Host $($transaction.Log)
+        }
+      }
+      else {
+        Write-Host "Points not spent"
+      }
+    }
+  }
+  else {
+    Write-Host "No available balance to spend."
   }
 }

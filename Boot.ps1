@@ -35,12 +35,12 @@ do {
       # balance
       Clear-Host
       $balance = Get-Balance
-
-      Write-Host "Balance: $balance"
+      $available = Get-AvailableBalance
+      Write-Host "Balance: $balance | Available Balance: $available"
     } 'g' {
       # game time
       Clear-Host
-      "Game Time"
+      Show-PromptGameTime
     }
   }
   if ($selection -ne 'q') {

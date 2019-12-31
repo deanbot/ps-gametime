@@ -1,7 +1,8 @@
 # set testing data access path
 $Global:JobCsvPath = "$pwd\Database\Job-Test.csv"
 $Global:TansactionCsvPath = "$pwd\Database\Transaction-Test.csv"
-$Global:Debug = "Continue"
+$Global:Debug = ""
+# $Global:Debug = "Continue"
 $Global:SilentStatusReturn = $true
 $ErrorActionPreference = "Stop"
 
@@ -24,6 +25,9 @@ function Clear-Transactions {
 # create Jobs
 function Test-1 {
   New-Job "Read" "Quest" .75
+  $jobs = Get-Jobs
+  $oneJobInJobs = $jobs.Length -eq 1
+
   New-Job "Start Bullet Journal" "Rare" 1.5
   New-Job "Meditate twice a day" "Daily" .25
   $jobs = Get-Jobs
@@ -137,7 +141,7 @@ function Test-5 {
   $transactions = Get-Transactions
   $canCreateTransaction = $transactions.Length -eq 1
 
-  New-Transaction 1 -Duration 2
+  New-Transaction 1 -Degree 2
   $transactions = Get-Transactions
   $canCreateTransactions = $transactions.Length -eq 2
 
@@ -157,8 +161,22 @@ function Test-5 {
   $transactions = Get-Transactions
   $deletingJobLeavesTransactions = $transactions.Length -eq 2
 
+  $rareJobCompletionRemovesJob = $false
+  $job = Get-Job 2
+  if ($job.Title -eq "Start Bullet Journal") {
+    New-Transaction 2
+    try {
+      $job = Get-Job 2
+      if (!$job) {
+        $rareJobCompletionRemovesJob = $true
+      }
+    }
+    catch {
+      $rareJobCompletionRemovesJob = $true
+    }
+  }
 
-  Write-Host "Test 4. Can create transactions: $($canCreateTransaction -and $canCreateTransactions -and $durationAffectsChange -and $missingJobThrowsError -and $deletingJobLeavesTransactions)"
+  Write-Host "Test 4. Can create transactions: $($canCreateTransaction -and $canCreateTransactions -and $durationAffectsChange -and $missingJobThrowsError -and $deletingJobLeavesTransactions -and $rareJobCompletionRemovesJob)"
 
   Clear-Jobs
   Clear-Transactions
@@ -184,6 +202,71 @@ function Test-6 {
   Clear-Transactions
 }
 
+# spend game points
+function Test-7 {
+  New-Job "Read" "Quest" .75
+  New-Transaction 1
+
+  $spendDeductsFromBalance = $false
+  $canOnlySpendWholeNumbers = $false
+  $canSpendOnlyAvailableBalance = $false
+  try {
+    New-Transaction -1 -Degree 1
+  }
+  catch {
+    # "good"
+    $canOnlySpendWholeNumbers = $true
+  }
+  if ($canOnlySpendWholeNumbers) {
+    try {
+      New-Transaction -1 -Degree .5
+      $canOnlySpendWholeNumbers = $false
+    }
+    catch {
+      # "good"
+    }
+  }
+  if ($canOnlySpendWholeNumbers) {
+    New-Transaction 1
+    try {
+      New-Transaction -1 -Degree 1
+    }
+    catch {
+      $canOnlySpendWholeNumbers = $false
+      # "bad"
+    }
+    if ($canOnlySpendWholeNumbers) {
+      $balance = Get-Balance
+      $spendDeductsFromBalance = $balance -eq .5
+      if ($spendDeductsFromBalance) {
+        # add 4.5 points to get balance of 5
+        New-Transaction 1 -Degree 6
+        New-Transaction -1 -Degree 2
+        $balance = Get-Balance
+        $spendDeductsFromBalance = $balance -eq 3
+      }
+      else {
+        # "bad"
+      }
+    }
+  }
+
+  if ($spendDeductsFromBalance) {
+    try {
+      New-Transaction -1 -Degree 4
+      # "bad"
+    }
+    catch {
+      $canSpendOnlyAvailableBalance = $true
+    }
+  }
+
+  Write-Host "Test 7. Can spend game time points: $($canOnlySpendWholeNumbers -and $canSpendOnlyAvailableBalance -and $spendDeductsFromBalance)"
+
+  Clear-Jobs
+  Clear-Transactions
+}
+
 # ========
 # Do tests
 # ========
@@ -193,6 +276,7 @@ Test-3
 Test-4
 Test-5
 Test-6
+Test-7
 
 # clean up
 Clear-Jobs

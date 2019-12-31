@@ -55,7 +55,7 @@ function Get-MessageDeductTransactionLog {
     [Parameter(Mandatory = $true, Position = 0)]
     [decimal]$Degree
   )
-  "Spent $Degree Game Time points."
+  "Spent $Degree Game Time points for a total of $($Degree * 20) minutes of gaming."
 }
 
 function Get-MessageTransactionLog {
@@ -121,7 +121,7 @@ function Get-Job {
     $Job
   }
   else {
-    Throw $(Get-MessageNoJobFound)
+    Throw $(Get-MessageNoJobFound $JobId)
     if (!$Global:SilentStatusReturn) {
       $false
     }
@@ -176,7 +176,7 @@ function New-Job {
     }
   }
   else {
-    Throw $(Get-MessageInvalidJobType)
+    Throw $(Get-MessageInvalidJobType $Type)
     Write-Debug "Job not created."
     if (!$Global:SilentStatusReturn) {
       return $false
@@ -237,10 +237,10 @@ function Edit-Job {
   }
   else {
     if (!$jobExists) {
-      Throw $(Get-MessageNoJobFound)
+      Throw $(Get-MessageNoJobFound $JobId)
     }
     elseif (!$validType) {
-      Throw $(Get-MessageInvalidJobType)
+      Throw $(Get-MessageInvalidJobType $Type)
     }
     Write-Debug "Job not editted."
     if (!$Global:SilentStatusReturn) {
@@ -261,7 +261,7 @@ function Remove-Job {
     Write-Debug "Job removed successfully."
   }
   else {
-    Throw $(Get-MessageNoJobFound)
+    Throw $(Get-MessageNoJobFound $JobId)
   }
   if (!$Global:SilentStatusReturn) {
     $success
@@ -355,16 +355,24 @@ function New-JobTransaction {
     }
     if (!$Global:SilentStatusReturn) {
       if ($isRare -and $success) {
-        return $removeJobSuccess
+        if ($removeJobSuccess) {
+          return $transaction
+        }
+        else {
+          return $false
+        }
+      }
+      elseif ($success) {
+        return $transaction
       }
       else {
-        return $success
+        return $false
       }
     }
   }
   else {
     if (!$job) {
-      Throw $(Get-MessageNoJobFound)
+      Throw $(Get-MessageNoJobFound $JobId)
     }
     elseif ($dailyJobAlreadyAdded) {
       Throw "Daily transaction already created for date: $date"
@@ -412,7 +420,13 @@ function New-DeductTransaction {
       Write-Debug "Transaction not created."
     }
     if (!$Global:SilentStatusReturn) {
-      return $success
+      if ($success) {
+        return $transaction
+      }
+      else {
+        return $false
+      }
+
     }
   }
 }
