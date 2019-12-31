@@ -9,6 +9,7 @@ function Show-Menu {
   Write-Host "5: Remove job"
   Write-Host "B: Balance"
   Write-Host "G: Spend Game Time points"
+  Write-Host "L: View logs"
   Write-Host "Q: Quit"
 }
 
@@ -257,7 +258,8 @@ function Show-PromptRemoveJob {
       $success = Remove-Job $JobId
       if ($success) {
         Write-Host "Job removed successfully."
-      } else {
+      }
+      else {
         Write-Host "Job not removed."
       }
     }

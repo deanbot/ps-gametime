@@ -33,6 +33,10 @@ do {
       $balance = Get-Balance
       $available = Get-AvailableBalance
       Write-Host "Balance: $balance | Available Balance: $available"
+    } 'l' {
+      Clear-Host
+      $trans = Get-Transactions
+      $trans | Select-Object Log | Format-Table
     } 'g' {
       # game time
       Show-PromptGameTime

@@ -33,3 +33,7 @@ In powershell terminal:
 cd [project\directory]
 .\Test.ps1
 ```
+
+## Gotchyas
+
+If manually editting csv's be sure to leave a new line at the end of the file.
