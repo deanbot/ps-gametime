@@ -322,7 +322,6 @@ function New-JobTransaction {
     # check transactions for same day same job id
     $transactions = Get-TransactionsDb
     $foundTransaction = $transactions | Where-Object { $_.Date -eq $date -and $_.JobId -eq $JobId }
-    $foundTransaction
     if ($foundTransaction) {
       $dailyJobAlreadyAdded = $true
       $valid = $false
