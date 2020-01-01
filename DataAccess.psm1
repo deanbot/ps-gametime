@@ -24,6 +24,15 @@ function Get-TransactionCsvPath {
 # get all jobs from db
 function Get-JobsDb {
   $csvFile = Get-JobCsvPath
+
+  $path = $csvFile.split('\')
+  $path = $path[$path.Length - 1]
+  $path = $csvFile.SubString(0, $csvFile.IndexOf($path) - 1 )
+
+  if ( !Test-Path $path -PathType Container) {
+    New-Item -Type directory $path
+  }
+
   $exists = Test-Path $csvFile -PathType Leaf
   $jobs = @()
   if ($exists) {
