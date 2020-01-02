@@ -20,22 +20,27 @@ function Get-TransactionCsvPath {
   }
 }
 
+function Initialize-Path {
+  Param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$filename
+  )
+
+  $path = $filename.split('\')
+  $path = $path[$path.Length - 1]
+  $path = $filename.SubString(0, $filename.IndexOf($path) - 1 )
+  if (!(Test-Path $path -PathType Container)) {
+    New-Item -Type directory $path
+  }
+}
+
 
 # get all jobs from db
 function Get-JobsDb {
   $csvFile = Get-JobCsvPath
-
-  $path = $csvFile.split('\')
-  $path = $path[$path.Length - 1]
-  $path = $csvFile.SubString(0, $csvFile.IndexOf($path) - 1 )
-
-  if ( !Test-Path $path -PathType Container) {
-    New-Item -Type directory $path
-  }
-
-  $exists = Test-Path $csvFile -PathType Leaf
+  Initialize-Path $csvFile
   $jobs = @()
-  if ($exists) {
+  if (Test-Path $csvFile -PathType Leaf) {
     $imported = Import-Csv $csvFile
     foreach ($job in $imported) {
       $jobs += [PSCustomObject]@{
@@ -58,6 +63,7 @@ function Set-JobsDb {
     $Jobs
   )
   $csvFile = Get-JobCsvPath
+  Initialize-Path $csvFile
   $Jobs | Export-Csv $csvFile -NoTypeInformation -Force
   $true
 }
@@ -175,9 +181,9 @@ function Remove-JobDb {
 
 function Get-TransactionsDb {
   $csvFile = Get-TransactionCsvPath
-  $exists = Test-Path $csvFile -PathType Leaf
+  Initialize-Path $csvFile
   $transactions = @()
-  if ($exists) {
+  if (Test-Path $csvFile -PathType Leaf) {
     foreach ($item in Import-Csv $csvFile) {
       $transactions += [PSCustomObject]@{
         Date   = $item.Date
@@ -198,6 +204,7 @@ function Add-TransactionDb {
     $Transaction
   )
   $csvFile = Get-TransactionCsvPath
+  Initialize-Path $csvFile
   $Transaction | Export-Csv $csvFile -NoTypeInformation -Force -Append
   $true
 }

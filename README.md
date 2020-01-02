@@ -16,6 +16,9 @@ Create Quest, Daily, and Rare jobs. Log job completions and get game time points
 
 * [Install](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6)
 
+  If having trouble you may need to run `Set-ExecutionPolicy RemoteSigned`
+
+
 ## Run
 
 In powershell terminal:
