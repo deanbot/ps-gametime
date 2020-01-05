@@ -6,10 +6,9 @@ function Show-MainMenu {
   $logLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))(L)Log"
 
   Write-Host ""
-  # Write-Host "   _______________________________________"
-  Write-Host "   .-----------,"
+  Write-Host "    .-----------,"
   # Write-Host "  / Main Menu /___________________________   "
-  Write-Host "  $(Get-PaddedString '/ Main Menu /' '_' ($width+1))  "
+  Write-Host "   $(Get-PaddedString '/ Main Menu /' -Fill '_' -Width ($width))  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$jobLine|  "
   Write-Host "  |$gameLine|  "

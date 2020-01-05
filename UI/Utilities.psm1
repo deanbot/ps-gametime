@@ -51,26 +51,54 @@ function Get-TextLines {
 function Get-PaddedString {
   param(
     [Parameter(Mandatory = $false, Position = 0)]
-    [string]$text = "",
+    [string]$Text = "",
 
     [Parameter(Mandatory = $false, Position = 1)]
-    [string]$fill = " ",
+    [string]$Fill = " ",
 
     [Parameter(Mandatory = $false, Position = 2)]
-    [int]$width,
+    [int]$Width,
 
-    [Parameter(Mandatory = $false, Position = 3)]
-    [boolean]$centered = $false
+    # whether text should be centered. not compatible with right
+    [Parameter(Mandatory = $false)]
+    [boolean]$Center = $false,
+
+    # whether text should be right aligned. not compatible with centered
+    [Parameter(Mandatory = $false)]
+    [boolean]$Right = $false
   )
-  if (!$width) {
-    $width = $global:containerWidth
+  if (!$Width) {
+    $Width = $global:containerWidth
   }
-  $padded = $text
-  if ($padded.Length -lt $width) {
-    do {
-      $padded += $fill
+  $padded = $Text
+  if ($padded.Length -lt $Width -and $Fill.Length -gt 0) {
+    # if not centered or there is nothing to center add fill to remainder of padding
+    if (!$Center -or $padded.Length -eq 0) {
+      do {
+        if (!$Right) {
+          $padded += $Fill
+        }
+        else {
+          $padded = "$Fill$padded"
+        }
+      }
+      until($padded.Length -ge $Width)
     }
-    until($padded.Length -ge $width)
+    else {
+      # add fill to left and right of text
+      $alt = $false
+      do {
+        if (!$alt) {
+          $padded += $Fill
+          $alt = $true
+        }
+        else {
+          $padded = "$Fill$padded"
+          $alt = $false
+        }
+      }
+      until($padded.Length -ge $Width)
+    }
   }
   $padded
 }

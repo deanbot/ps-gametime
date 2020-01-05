@@ -220,6 +220,20 @@ function Read-Input {
         # elseif ($character -eq [System.ConsoleKey]::Enter) {
 
         # }
+        else {
+          switch ($character) {
+            'C' {
+              $global:menuPositionY = 0
+              $foundMatch = $true
+            } 'E' {
+              $global:menuPositionY = 1
+              $foundMatch = $true
+            } 'R' {
+              $global:menuPositionY = 2
+              $foundMatch = $true
+            }
+          }
+        }
       }
     }
     # game menu

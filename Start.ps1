@@ -12,15 +12,18 @@ function Main {
     Initialize-Display
     Initialize-Variables
     Initialize-MainMenu
-    $changed = $true
+    $repaint = $true
     do {
-      if ($changed) {
+      # update screen only if a key being listened for was pressed
+      if ($repaint) {
         Clear-Host
         Show-Header
         Show-BodyContent
         Show-Footer
       }
-      $changed = Read-Input
+
+      # respond to input and check if screen should repaint
+      $repaint = Read-Input
     }
     while (-not $global:quit)
   }
