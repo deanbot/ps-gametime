@@ -1,9 +1,17 @@
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
+}
+
 # constants
 $sectionMainMenu = 'Main Menu'
 $sectionJobsMenu = 'Jobs'
 $sectionGameMenu = 'Game Time'
 $sectionLogsMenu = 'Logs'
 $jobPageSingle = 'Single'
+$jobPageNew = 'New'
 
 function Initialize-Variables {
   $global:quit = $false
@@ -17,6 +25,9 @@ function Initialize-Variables {
   $global:canChangeMenuPositonX = $false
   $global:canChangeMenuPositonY = $false
   $global:showEsc = $false
+  $global:hideHeader = $false
+  $global:hideFooter = $false
+  $global:forceRepaint = $false
 }
 
 function Initialize-MainMenu {
@@ -39,6 +50,7 @@ function Initialize-JobsMenu {
   $global:section = $sectionJobsMenu
   $global:subPage = ''
   $global:currentJob = ''
+  $global:currentJobType = ''
   $global:menuPositionX = $menuPositionX
   $global:menuPositionY = 0
   $global:maxMenuPositionsX = 3
@@ -46,12 +58,14 @@ function Initialize-JobsMenu {
   $global:canChangeMenuPositonX = $true
   $global:canChangeMenuPositonY = $false
   $global:showEsc = $true
+  $global:hideHeader = $false
+  $global:hideFooter = $false
   Initialize-JobsSubSection
 }
 
 function Initialize-JobsSubSection {
   $global:canChangeMenuPositonX = $true
-  $global:canChangeMenuPositonY = $false
+  $global:menuPositionY = 0
 
   # get sub section jobs
   $posX = $global:menuPositionX
@@ -64,12 +78,18 @@ function Initialize-JobsSubSection {
       $jobType = 'Rare'
     }
   }
+
   $jobs = (Get-Jobs) | Where-Object { $_.Type -eq $jobType }
+  if ($jobs) {
+    $jobs = , $jobs
+  }
   $global:currentJobs = $jobs
-  $jobs = , $jobs
+
+  # one extra position to support add job option
+  $global:maxMenuPositionsY = $jobs.Length + 1
 
   # allow vertical nav if multiple jobs
-  $global:canChangeMenuPositonY = $jobs.Length -gt 1
+  $global:canChangeMenuPositonY = $jobs.Length -gt 0
 }
 
 function Initialize-JobsSingle {
@@ -78,6 +98,17 @@ function Initialize-JobsSingle {
   $global:maxMenuPositionsY = 3
   $global:canChangeMenuPositonX = $false
   $global:canChangeMenuPositonY = $true
+}
+
+function Initialize-JobsNew {
+  $global:subPage = $jobPageNew
+  $global:canChangeMenuPositonX = $false
+  $global:menuPositionY = 0
+  $global:maxMenuPositionsY = 0
+  $global:hideHeader = $true
+  $global:hideFooter = $true
+  $global:newJobTitle = ""
+  $global:newJobRate = 0
 }
 
 function Initialize-GameMenu {
@@ -203,10 +234,27 @@ function Read-Input {
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
           $global:prevMenuPositionX = $global:menuPositionX
-          $global:currentJob = Get-CurrentJob
-          if ($global:currentJob) {
-            Initialize-JobsSingle
+          if ($global:menuPositionY -lt $global:maxMenuPositionsY - 1) {
+            $global:currentJob = Get-CurrentJob
+            if ($global:currentJob) {
+              Initialize-JobsSingle
+              $foundMatch = $true
+            }
+          }
+          else {
+            $global:currentJobType = Get-CurrentJobType
+            Initialize-JobsNew
             $foundMatch = $true
+          }
+        }
+        else {
+          switch ($character) {
+            'A' {
+              if ($global:menuPositionY -ne $global:maxMenuPositionsY - 1) {
+                $global:menuPositionY = $global:maxMenuPositionsY - 1;
+                $foundMatch = $true
+              }
+            }
           }
         }
       }
@@ -233,6 +281,14 @@ function Read-Input {
               $foundMatch = $true
             }
           }
+        }
+      }
+      elseif ($subPage -eq $jobPageNew) {
+        if ($character -eq [System.ConsoleKey]::Escape) {
+          # init jobs menu and restore menu section
+          Initialize-JobsMenu $global:prevMenuPositionX
+          $foundMatch = $true
+          $global:prevMenuPositionX = 0
         }
       }
     }
@@ -277,6 +333,20 @@ function Get-CurrentJob {
   return $false
 }
 
+function Get-CurrentJobType {
+  $pos = $global:menuPositionX
+  switch ($pos) {
+    0 {
+      $jobType = 'Quest'
+    } 1 {
+      $jobType = 'Daily'
+    } 2 {
+      $jobType = 'Rare'
+    }
+  }
+  $jobType
+}
+
 function Show-BodyContent {
   $section = $global:section
   if ($section -eq $sectionMainMenu) {
@@ -290,11 +360,76 @@ function Show-BodyContent {
     elseif ($jobPage -eq $jobPageSingle) {
       Show-JobsSingle
     }
+    elseif ($jobPage -eq $jobPageNew) {
+      do {
+        Show-JobsNew
+        Read-NewJobInputVal
+      } while ($global:subPage -eq $jobPageNew)
+    }
   }
   elseif ($section -eq $sectionGameMenu) {
     Show-GameMenu
   }
   elseif ($section -eq $sectionLogsMenu) {
     Show-LogsMenu
+  }
+}
+
+function Read-NewJobInputVal {
+  $inputVal = $global:newInputValue
+
+  $quit = $false
+  # step 1 of input form
+  if (!$global:newJobTitle) {
+    # if empty title return
+    if (!$inputVal) {
+      Show-JobNewFailed
+      $input = Read-Character -Blocking $true
+      $quit = $true
+    }
+    # set new title
+    else {
+      $global:newJobTitle = $inputVal
+    }
+  }
+
+  # step 2 of input form
+  elseif (!$global:newJobRate) {
+    if ($inputVal -eq 'q') {
+      $input = Read-Character -Blocking $true
+      $quit = $true
+    } elseif (!$inputVal -or ![decimal]$inputVal -is [decimal]) {
+      Write-Host ""
+      Write-Host "  Notice: Enter rewards as a decimal i.e. .25 or 1"
+      Write-Host ""
+      pause
+    } elseif ($inputVal) {
+      $global:newJobRate = $inputVal
+    }
+  }
+
+  # step 3 of input form
+  else {
+    if ($inputVal -eq 'q' `
+      -or $inputVal -eq 'n') {
+      Show-JobNewFailed
+      $input = Read-Character -Blocking $true
+      $quit = $true
+    } else {
+      $success = New-Job $global:newJobTitle $global:currentJobType $global:newJobRate
+      if ($success) {
+        Show-JobNewSuccess
+        $input = Read-Character -Blocking $true
+        $quit = $true
+      } else {
+
+      }
+    }
+  }
+
+  if ($quit) {
+    Initialize-JobsMenu $global:prevMenuPositionX
+    $global:prevMenuPositionX = 0
+    $global:forceRepaint = $true
   }
 }

@@ -102,7 +102,11 @@ function Get-Transactions {
 function Get-Balance {
   $transactions = Get-Transactions
   $balance = $transactions | Select-Object Change, @{Name = "CastedChange"; Expression = { [decimal]$_.Change } } | Measure-Object CastedChange -Sum
-  $balance.Sum
+  if ($balance.Sum) {
+    $balance.Sum
+  } else {
+    0
+  }
 }
 
 function Get-AvailableBalance {

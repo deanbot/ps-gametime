@@ -4,19 +4,46 @@
 
 function Get-JobCsvPath {
   if ($Global:JobCsvPath) {
-    $Global:JobCsvPath
+    return $Global:JobCsvPath
   }
   else {
-    "$pwd\Database\Job.csv"
+    if ($Global:SessionName) {
+      $filename = "Job-$($Global:SessionName).csv"
+    } else {
+      $filename = "Job.csv"
+    }
+    if ($Global:StorageLocation) {
+      $path = $Global:StorageLocation
+      if ($path[$path.Length -1] -ne "\") {
+        $path = "$path\"
+      }
+    } else {
+      $path = "$pwd\Database\"
+    }
+    return "$path$filename"
   }
 }
 
 function Get-TransactionCsvPath {
   if ($Global:TansactionCsvPath) {
-    $Global:TansactionCsvPath
+    return $Global:TansactionCsvPath
   }
   else {
-    "$pwd\Database\Transaction.csv"
+    if ($Global:SessionName) {
+      $filename = "Transaction-$($Global:SessionName).csv"
+    } else {
+      $filename = "Transaction.csv"
+    }
+    if ($Global:StorageLocation) {
+      $path = $Global:StorageLocation
+      if ($path[$path.Length - 1] -ne "\") {
+        $path = "$path\"
+      }
+    }
+    else {
+      $path = "$pwd\Database\"
+    }
+    return "$path$filename"
   }
 }
 
@@ -51,7 +78,11 @@ function Get-JobsDb {
       }
     }
   }
-  return , $jobs
+  if ($jobs) {
+    return , $jobs
+  } else {
+    $jobs
+  }
 }
 
 # set all jobs in db

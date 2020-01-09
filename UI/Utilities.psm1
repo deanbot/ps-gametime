@@ -105,9 +105,9 @@ function Get-PaddedString {
 
 function Read-Character() {
   param(
-    [bool]$blocking = $true
+    [bool]$Blocking = $true
   )
-  if ($blocking) {
+  if ($Blocking) {
     return [System.Console]::ReadKey($true).Key.ToString()
   }
   elseif ([System.Console]::KeyAvailable) {
