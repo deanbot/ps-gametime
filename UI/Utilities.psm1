@@ -136,9 +136,13 @@ function Initialize-Display {
 
 function Restore-Display {
   Clear-Host
-  if ([System.Console]::BufferWidth -gt $global:originalBufferWidth -or [System.Console]::BufferHeight -gt $global:originalBufferHeight) {
-    [System.Console]::SetWindowSize(1, 1);
+  try {
+    if ([System.Console]::BufferWidth -gt $global:originalBufferWidth -or [System.Console]::BufferHeight -gt $global:originalBufferHeight) {
+      [System.Console]::SetWindowSize(1, 1);
+    }
+    [System.Console]::SetBufferSize($global:originalBufferWidth, $global:originalBufferHeight);
+    [System.Console]::SetWindowSize($global:originalWindowWidth, $global:originalWindowHeight);
+  } catch {
+    # 'not supported on this platform'
   }
-  [System.Console]::SetBufferSize($global:originalBufferWidth, $global:originalBufferHeight);
-  [System.Console]::SetWindowSize($global:originalWindowWidth, $global:originalWindowHeight);
 }

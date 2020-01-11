@@ -377,15 +377,16 @@ function Show-BodyContent {
 
 function Read-NewJobInputVal {
   $inputVal = $global:newInputValue
-
   $quit = $false
+
   # step 1 of input form
   if (!$global:newJobTitle) {
     # if empty title return
-    if (!$inputVal) {
+    if ($inputVal -eq 'q') {
       Show-JobNewFailed
-      $input = Read-Character -Blocking $true
       $quit = $true
+    } elseif (!$inputVal) {
+      Show-JobTitleWarning
     }
     # set new title
     else {
@@ -396,16 +397,30 @@ function Read-NewJobInputVal {
   # step 2 of input form
   elseif (!$global:newJobRate) {
     if ($inputVal -eq 'q') {
-      $input = Read-Character -Blocking $true
+      Show-JobNewFailed
       $quit = $true
-    } elseif (!$inputVal -or ![decimal]$inputVal -is [decimal]) {
-      Write-Host ""
-      Write-Host "  Notice: Enter rewards as a decimal i.e. .25 or 1"
-      Write-Host ""
-      pause
-    } elseif ($inputVal) {
-      $global:newJobRate = $inputVal
-    }
+    } else {
+      $warn = $false
+      if (!$inputVal) {
+        $warn = $true
+      } else {
+        try {
+          if ([decimal]$inputVal -is [decimal]) {
+            $inputVal = [decimal]$inputVal
+          } else {
+            $warn = $true
+          }
+        } catch {
+          $warn = $true
+        }
+      }
+      if ($warn -eq $true) {
+        Show-JobRateWarning 
+      } else {
+        $global:newJobRate = $inputVal
+      }
+    } 
+    
   }
 
   # step 3 of input form
@@ -413,17 +428,15 @@ function Read-NewJobInputVal {
     if ($inputVal -eq 'q' `
       -or $inputVal -eq 'n') {
       Show-JobNewFailed
-      $input = Read-Character -Blocking $true
       $quit = $true
     } else {
       $success = New-Job $global:newJobTitle $global:currentJobType $global:newJobRate
       if ($success) {
         Show-JobNewSuccess
-        $input = Read-Character -Blocking $true
-        $quit = $true
       } else {
-
+        Show-JobNewFailed
       }
+      $quit = $true
     }
   }
 

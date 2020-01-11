@@ -95,16 +95,13 @@ function Show-JobsNew {
   $rate = $global:newJobRate
 
   if ($title) {
-    Write-Host "  |$(Get-PaddedString "  Type: $type")|  "
-    Write-Host "  |$(Get-PaddedString)|  "
-    Write-Host "  |$(Get-PaddedString "  Title: $title")|  "
-    Write-Host "  |$(Get-PaddedString)|  "
+    Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
+    Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
     if ($rate) {
       Write-Host "  |$(Get-PaddedString "  Rewards: $rate")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
       Write-Host "  Create Job? Enter [y/n]"
-      Write-Host ""
       do {
         $createJob = Read-Character
       } until ($createJob -eq 'y' `
@@ -116,21 +113,24 @@ function Show-JobsNew {
       Write-Host "  |$(Get-PaddedString "  [...]")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
+      Write-Host "   $(Get-PaddedString "(enter 'q' to quit)" -Right $true)"
+      Write-Host ""
       if ($type -eq 'Quest') {
-        Write-Host "  Input amount of Game Time points per hour of completion (enter 'q' to quit)"
+        Write-Host "  Game Time points per hour"
       }
       else {
-        Write-Host "  Input amount of Game Time points for job completion (enter 'q' to quit)"
+        Write-Host "  Game Time points per completion"
       }
       $rate = Read-Host "  Rewards"
       $global:newInputValue = $rate
     }
   }
   else {
-    Write-Host "  |$(Get-PaddedString "  Type: $type")|  "
-    Write-Host "  |$(Get-PaddedString)|  "
+    Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "(enter 'q' to quit)" -Right $true)"
     Write-Host ""
     $title = Read-Host "  Title"
     $global:newInputValue = $title
@@ -145,15 +145,63 @@ function Show-JobNewFailed {
 
   Clear-Host
   Write-Host ""
-  Write-Host "    .-------------,"
-  # Write-Host "   / Add New Job /___________________________   "
-  Write-Host "   $(Get-PaddedString '/ Add New Job /' -Fill '_' -Width ($width))  "
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  No job created.")|  "
-  Write-Host "  |$(Get-PaddedString "  Press any key to continue.")|  "
+  if ($reason) {
+    Write-Host "  |$(Get-PaddedString "  $reason")|  "  
+  }
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
+  $char = Read-Character -Blocking $true
 }
+
+function Show-JobTitleWarning {
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Notice")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Enter a job title")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
+  Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
+
+function Show-JobRateWarning {
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Notice")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Enter rewards as a decimal")|  "
+  Write-Host "  |$(Get-PaddedString "  ... i.e., 1 or .25")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
+  Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
+
+function Show-JobNewSuccess {
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Job created successfully!")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
+  Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
+
 
 function Show-JobCheckBoxes {
   param(
@@ -167,7 +215,7 @@ function Show-JobCheckBoxes {
   for ($i = 0; $i -lt $jobs.Length; $i++) {
     $job = $jobs[$i]
     $selected = $pos -eq $i
-    $jobLine = "  $(Get-CheckBox $selected) $($job.Title)"
+    $jobLine = "  $(Get-CheckBox $selected)$($job.Title)"
     Write-Host "  |$(Get-PaddedString $jobLine)|  "
   }
 }
