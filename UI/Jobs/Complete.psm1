@@ -55,13 +55,13 @@ function Show-JobConfirmComplete {
 function Show-JobCompleteSuccess {
   param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [string]$Log
+    [string]$Message
   )
   Clear-Host
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  $Log")|  "
+  Write-Host "  |$(Get-PaddedString "  $Message")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "

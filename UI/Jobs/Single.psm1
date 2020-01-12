@@ -1,4 +1,4 @@
-function Show-JobsSingle {
+function Show-JobSingle {
   $pos = $global:menuPositionY
   $job = $global:currentJob
   $jobType = $job.Type
@@ -8,7 +8,6 @@ function Show-JobsSingle {
 
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate
-  # Write-Host "  |$(Get-PaddedString -Fill "-")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))(C)omplete"
   Write-Host "  |$completeLine|  "

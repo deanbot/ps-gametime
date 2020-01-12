@@ -79,7 +79,10 @@ function Show-JobHeading {
     [string]$JobType,
 
     [Parameter(Mandatory = $true, Position = 2)]
-    $JobRate
+    $JobRate,
+
+    [Parameter(Mandatory = $false, Position = 3)]
+    [bool]$Edit = $false
   )
 
   $width = $global:containerWidth
@@ -94,7 +97,11 @@ function Show-JobHeading {
   }
 
   Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
-  Write-Host "   /$(Get-PaddedString "$JobTitle" -Center $true -Width ($width-2))\  "
+  if ($Edit) {
+    Write-Host "   /$(Get-PaddedString "Edit: $JobTitle" -Center $true -Width ($width-2))\  "
+  } else {
+    Write-Host "   /$(Get-PaddedString "$JobTitle" -Center $true -Width ($width-2))\  "
+  }
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Type: $JobType" -Width $widthLeft)$(Get-PaddedString "Rate: $JobRate$jobRateSuffix  " -Right $true -Width $widthRight)|  "

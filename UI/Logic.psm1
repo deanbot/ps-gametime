@@ -28,6 +28,7 @@ function Initialize-Variables {
   $global:canChangeMenuPositonX = $false
   $global:canChangeMenuPositonY = $false
   $global:showEsc = $false
+  $global:showQuit = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
   $global:forceRepaint = $false
@@ -86,7 +87,7 @@ function Initialize-JobsSubSection {
   $global:canChangeMenuPositonY = $jobs.Length -gt 0
 }
 
-function Initialize-JobsSingle {
+function Initialize-JobSingle {
   $global:subPage = $jobPageSingle
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 3
@@ -94,7 +95,42 @@ function Initialize-JobsSingle {
   $global:canChangeMenuPositonY = $true
 }
 
-function Initialize-JobsNew {
+function Initialize-JobEdit {
+  $global:subPage = $jobPageEdit
+  $global:menuPositionY = 0
+  $job = $global:currentJob
+  # increment each max y by 1 if using Cancel option
+  if ($job.Type -eq 'Quest') {
+    $global:maxMenuPositionsY = 3 #4
+  } else {
+    $global:maxMenuPositionsY = 2 #3
+  }
+  $global:canChangeMenuPositonX = $false
+  $global:canChangeMenuPositonY = $true
+  $global:currentField = $false
+  $global:showQuit = $true
+}
+
+function Initialize-JobEditField {
+  $posY = $global:menuPositionY
+  $field = ''
+  switch ($posY) {
+    0 {
+      $field = 'Title'
+    } 1 {
+      $field = 'Type'
+    } 2 {
+      # can only reach in Quest job
+      $field = 'Rate'
+    }
+  }
+  $global:currentField = $field
+  if ($field -eq 'Type') {
+    $global:showQuit = $false
+  }
+}
+
+function Initialize-JobNew {
   $global:subPage = $jobPageNew
   $global:canChangeMenuPositonX = $false
   $global:menuPositionY = 0
@@ -105,7 +141,7 @@ function Initialize-JobsNew {
   $global:newJobRate = 0
 }
 
-function Initialize-JobsRemove {
+function Initialize-JobRemove {
   $global:subPage = $jobPageRemove
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 0
@@ -113,7 +149,7 @@ function Initialize-JobsRemove {
   $global:canChangeMenuPositonY = $false
 }
 
-function Initialize-JobsComplete {
+function Initialize-JobComplete {
   $global:subPage = $jobPageComplete
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 0
@@ -255,21 +291,24 @@ function Read-Input {
           if ($global:menuPositionY -lt $global:maxMenuPositionsY - 1) {
             $global:currentJob = Get-CurrentJob
             if ($global:currentJob) {
-              Initialize-JobsSingle
+              Initialize-JobSingle
               $foundMatch = $true
             }
           }
           else {
             $global:currentJobType = Get-CurrentJobType
-            Initialize-JobsNew
+            Initialize-JobNew
             $foundMatch = $true
           }
         }
         else {
+          # hidden option (not advertised)
           switch ($character) {
             'A' {
               if ($global:menuPositionY -ne $global:maxMenuPositionsY - 1) {
                 $global:menuPositionY = $global:maxMenuPositionsY - 1;
+                $jobs = $global:currentJobs
+                $global:menuPositionY = $jobs.Length
                 $foundMatch = $true
               }
             }
@@ -286,13 +325,13 @@ function Read-Input {
         elseif ($character -eq [System.ConsoleKey]::Enter) {
           switch($global:menuPositionY) {
             0 {
-              Initialize-JobsComplete
+              Initialize-JobComplete
               $foundMatch = $true
             } 1 {
-              Initialize-JobsEdit
+              Initialize-JobEdit
               $foundMatch = $true
             } 2 {
-              Initialize-JobsRemove
+              Initialize-JobRemove
               $foundMatch = $true
             }
           }
@@ -310,6 +349,20 @@ function Read-Input {
               $foundMatch = $true
             }
           }
+        }
+      }
+      elseif ($subPage -eq $jobPageEdit) {
+        if ($character -eq [System.ConsoleKey]::Enter) {
+          # uncomment if including cancel option
+          # if ($global:menuPositionY -eq $global:maxMenuPositionsY - 1) {
+          #   Initialize-JobSingle
+          # } else {
+            Initialize-JobEditField
+          # }
+          $foundMatch = $true
+        } elseif ([System.ConsoleKey]::Escape) {
+          Initialize-JobSingle
+          $foundMatch = $true
         }
       }
       # elseif ($subPage -eq $jobPageNew) {
@@ -387,11 +440,11 @@ function Show-BodyContent {
       Show-JobsMenu
     }
     elseif ($jobPage -eq $jobPageSingle) {
-      Show-JobsSingle
+      Show-JobSingle
     }
     elseif ($jobPage -eq $jobPageNew) {
       do {
-        Show-JobsNew
+        Show-JobNew
         Read-NewJobInputVal
       } while ($global:subPage -eq $jobPageNew)
     } elseif ($jobPage -eq $jobPageComplete) {
@@ -404,6 +457,15 @@ function Show-BodyContent {
         Show-JobConfirmRemove
         Read-JobRemoveInputVal
       } while ($global:subPage -eq $jobPageRemove)
+    } elseif ($jobPage -eq $jobPageEdit) {
+      if ($global:currentField) {
+        do {
+          Show-JobField
+          Read-JobEditInputVal
+        } while ($global:currentField)
+      } else {
+        Show-JobEdit
+      }
     }
   }
   elseif ($section -eq $sectionGameMenu) {
@@ -425,7 +487,7 @@ function Read-JobRemoveInputVal {
       try {
         $success = Remove-Job $jobId
         if ($success) {
-          
+          $quit = $true
         } else {
           Show-JobRemoveFailed
           $quit = $true
@@ -499,8 +561,8 @@ function Read-JobCompleteInputVal {
         $duration = $global:duration
         $transaction = New-JobTransaction $jobId $duration $notes
         if ($transaction) {
-          $log = $transaction.Log
-          Show-JobCompleteSuccess $log 
+          $message = "Gained $($transaction.Change) points!"
+          Show-JobCompleteSuccess $message
           $quit = $true
         } else {
           Show-JobCompleteFailed
@@ -521,7 +583,7 @@ function Read-JobCompleteInputVal {
 }
 
 function Read-NewJobInputVal {
-  $inputVal = $global:newInputValue
+  $inputVal = $global:inputValue
   $quit = $false
 
   # step 1 of input form
@@ -564,8 +626,7 @@ function Read-NewJobInputVal {
       } else {
         $global:newJobRate = $inputVal
       }
-    } 
-    
+    }
   }
 
   # step 3 of input form
@@ -588,6 +649,96 @@ function Read-NewJobInputVal {
   if ($quit) {
     Initialize-JobsMenu $global:prevMenuPositionX
     $global:prevMenuPositionX = 0
+    $global:forceRepaint = $true
+  }
+}
+
+function Read-JobEditInputVal {
+  $inputVal = $global:inputValue
+  $quit = $false
+  $update = $false
+  $field = $global:currentField
+  
+  if ($inputVal -eq 'q' -and $field -ne 'Type') {
+    $quit = $true
+  } else {
+    $job = $global:currentJob
+    $jobId = $job.Id
+    if ($field -eq 'Title') {
+      if (!$inputVal) {
+        Show-JobTitleWarning
+      } else {
+        $success = Edit-Job $jobId $inputVal
+        if (!$success) {
+          Show-JobEditFailed
+        } else {
+          $update = $true
+        }
+        $quit = $true
+      }
+    } elseif ($field -eq 'Type') {
+      $oldType = $job.Type
+      $newType = ''
+      switch ($inputVal) {
+        'Q' {
+          $newType = 'Quest'
+        } 'D' {
+          $newType = 'Daily'
+        } 'R' {
+          $newType = 'Rare'
+        }
+        [System.ConsoleKey]::Escape {
+          $quit = $true
+        }
+      }
+      if (!$quit) {
+        if ($newType -ne $oldType) {
+          $success = Edit-Job $jobId -Type $newType
+          if (!$success) {
+            Show-JobEditFailed
+          } else {
+            $update = $true
+          }
+          $quit = $true
+        } else {
+          $quit = $true
+        }
+      }
+    } elseif ($field -eq 'Rate') {
+      if (!$inputVal) {
+        $warn = $true
+      } else {
+        try {
+          if ([decimal]$inputVal -is [decimal]) {
+            $inputVal = [decimal]$inputVal
+          } else {
+            $warn = $true
+          }
+        } catch {
+          $warn = $true
+        }
+      }
+      if ($warn -eq $true) {
+        Show-JobRateWarning 
+      } else {
+        $success = Edit-Job $jobId -Rate $inputVal
+        if (!$success) {
+          Show-JobEditFailed
+        } else {
+          $update = $true
+        }
+        $quit = $true
+      }
+    }
+  }
+
+  # get new job data from db
+  if ($update) {
+    $global:currentJob = Get-Job $jobId
+  }
+
+  if ($quit) {
+    Initialize-JobEdit
     $global:forceRepaint = $true
   }
 }

@@ -20,10 +20,16 @@ function Show-Footer {
   if (!$global:hideFooter) {
     Write-Host "                                             "
     if ($global:showEsc) {
-      Write-Host "  <- (Esc)               Press (Q) to quit   "
+      if ($global:showQuit) {
+        Write-Host "  <- (Esc)               Press (Q) to quit   "
+      } else {
+        Write-Host "  <- (Esc)                                   "
+      }
     }
     else {
-      Write-Host "                         Press (Q) to quit   "
+      if ($global:showQuit) {
+        Write-Host "                         Press (Q) to quit   "
+      }
     }
     Write-Host "                                             "
   }

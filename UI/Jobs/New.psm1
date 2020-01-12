@@ -1,4 +1,4 @@
-function Show-JobsNew {
+function Show-JobNew {
   Clear-Host
   Write-Host ""
   Write-Host "    .-------------,"
@@ -23,13 +23,13 @@ function Show-JobsNew {
       } until ($createJob -eq 'y' `
         -or $createJob -eq 'n' `
         -or $createJob -eq 'q')
-      $global:newInputValue = $createJob
+      $global:inputValue = $createJob
     }
     else {
       Write-Host "  |$(Get-PaddedString "  [...]")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
-      Write-Host "   $(Get-PaddedString "(enter 'q' to quit)" -Right $true)"
+      Write-Host "   $(Get-PaddedString "(enter 'q' to return)" -Right $true)"
       Write-Host ""
       if ($type -eq 'Quest') {
         Write-Host "  Game Time points per hour"
@@ -38,7 +38,7 @@ function Show-JobsNew {
         Write-Host "  Game Time points per completion"
       }
       $rate = Read-Host "  Rewards"
-      $global:newInputValue = $rate
+      $global:inputValue = $rate
     }
   }
   else {
@@ -46,10 +46,10 @@ function Show-JobsNew {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "(enter 'q' to quit)" -Right $true)"
+    Write-Host "   $(Get-PaddedString "(enter 'q' to return)" -Right $true)"
     Write-Host ""
     $title = Read-Host "  Title"
-    $global:newInputValue = $title
+    $global:inputValue = $title
   }
 }
 
