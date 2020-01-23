@@ -2,6 +2,13 @@
 # Data Access Layer
 # ============
 
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
+}
+
 function Get-JobCsvPath {
   if ($Global:JobCsvPath) {
     return $Global:JobCsvPath

@@ -146,3 +146,21 @@ function Restore-Display {
     # 'not supported on this platform'
   }
 }
+
+function Get-JobTypeByPosition {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int32]$posX
+  )
+  $jobType = "";
+  switch ($posX) {
+    0 {
+      $jobType = 'Quest'
+    } 1 {
+      $jobType = 'Daily'
+    } 2 {
+      $jobType = 'Rare'
+    }
+  }
+  $jobType
+}

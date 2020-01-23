@@ -11,7 +11,7 @@ param(
 )
 
 # import game time utilities
-$Global:Debug = ""
+$Global:Debug = "Continue"
 $Global:SilentStatusReturn = $false
 $Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation

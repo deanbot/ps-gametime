@@ -15,6 +15,7 @@ $jobPageNew = 'New'
 $jobPageComplete = 'Complete'
 $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
+$gamePageSpend = 'Spend'
 
 function Initialize-Variables {
   $global:quit = $false
@@ -25,13 +26,14 @@ function Initialize-Variables {
   $global:maxMenuPositionsX = 0
   $global:maxMenuPositionsY = 0
   $global:containerWidth = 39
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $false
   $global:showEsc = $false
   $global:showQuit = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
   $global:forceRepaint = $false
+  $global:invertY = $false
 }
 
 function Initialize-MainMenu {
@@ -41,9 +43,11 @@ function Initialize-MainMenu {
   $global:menuPositionY = 0
   $global:maxMenuPositionsX = 0
   $global:maxMenuPositionsY = 3
-  $global:canChangeMenuPositonY = $true
-  $global:canChangeMenuPositonX = $false
+  $global:canChangeMenuY = $true
+  $global:canChangeMenuPositionY = $true
+  $global:canChangeMenuPositionX = $false
   $global:showEsc = $false
+  $global:invertY = $false
 }
 
 function Initialize-JobsMenu {
@@ -59,8 +63,8 @@ function Initialize-JobsMenu {
   $global:menuPositionY = 0
   $global:maxMenuPositionsX = 3
   $global:maxMenuPositionsY = 0
-  $global:canChangeMenuPositonX = $true
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $true
+  $global:canChangeMenuPositionY = $false
   $global:showEsc = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
@@ -68,31 +72,26 @@ function Initialize-JobsMenu {
 }
 
 function Initialize-JobsSubSection {
-  $global:canChangeMenuPositonX = $true
+  $global:canChangeMenuPositionX = $true
   $global:menuPositionY = 0
 
   # get sub section jobs
-  $jobType = Get-CurrentJobType
-
-  $jobs = (Get-Jobs) | Where-Object { $_.Type -eq $jobType }
-  if ($jobs) {
-    $jobs = , $jobs
-  }
+  $jobs = Get-CurrentJobs
   $global:currentJobs = $jobs
 
   # one extra position to support add job option
   $global:maxMenuPositionsY = $jobs.Length + 1
 
   # allow vertical nav if multiple jobs
-  $global:canChangeMenuPositonY = $jobs.Length -gt 0
+  $global:canChangeMenuPositionY = $jobs.Length -gt 0
 }
 
 function Initialize-JobSingle {
   $global:subPage = $jobPageSingle
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 3
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $true
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $true
 }
 
 function Initialize-JobEdit {
@@ -105,8 +104,8 @@ function Initialize-JobEdit {
   } else {
     $global:maxMenuPositionsY = 2 #3
   }
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $true
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $true
   $global:currentField = $false
   $global:showQuit = $true
 }
@@ -132,7 +131,7 @@ function Initialize-JobEditField {
 
 function Initialize-JobNew {
   $global:subPage = $jobPageNew
-  $global:canChangeMenuPositonX = $false
+  $global:canChangeMenuPositionX = $false
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 0
   $global:hideHeader = $true
@@ -145,16 +144,16 @@ function Initialize-JobRemove {
   $global:subPage = $jobPageRemove
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 0
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $false
 }
 
 function Initialize-JobComplete {
   $global:subPage = $jobPageComplete
   $global:menuPositionY = 0
   $global:maxMenuPositionsY = 0
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $false
   $global:notesStepPassed = $false
   $global:notes = ""
   $job = $global:currentJob
@@ -171,9 +170,28 @@ function Initialize-GameMenu {
   $global:menuPositionX = 0
   $global:menuPositionY = 0
   $global:maxMenuPositionsX = 0
-  $global:maxMenuPositionsY = 0
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $false
+  $global:notesStepPassed = $false
+  $global:notes = ""
+
+  $availableBalance = Get-AvailableBalance
+  $hasAvailableBalance = $availableBalance -gt 0
+  if ($hasAvailableBalance) {
+    $global:maxMenuPositionsY = $availableBalance + 1
+    $global:canChangeMenuPositionY = $true
+    $global:showEsc = $true
+    $global:invertY = $true
+  } else {
+    $global:maxMenuPositionsY = 0
+    $global:canChangeMenuPositionY = $false
+    $global:showEsc = $false
+  }
+}
+
+function Initialize-GameConfirmPage {
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $false
+  $global:subPage = $gamePageSpend
   $global:showEsc = $true
 }
 
@@ -184,8 +202,8 @@ function Initialize-LogsMenu {
   $global:menuPositionY = 0
   $global:maxMenuPositionsX = 0
   $global:maxMenuPositionsY = 0
-  $global:canChangeMenuPositonX = $false
-  $global:canChangeMenuPositonY = $false
+  $global:canChangeMenuPositionX = $false
+  $global:canChangeMenuPositionY = $false
   $global:showEsc = $true
 }
 
@@ -208,7 +226,7 @@ function Read-PositionInput {
     [string]$value
   )
   $foundMatch = $false
-  if ($global:canChangeMenuPositonX) {
+  if ($global:canChangeMenuPositionX) {
     if ($character -eq [System.ConsoleKey]::LeftArrow) {
       if ($global:menuPositionX -gt 0) {
         $global:menuPositionX--
@@ -223,17 +241,32 @@ function Read-PositionInput {
     }
   }
   if (!$foundMatch) {
-    if ($global:canChangeMenuPositonY) {
-      if ($character -eq [System.ConsoleKey]::DownArrow) {
-        if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
-          $global:menuPositionY++
-          $foundMatch = $true
+    if ($global:canChangeMenuPositionY) {
+      if (!$global:invertY) {  
+        # position starts at top and goes down the page 
+        if ($character -eq [System.ConsoleKey]::DownArrow) {
+          if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
+            $global:menuPositionY++
+            $foundMatch = $true
+          }
+        } elseif ($character -eq [System.ConsoleKey]::UpArrow) {
+          if ($global:menuPositionY -gt 0) {
+            $global:menuPositionY--
+            $foundMatch = $true
+          }
         }
-      }
-      elseif ($character -eq [System.ConsoleKey]::UpArrow) {
-        if ($global:menuPositionY -gt 0) {
-          $global:menuPositionY--
-          $foundMatch = $true
+      } else {
+        # position starts at bottom and goes up
+        if ($character -eq [System.ConsoleKey]::UpArrow) {
+          if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
+            $global:menuPositionY++
+            $foundMatch = $true
+          }
+        } elseif ($character -eq [System.ConsoleKey]::DownArrow) {
+          if ($global:menuPositionY -gt 0) {
+            $global:menuPositionY--
+            $foundMatch = $true
+          }
         }
       }
     }
@@ -376,9 +409,22 @@ function Read-Input {
     }
     # game menu
     elseif ($section -eq $sectionGameMenu) {
-      if ($character -eq [System.ConsoleKey]::Escape) {
-        Initialize-MainMenu
-        $foundMatch = $true
+      $hasAvailableBalance = Get-AvailableBalance -gt 0
+      if ($hasAvailableBalance) {
+        if ($character -eq [System.ConsoleKey]::Escape) {
+          Initialize-MainMenu
+          $foundMatch = $true
+        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+          if ($global:menuPositionY -gt 0) {
+            Initialize-GameConfirmPage
+            $foundMatch = $true
+          }
+        }
+      } else {
+        if ($character) {
+          Initialize-MainMenu
+          $foundMatch = $true
+        }
       }
     }
     # logs menu
@@ -417,16 +463,14 @@ function Get-CurrentJob {
 
 function Get-CurrentJobType {
   $pos = $global:menuPositionX
-  switch ($pos) {
-    0 {
-      $jobType = 'Quest'
-    } 1 {
-      $jobType = 'Daily'
-    } 2 {
-      $jobType = 'Rare'
-    }
-  }
+  $jobType = Get-JobTypeByPosition $pos
   $jobType
+}
+
+function Get-CurrentJobs {
+  $jobType = Get-CurrentJobType
+  $jobs = (Get-Jobs) | Where-Object { $_.Type -eq $jobType }
+  $jobs
 }
 
 function Show-BodyContent {
@@ -469,12 +513,46 @@ function Show-BodyContent {
     }
   }
   elseif ($section -eq $sectionGameMenu) {
-    Show-GameMenu
+    $subPage = $global:subPage
+    if (!$subPage) {
+      Show-GameMenu
+    } elseif ($subPage -eq $gamePageSpend) {
+      do {
+        Show-GameConfirmSpend
+        Read-GameConfirmInputVal
+      } while ($global:subPage -eq $gameSpageSpend)
+    }
+    
   }
   elseif ($section -eq $sectionLogsMenu) {
     Show-LogsMenu
   }
 }
+
+function Read-GameConfirmInputVal {
+  $inputVal = $global:inputValue
+  $quit = $false
+
+  # first form step
+  if (!$global:notesStepPassed) {
+    $global:notesStepPassed = $true
+    $global:notes = $inputVal
+  }
+
+  # confirm step
+  else {
+    if ($inputVal -eq 'y') {
+    } elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
+      $quit = $true
+    }
+  }
+
+  if ($quit) {
+    Initialize-GameMenu
+    $global:forceRepaint = $true
+  }
+}
+
 
 function Read-JobRemoveInputVal {
   $inputVal = $global:inputValue

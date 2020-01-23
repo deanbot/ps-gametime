@@ -34,9 +34,7 @@ function Show-JobCheckBoxes {
     [Parameter(Mandatory = $true, Position = 0)]
     $jobs
   )
-  if ($jobs) {
-    $jobs = , $jobs
-  }
+  
   $pos = $global:menuPositionY
   for ($i = 0; $i -lt $jobs.Length; $i++) {
     $job = $jobs[$i]
@@ -105,22 +103,4 @@ function Show-JobHeading {
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Type: $JobType" -Width $widthLeft)$(Get-PaddedString "Rate: $JobRate$jobRateSuffix  " -Right $true -Width $widthRight)|  "
-}
-
-function Get-JobTypeByPosition {
-  param(
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int32]$posX
-  )
-  $jobType = "";
-  switch ($posX) {
-    0 {
-      $jobType = 'Quest'
-    } 1 {
-      $jobType = 'Daily'
-    } 2 {
-      $jobType = 'Rare'
-    }
-  }
-  $jobType
 }
