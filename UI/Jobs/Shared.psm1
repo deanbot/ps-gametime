@@ -34,16 +34,16 @@ function Show-JobCheckBoxes {
     [Parameter(Mandatory = $true, Position = 0)]
     $jobs
   )
-  
+
   $pos = $global:menuPositionY
-  for ($i = 0; $i -lt $jobs.Length; $i++) {
+  for ($i = 0; $i -lt @($jobs).Length; $i++) {
     $job = $jobs[$i]
     $selected = $pos -eq $i
     $jobLine = "  $(Get-CheckBox $selected)$($job.Title)"
     Write-Host "  |$(Get-PaddedString $jobLine)|  "
   }
 }
-  
+
 function Show-JobsTabs {
   param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -72,7 +72,7 @@ function Show-JobHeading {
   param(
     [Parameter(Mandatory = $true, Position = 0)]
     [string]$JobTitle,
-    
+
     [Parameter(Mandatory = $true, Position = 1)]
     [string]$JobType,
 
@@ -97,7 +97,8 @@ function Show-JobHeading {
   Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
   if ($Edit) {
     Write-Host "   /$(Get-PaddedString "Edit: $JobTitle" -Center $true -Width ($width-2))\  "
-  } else {
+  }
+  else {
     Write-Host "   /$(Get-PaddedString "$JobTitle" -Center $true -Width ($width-2))\  "
   }
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "

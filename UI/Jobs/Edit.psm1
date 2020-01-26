@@ -13,13 +13,8 @@ function Show-JobEdit {
   Write-Host "  |$(Get-PaddedString $titleLine)|  "
   $typeLine = "  $(Get-CheckBox ($pos -eq 1))Type"
   Write-Host "  |$(Get-PaddedString $typeLine)|  "
-  if ($jobType -eq 'Quest') {
-    $rateLine = "  $(Get-CheckBox ($pos -eq 2))Rewards"
-    Write-Host "  |$(Get-PaddedString $rateLine)|  "
-    # $lastPos = 3
-  } # } else {
-    # $lastPos = 2
-  # }
+  $rateLine = "  $(Get-CheckBox ($pos -eq 2))Rewards"
+  Write-Host "  |$(Get-PaddedString $rateLine)|  "
   # Write-Host "  |$(Get-PaddedString)|  "
   # $cancelLine = "  $(Get-CheckBox ($pos -eq $lastPos))Cancel"
   # Write-Host "  |$(Get-PaddedString $cancelLine)|  "
@@ -41,7 +36,7 @@ function Show-JobEditFailed {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Job not editted.")|  "
   if ($reason) {
-    Write-Host "  |$(Get-PaddedString "  $reason")|  "  
+    Write-Host "  |$(Get-PaddedString "  $reason")|  "
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
@@ -70,7 +65,8 @@ function Show-JobField {
     Write-Host ""
     $title = Read-Host "  Edit Title"
     $global:inputValue = $title
-  } elseif ($field -eq 'Type') {
+  }
+  elseif ($field -eq 'Type') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
@@ -80,11 +76,12 @@ function Show-JobField {
     do {
       $type = Read-Character
     } until($type -eq 'q' `
-      -or $type -eq 'd' `
-      -or $type -eq 'r' `
-      -or $type -eq [System.ConsoleKey]::Escape)
+        -or $type -eq 'd' `
+        -or $type -eq 'r' `
+        -or $type -eq [System.ConsoleKey]::Escape)
     $global:inputValue = $type
-  } elseif ($field -eq 'Rate') {
+  }
+  elseif ($field -eq 'Rate') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""

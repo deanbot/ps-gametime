@@ -78,12 +78,13 @@ function Initialize-JobsSubSection {
   # get sub section jobs
   $jobs = Get-CurrentJobs
   $global:currentJobs = $jobs
+  $jobCount = @($jobs).Length
 
   # one extra position to support add job option
-  $global:maxMenuPositionsY = $jobs.Length + 1
+  $global:maxMenuPositionsY = $jobCount + 1
 
   # allow vertical nav if multiple jobs
-  $global:canChangeMenuPositionY = $jobs.Length -gt 0
+  $global:canChangeMenuPositionY = $jobCount -gt 0
 }
 
 function Initialize-JobSingle {
@@ -97,13 +98,9 @@ function Initialize-JobSingle {
 function Initialize-JobEdit {
   $global:subPage = $jobPageEdit
   $global:menuPositionY = 0
-  $job = $global:currentJob
+
   # increment each max y by 1 if using Cancel option
-  if ($job.Type -eq 'Quest') {
-    $global:maxMenuPositionsY = 3 #4
-  } else {
-    $global:maxMenuPositionsY = 2 #3
-  }
+  $global:maxMenuPositionsY = 3 #4
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $true
   $global:currentField = $false
@@ -159,7 +156,8 @@ function Initialize-JobComplete {
   $job = $global:currentJob
   if ($job.Type -ne 'Quest') {
     $global:duration = 1
-  } else {
+  }
+  else {
     $global:duration = 0
   }
 }
@@ -181,7 +179,8 @@ function Initialize-GameMenu {
     $global:canChangeMenuPositionY = $true
     $global:showEsc = $true
     $global:invertY = $true
-  } else {
+  }
+  else {
     $global:maxMenuPositionsY = 0
     $global:canChangeMenuPositionY = $false
     $global:showEsc = $false
@@ -242,27 +241,30 @@ function Read-PositionInput {
   }
   if (!$foundMatch) {
     if ($global:canChangeMenuPositionY) {
-      if (!$global:invertY) {  
-        # position starts at top and goes down the page 
+      if (!$global:invertY) {
+        # position starts at top and goes down the page
         if ($character -eq [System.ConsoleKey]::DownArrow) {
           if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
             $global:menuPositionY++
             $foundMatch = $true
           }
-        } elseif ($character -eq [System.ConsoleKey]::UpArrow) {
+        }
+        elseif ($character -eq [System.ConsoleKey]::UpArrow) {
           if ($global:menuPositionY -gt 0) {
             $global:menuPositionY--
             $foundMatch = $true
           }
         }
-      } else {
+      }
+      else {
         # position starts at bottom and goes up
         if ($character -eq [System.ConsoleKey]::UpArrow) {
           if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
             $global:menuPositionY++
             $foundMatch = $true
           }
-        } elseif ($character -eq [System.ConsoleKey]::DownArrow) {
+        }
+        elseif ($character -eq [System.ConsoleKey]::DownArrow) {
           if ($global:menuPositionY -gt 0) {
             $global:menuPositionY--
             $foundMatch = $true
@@ -356,7 +358,7 @@ function Read-Input {
           $global:prevMenuPositionX = 0
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
-          switch($global:menuPositionY) {
+          switch ($global:menuPositionY) {
             0 {
               Initialize-JobComplete
               $foundMatch = $true
@@ -390,21 +392,22 @@ function Read-Input {
           # if ($global:menuPositionY -eq $global:maxMenuPositionsY - 1) {
           #   Initialize-JobSingle
           # } else {
-            Initialize-JobEditField
+          Initialize-JobEditField
           # }
           $foundMatch = $true
-        } elseif ([System.ConsoleKey]::Escape) {
+        }
+        elseif ($character -eq [System.ConsoleKey]::Escape) {
           Initialize-JobSingle
           $foundMatch = $true
         }
       }
       # elseif ($subPage -eq $jobPageNew) {
-        # if ($character -eq [System.ConsoleKey]::Escape) {
-          # init jobs menu and restore menu section
-          # Initialize-JobsMenu $global:prevMenuPositionX
-        #   $foundMatch = $true
-        #   $global:prevMenuPositionX = 0
-        # }
+      # if ($character -eq [System.ConsoleKey]::Escape) {
+      # init jobs menu and restore menu section
+      # Initialize-JobsMenu $global:prevMenuPositionX
+      #   $foundMatch = $true
+      #   $global:prevMenuPositionX = 0
+      # }
       # }
     }
     # game menu
@@ -414,13 +417,15 @@ function Read-Input {
         if ($character -eq [System.ConsoleKey]::Escape) {
           Initialize-MainMenu
           $foundMatch = $true
-        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+        }
+        elseif ($character -eq [System.ConsoleKey]::Enter) {
           if ($global:menuPositionY -gt 0) {
             Initialize-GameConfirmPage
             $foundMatch = $true
           }
         }
-      } else {
+      }
+      else {
         if ($character) {
           Initialize-MainMenu
           $foundMatch = $true
@@ -491,23 +496,27 @@ function Show-BodyContent {
         Show-JobNew
         Read-NewJobInputVal
       } while ($global:subPage -eq $jobPageNew)
-    } elseif ($jobPage -eq $jobPageComplete) {
+    }
+    elseif ($jobPage -eq $jobPageComplete) {
       do {
         Show-JobConfirmComplete
         Read-JobCompleteInputVal
       } while ($global:subPage -eq $jobPageComplete)
-    } elseif ($jobPage -eq $jobPageRemove) {
+    }
+    elseif ($jobPage -eq $jobPageRemove) {
       do {
         Show-JobConfirmRemove
         Read-JobRemoveInputVal
       } while ($global:subPage -eq $jobPageRemove)
-    } elseif ($jobPage -eq $jobPageEdit) {
+    }
+    elseif ($jobPage -eq $jobPageEdit) {
       if ($global:currentField) {
         do {
           Show-JobField
           Read-JobEditInputVal
         } while ($global:currentField)
-      } else {
+      }
+      else {
         Show-JobEdit
       }
     }
@@ -516,13 +525,14 @@ function Show-BodyContent {
     $subPage = $global:subPage
     if (!$subPage) {
       Show-GameMenu
-    } elseif ($subPage -eq $gamePageSpend) {
+    }
+    elseif ($subPage -eq $gamePageSpend) {
       do {
         Show-GameConfirmSpend
         Read-GameConfirmInputVal
       } while ($global:subPage -eq $gameSpageSpend)
     }
-    
+
   }
   elseif ($section -eq $sectionLogsMenu) {
     Show-LogsMenu
@@ -542,7 +552,8 @@ function Read-GameConfirmInputVal {
   # confirm step
   else {
     if ($inputVal -eq 'y') {
-    } elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
+    }
+    elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
       $quit = $true
     }
   }
@@ -566,19 +577,23 @@ function Read-JobRemoveInputVal {
         $success = Remove-Job $jobId
         if ($success) {
           $quit = $true
-        } else {
+        }
+        else {
           Show-JobRemoveFailed
           $quit = $true
         }
-      } catch {
+      }
+      catch {
         Show-JobRemoveFailed
         $quit = $true
       }
-    } else {
+    }
+    else {
       Show-JobRemoveFailed "Job ID not found"
       $quit = $true
     }
-  } elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
+  }
+  elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
     $quit = $true
   }
 
@@ -587,7 +602,7 @@ function Read-JobRemoveInputVal {
     $global:prevMenuPositionX = 0
     $global:forceRepaint = $true
   }
-} 
+}
 
 function Read-JobCompleteInputVal {
   $inputVal = $global:inputValue
@@ -597,29 +612,34 @@ function Read-JobCompleteInputVal {
   if (!$global:duration) {
     if ($inputVal -eq 'q') {
       $quit = $true
-    } else {
+    }
+    else {
       $warn = $false
       if (!$inputVal) {
         $warn = $true
-      } else {
+      }
+      else {
         try {
           if ([decimal]$inputVal -is [decimal]) {
             $inputVal = [decimal]$inputVal
-          } else {
+          }
+          else {
             $warn = $true
           }
-        } catch {
+        }
+        catch {
           $warn = $true
         }
       }
       if ($warn -eq $true) {
         Show-JobCompleteDurationWarning
-      } else {
+      }
+      else {
         $global:duration = $inputVal
       }
     }
-  } 
-  
+  }
+
   # second form step
   elseif (!$global:notesStepPassed) {
     $global:notesStepPassed = $true
@@ -629,12 +649,13 @@ function Read-JobCompleteInputVal {
   # confirm step
   else {
     if ($inputVal -eq [System.ConsoleKey]::Escape `
-      -or $inputVal -eq 'n') {
+        -or $inputVal -eq 'n') {
       $quit = $true
-    } elseif ($inputVal -eq 'y') {
+    }
+    elseif ($inputVal -eq 'y') {
       try {
         $job = $global:currentJob
-        $jobId = $job.Id 
+        $jobId = $job.Id
         $notes = $global:notes
         $duration = $global:duration
         $transaction = New-JobTransaction $jobId $duration $notes
@@ -642,11 +663,13 @@ function Read-JobCompleteInputVal {
           $message = "Gained $($transaction.Change) points!"
           Show-JobCompleteSuccess $message
           $quit = $true
-        } else {
+        }
+        else {
           Show-JobCompleteFailed
           $quit = $true
         }
-      } catch {
+      }
+      catch {
         Show-JobCompleteFailed
         $quit = $true
       }
@@ -668,9 +691,10 @@ function Read-NewJobInputVal {
   if (!$global:newJobTitle) {
     # if empty title return
     if ($inputVal -eq 'q') {
-      Show-JobNewFailed
+      # Show-JobNewFailed
       $quit = $true
-    } elseif (!$inputVal) {
+    }
+    elseif (!$inputVal) {
       Show-JobTitleWarning
     }
     # set new title
@@ -682,26 +706,31 @@ function Read-NewJobInputVal {
   # step 2 of input form
   elseif (!$global:newJobRate) {
     if ($inputVal -eq 'q') {
-      Show-JobNewFailed
+      # Show-JobNewFailed
       $quit = $true
-    } else {
+    }
+    else {
       $warn = $false
       if (!$inputVal) {
         $warn = $true
-      } else {
+      }
+      else {
         try {
           if ([decimal]$inputVal -is [decimal]) {
             $inputVal = [decimal]$inputVal
-          } else {
+          }
+          else {
             $warn = $true
           }
-        } catch {
+        }
+        catch {
           $warn = $true
         }
       }
       if ($warn -eq $true) {
-        Show-JobRateWarning 
-      } else {
+        Show-JobRateWarning
+      }
+      else {
         $global:newJobRate = $inputVal
       }
     }
@@ -710,14 +739,16 @@ function Read-NewJobInputVal {
   # step 3 of input form
   else {
     if ($inputVal -eq 'q' `
-      -or $inputVal -eq 'n') {
+        -or $inputVal -eq 'n') {
       Show-JobNewFailed
       $quit = $true
-    } else {
+    }
+    else {
       $success = New-Job $global:newJobTitle $global:currentJobType $global:newJobRate
       if ($success) {
         Show-JobNewSuccess
-      } else {
+      }
+      else {
         Show-JobNewFailed
       }
       $quit = $true
@@ -736,25 +767,29 @@ function Read-JobEditInputVal {
   $quit = $false
   $update = $false
   $field = $global:currentField
-  
+
   if ($inputVal -eq 'q' -and $field -ne 'Type') {
     $quit = $true
-  } else {
+  }
+  else {
     $job = $global:currentJob
     $jobId = $job.Id
     if ($field -eq 'Title') {
       if (!$inputVal) {
         Show-JobTitleWarning
-      } else {
+      }
+      else {
         $success = Edit-Job $jobId $inputVal
         if (!$success) {
           Show-JobEditFailed
-        } else {
+        }
+        else {
           $update = $true
         }
         $quit = $true
       }
-    } elseif ($field -eq 'Type') {
+    }
+    elseif ($field -eq 'Type') {
       $oldType = $job.Type
       $newType = ''
       switch ($inputVal) {
@@ -774,35 +809,43 @@ function Read-JobEditInputVal {
           $success = Edit-Job $jobId -Type $newType
           if (!$success) {
             Show-JobEditFailed
-          } else {
+          }
+          else {
             $update = $true
           }
           $quit = $true
-        } else {
+        }
+        else {
           $quit = $true
         }
       }
-    } elseif ($field -eq 'Rate') {
+    }
+    elseif ($field -eq 'Rate') {
       if (!$inputVal) {
         $warn = $true
-      } else {
+      }
+      else {
         try {
           if ([decimal]$inputVal -is [decimal]) {
             $inputVal = [decimal]$inputVal
-          } else {
+          }
+          else {
             $warn = $true
           }
-        } catch {
+        }
+        catch {
           $warn = $true
         }
       }
       if ($warn -eq $true) {
-        Show-JobRateWarning 
-      } else {
+        Show-JobRateWarning
+      }
+      else {
         $success = Edit-Job $jobId -Rate $inputVal
         if (!$success) {
           Show-JobEditFailed
-        } else {
+        }
+        else {
           $update = $true
         }
         $quit = $true
