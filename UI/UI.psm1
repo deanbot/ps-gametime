@@ -15,34 +15,20 @@ function Show-Header {
     Write-Host "  / (_ / _ ``/  ' \/ -_)   / / / /  ' \/ -_)  "
     Write-Host "  \___/\_,_/_/_/_/\__/   /_/ /_/_/_/_/\__/   "
     Write-Host "                                             "
-    # Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "Press (Q) to quit" -Right $true -Width $widthRight)"
-    Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "[Q]uit" -Right $true -Width $widthRight)"
+    if ($global:showQuit) {
+      Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "[Q]uit" -Right $true -Width $widthRight)"
+    }
+    else {
+      Write-Host "  Bal: $(Get-Balance)"
+    }
   }
 }
 
 function Show-Footer {
-  Show-ControlsFooter
-
   if (!$global:hideFooter) {
-    Write-Host "                                             "
-    # Write-Host "  $(Get-PaddedString "( < Navigate > )" -Center $true)  "
-    if ($global:showEsc) {
-      if ($global:showQuit) {
-        # Write-Host "    <- (Esc)             Press (Q) to quit   "
-        # Write-Host "    <- (Esc)                                 "
-      }
-      else {
-        # Write-Host "    <- (Esc)                                 "
-      }
-    }
-    else {
-      if ($global:showQuit) {
-        # Write-Host "                         Press (Q) to quit   "
-        # Write-Host "                                             "
-      }
-    }
-    Write-Host "                                             "
+    Show-ControlsFooter
   }
+  Write-Host ""
 }
 
 function Show-ControlsFooter {
@@ -84,20 +70,16 @@ function Show-ControlsFooter {
       }
     }
   }
-  $width = $global:containerWidth
-  $widthLeft = [System.Math]::Floor($width / 2) - 6
-  $widthRight = [System.Math]::Ceiling($width / 2) + 6
+  # $width = $global:containerWidth
+  # $widthLeft = [System.Math]::Floor($width / 2) - 6
+  # $widthRight = [System.Math]::Ceiling($width / 2) + 6
 
-  # Write-Host "  $(Get-PaddedString "($n)    " -Right $true)  "
-  Write-Host "  $(Get-PaddedString "  Press [Enter] to select       [$n]")  "
-  # Write-Host "  $(Get-PaddedString "  Press [Enter] to select    ($w)   ($e)")  "
+  Write-Host "  $(Get-PaddedString "   Press [Enter] to select      [$n]")  "
   Write-Host "  $(Get-PaddedString "                             [$w]   [$e]")  "
-  # Write-Host "  $(Get-PaddedString "($s)    " -Right $true)  "
-  # Write-Host "  $(Get-PaddedString "  Press [Enter] to select       ($s)")  "
   if ($global:showEsc) {
-    Write-Host "  $(Get-PaddedString "  <- [Esc/Bksp]                 [$s]")  "
-  } else {
+    Write-Host "  $(Get-PaddedString "   <- [Esc/Bksp]                [$s]")  "
+  }
+  else {
     Write-Host "  $(Get-PaddedString "                                [$s]")  "
   }
-  # Write-Host "  $(Get-PaddedString "  Press [Back] to return" -Width $widthLeft)$(Get-PaddedString "($s)" -Right $true -Width $widthRight)  "
 }

@@ -171,6 +171,7 @@ function Initialize-GameMenu {
   $global:canChangeMenuPositionX = $false
   $global:notesStepPassed = $false
   $global:notes = ""
+  $global:hideFooter = $false
 
   $availableBalance = Get-AvailableBalance
   $hasAvailableBalance = $availableBalance -gt 0
@@ -192,6 +193,7 @@ function Initialize-GameConfirmPage {
   $global:canChangeMenuPositionY = $false
   $global:subPage = $gamePageSpend
   $global:showEsc = $true
+  $global:hideFooter = $true
 }
 
 function Initialize-LogsMenu {

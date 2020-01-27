@@ -37,15 +37,18 @@ function Show-GameMenu {
 }
 
 function Show-GameConfirmSpend {
-
-  Clear-Host
-  Write-Host ""
-  Write-Host "  |$(Get-PaddedString)|  "
-
   $passedNotes = $global:notesStepPassed
   $notes = $global:notes
   $points = $global:menuPositionY
 
+  Clear-Host
+  Write-Host ""
+  Write-Host "    .-----------,"
+  # Write-Host "  / Game Time /___________________________   "
+  Write-Host "   $(Get-PaddedString '/ Game Time /' '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Spend Points")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Points: $points")|  "
 
   if (!$passedNotes) {
