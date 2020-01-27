@@ -18,7 +18,6 @@ function Show-JobsMenu {
   $addLine = "  $(Get-CheckBox $addSelected)Add job"
   Write-Host "  |$(Get-PaddedString $addLine)|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString '  Press [Enter] to select')|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
 }

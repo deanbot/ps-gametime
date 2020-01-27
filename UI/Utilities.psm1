@@ -7,7 +7,7 @@ function Get-CheckBox {
     "[*] "
   }
   else {
-    "[ ] "
+    "[0] "
   }
 }
 
@@ -142,7 +142,8 @@ function Restore-Display {
     }
     [System.Console]::SetBufferSize($global:originalBufferWidth, $global:originalBufferHeight);
     [System.Console]::SetWindowSize($global:originalWindowWidth, $global:originalWindowHeight);
-  } catch {
+  }
+  catch {
     # 'not supported on this platform'
   }
 }

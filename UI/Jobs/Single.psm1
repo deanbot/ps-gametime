@@ -9,14 +9,15 @@ function Show-JobSingle {
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate
   Write-Host "  |$(Get-PaddedString)|  "
-  $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))(C)omplete"
+  $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Complete job (log completion)"
   Write-Host "  |$completeLine|  "
-  $editLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))(E)dit"
+  $editLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Edit job"
   Write-Host "  |$editLine|  "
-  $removeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))(R)emove"
+  $removeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))Remove job"
   Write-Host "  |$removeLine|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
+  # Show-ControlsFooter
+  # Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
 }

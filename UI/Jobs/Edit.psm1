@@ -19,7 +19,8 @@ function Show-JobEdit {
   # $cancelLine = "  $(Get-CheckBox ($pos -eq $lastPos))Cancel"
   # Write-Host "  |$(Get-PaddedString $cancelLine)|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
+  # Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
+  # Show-ControlsFooter
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
 }

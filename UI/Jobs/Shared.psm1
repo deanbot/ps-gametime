@@ -54,7 +54,11 @@ function Show-JobsTabs {
   $isDaily = $posX -eq 1
   $isRare = $posx -eq 2
 
+  # Write-Host "   [<]                                 [>]   "
+  # Write-Host "   / Quest /_/ Daily /_/ Rare /___________   "
+
   if ($isQuest) {
+    # Write-Host "    .-------, ________  _______      (</>)      "
     Write-Host "    .-------, ________  _______               "
     Write-Host "   / Quest /_/ Daily /_/ Rare /___________   "
   }

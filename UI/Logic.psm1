@@ -317,7 +317,7 @@ function Read-Input {
     #  jobs menu
     elseif ($section -eq $sectionJobsMenu) {
       if (!$subPage) {
-        if ($character -eq [System.ConsoleKey]::Escape) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-MainMenu
           $foundMatch = $true
         }
@@ -351,7 +351,7 @@ function Read-Input {
         }
       }
       elseif ($subPage -eq $jobPageSingle) {
-        if ($character -eq [System.ConsoleKey]::Escape) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           # init jobs menu and restore menu section
           Initialize-JobsMenu $global:prevMenuPositionX
           $foundMatch = $true
@@ -396,13 +396,13 @@ function Read-Input {
           # }
           $foundMatch = $true
         }
-        elseif ($character -eq [System.ConsoleKey]::Escape) {
+        elseif ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-JobSingle
           $foundMatch = $true
         }
       }
       # elseif ($subPage -eq $jobPageNew) {
-      # if ($character -eq [System.ConsoleKey]::Escape) {
+      # if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
       # init jobs menu and restore menu section
       # Initialize-JobsMenu $global:prevMenuPositionX
       #   $foundMatch = $true
@@ -414,13 +414,25 @@ function Read-Input {
     elseif ($section -eq $sectionGameMenu) {
       $hasAvailableBalance = Get-AvailableBalance -gt 0
       if ($hasAvailableBalance) {
-        if ($character -eq [System.ConsoleKey]::Escape) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-MainMenu
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
           if ($global:menuPositionY -gt 0) {
             Initialize-GameConfirmPage
+            $foundMatch = $true
+          }
+        }
+        elseif ($character -eq [System.ConsoleKey]::OemPlus) {
+          if ($global:menuPositionY -lt ($global:maxMenuPositionsY - 1)) {
+            $global:menuPositionY++
+            $foundMatch = $true
+          }
+        }
+        elseif ($character -eq [System.ConsoleKey]::OemMinus) {
+          if ($global:menuPositionY -gt 0) {
+            $global:menuPositionY--
             $foundMatch = $true
           }
         }
@@ -434,7 +446,7 @@ function Read-Input {
     }
     # logs menu
     elseif ($section -eq $sectionLogsMenu) {
-      if ($character -eq [System.ConsoleKey]::Escape) {
+      if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
         Initialize-MainMenu
         $foundMatch = $true
       }
