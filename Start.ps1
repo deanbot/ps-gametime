@@ -11,6 +11,7 @@ param(
 )
 
 # import game time utilities
+$global:DevMode = $true
 $Global:Debug = "Continue"
 $Global:SilentStatusReturn = $false
 $Global:SessionName = $SessionName

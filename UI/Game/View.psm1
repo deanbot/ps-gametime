@@ -96,13 +96,15 @@ function Show-GameSpendFailed {
 }
 
 function Show-GameSpendSuccess {
-  $points = $globalMenuPositionY
+  $points = $global:menuPositionY
   $minutes = $points * 20
   Clear-Host
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Spent $points points for $minutes minutes.")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  Have fun!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""

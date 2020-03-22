@@ -567,7 +567,23 @@ function Read-GameConfirmInputVal {
   # confirm step
   else {
     if ($inputVal -eq 'y') {
-
+      try {
+        $notes = $global:notes
+        $points = $global:menuPositionY
+        $transaction = New-DeductTransaction $points $notes
+        if ($transaction) {
+          Show-GameSpendSuccess $message
+          $quit = $true
+        }
+        else {
+          Show-GameSpendFailed
+          $quit = $true
+        }
+      }
+      catch {
+        Show-GameSpendFailed $_
+        $quit = $true
+      }
     }
     elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
       $quit = $true
