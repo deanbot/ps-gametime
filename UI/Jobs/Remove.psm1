@@ -6,19 +6,23 @@ function Show-JobConfirmRemove {
 
   Clear-Host
   Write-Host ""
-  Show-JobHeading $jobTitle $jobType $jobRate
-  Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Remove Job? Enter [y/n]")|  "
+  Show-JobHeading "Remove: $jobTitle" $jobType $jobRate
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+  Write-Host ""
+  Write-Host "  Remove Job?"
+  Write-Host "  [Y] Yes  [N] No"
   Write-Host ""
   do {
     $char = Read-Character
   } until ($char -eq 'y' `
       -or $char -eq 'n' `
-      -or $char -eq [System.ConsoleKey]::Escape)
+      -or $char -eq [System.ConsoleKey]::Escape `
+      -or $char -eq [System.ConsoleKey]::Backspace)
   $global:inputValue = $char
 }
-  
+
 function Show-JobRemoveFailed {
   Param(
     [Parameter(Mandatory = $false, Position = 0)]
@@ -31,11 +35,12 @@ function Show-JobRemoveFailed {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Job not removed.")|  "
   if ($reason) {
-    Write-Host "  |$(Get-PaddedString "  $reason")|  "  
+    Write-Host "  |$(Get-PaddedString "  $reason")|  "
   }
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
@@ -48,9 +53,9 @@ function Show-JobRemoveSuccess {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Job removed successfully!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
-  

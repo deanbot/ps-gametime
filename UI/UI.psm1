@@ -16,7 +16,7 @@ function Show-Header {
     Write-Host "  \___/\_,_/_/_/_/\__/   /_/ /_/_/_/_/\__/   "
     Write-Host "                                             "
     if ($global:showQuit) {
-      Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "[Q]uit" -Right $true -Width $widthRight)"
+      Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "[Q] Quit" -Right $true -Width $widthRight)"
     }
     else {
       Write-Host "  Bal: $(Get-Balance)"
@@ -74,12 +74,28 @@ function Show-ControlsFooter {
   # $widthLeft = [System.Math]::Floor($width / 2) - 6
   # $widthRight = [System.Math]::Ceiling($width / 2) + 6
 
-  Write-Host "  $(Get-PaddedString "   Press [Enter] to select      [$n]")  "
+  if ($global:showSelect) {
+    Write-Host "  $(Get-PaddedString "   Press [Enter] to select      [$n]")  "
+  }
+  else {
+    Write-Host "  $(Get-PaddedString "                                [$n]")  "
+  }
   Write-Host "  $(Get-PaddedString "                             [$w]   [$e]")  "
-  if ($global:showEsc) {
+  if ($global:showReturn) {
     Write-Host "  $(Get-PaddedString "   <- [Esc/Bksp]                [$s]")  "
   }
   else {
     Write-Host "  $(Get-PaddedString "                                [$s]")  "
   }
+}
+
+function Show-Heading {
+  Param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Text
+  )
+  $width = $global:containerWidth
+  Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
+  Write-Host "   /$(Get-PaddedString $Text -Center $true -Width ($width-2))\  "
+  Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
 }

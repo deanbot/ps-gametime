@@ -28,7 +28,8 @@ function Initialize-Variables {
   $global:containerWidth = 39
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $false
-  $global:showEsc = $false
+  $global:showReturn = $false
+  $global:showSelect = $true
   $global:showQuit = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
@@ -46,7 +47,8 @@ function Initialize-MainMenu {
   $global:canChangeMenuY = $true
   $global:canChangeMenuPositionY = $true
   $global:canChangeMenuPositionX = $false
-  $global:showEsc = $false
+  $global:showReturn = $false
+  $global:showSelect = $true
   $global:invertY = $false
 }
 
@@ -65,7 +67,7 @@ function Initialize-JobsMenu {
   $global:maxMenuPositionsY = 0
   $global:canChangeMenuPositionX = $true
   $global:canChangeMenuPositionY = $false
-  $global:showEsc = $true
+  $global:showReturn = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
   Initialize-JobsSubSection
@@ -80,11 +82,11 @@ function Initialize-JobsSubSection {
   $global:currentJobs = $jobs
   $jobCount = @($jobs).Length
 
-  # one extra position to support add job option
-  $global:maxMenuPositionsY = $jobCount + 1
+  $global:maxMenuPositionsY = $jobCount
 
   # allow vertical nav if multiple jobs
-  $global:canChangeMenuPositionY = $jobCount -gt 0
+  $global:canChangeMenuPositionY = $jobCount -gt 1
+  $global:showSelect = $jobCount -gt 0
 }
 
 function Initialize-JobSingle {
@@ -93,6 +95,7 @@ function Initialize-JobSingle {
   $global:maxMenuPositionsY = 3
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $true
+  $global:showSelect = $true
 }
 
 function Initialize-JobEdit {
@@ -105,6 +108,7 @@ function Initialize-JobEdit {
   $global:canChangeMenuPositionY = $true
   $global:currentField = $false
   $global:showQuit = $true
+  $global:showSelect = $true
 }
 
 function Initialize-JobEditField {
@@ -172,19 +176,18 @@ function Initialize-GameMenu {
   $global:notesStepPassed = $false
   $global:notes = ""
   $global:hideFooter = $false
+  $global:showReturn = $true
 
   $availableBalance = Get-AvailableBalance
   $hasAvailableBalance = $availableBalance -gt 0
   if ($hasAvailableBalance) {
     $global:maxMenuPositionsY = $availableBalance + 1
     $global:canChangeMenuPositionY = $true
-    $global:showEsc = $true
     $global:invertY = $true
   }
   else {
     $global:maxMenuPositionsY = 0
     $global:canChangeMenuPositionY = $false
-    $global:showEsc = $false
   }
 }
 
@@ -192,7 +195,7 @@ function Initialize-GameConfirmPage {
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $false
   $global:subPage = $gamePageSpend
-  $global:showEsc = $true
+  $global:showReturn = $true
   $global:hideFooter = $true
 }
 
@@ -205,7 +208,7 @@ function Initialize-LogsMenu {
   $global:maxMenuPositionsY = 0
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $false
-  $global:showEsc = $true
+  $global:showReturn = $true
 }
 
 function Read-QuitInput {
@@ -325,29 +328,18 @@ function Read-Input {
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
           $global:prevMenuPositionX = $global:menuPositionX
-          if ($global:menuPositionY -lt $global:maxMenuPositionsY - 1) {
-            $global:currentJob = Get-CurrentJob
-            if ($global:currentJob) {
-              Initialize-JobSingle
-              $foundMatch = $true
-            }
-          }
-          else {
-            $global:currentJobType = Get-CurrentJobType
-            Initialize-JobNew
+          $global:currentJob = Get-CurrentJob
+          if ($global:currentJob) {
+            Initialize-JobSingle
             $foundMatch = $true
           }
         }
         else {
-          # hidden option (not advertised)
           switch ($character) {
-            'A' {
-              if ($global:menuPositionY -ne $global:maxMenuPositionsY - 1) {
-                $global:menuPositionY = $global:maxMenuPositionsY - 1;
-                $jobs = $global:currentJobs
-                $global:menuPositionY = $jobs.Length
-                $foundMatch = $true
-              }
+            'N' {
+              $global:currentJobType = Get-CurrentJobType
+              Initialize-JobNew
+              $foundMatch = $true
             }
           }
         }
@@ -813,6 +805,9 @@ function Read-JobEditInputVal {
           $newType = 'Daily'
         } 'R' {
           $newType = 'Rare'
+        }
+        [System.ConsoleKey]::Backspace {
+          $quit = $true
         }
         [System.ConsoleKey]::Escape {
           $quit = $true

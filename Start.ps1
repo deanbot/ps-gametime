@@ -16,6 +16,8 @@ $Global:SilentStatusReturn = $false
 $Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation
 
+# . $pwd\Config.ps1
+
 Import-Module $pwd\DataAccess.psm1 -Force
 Import-Module $pwd\Utilities.psm1 -Force
 Import-Module $pwd\UI\UI.psm1 -Force

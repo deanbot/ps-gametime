@@ -6,9 +6,8 @@ function Show-JobConfirmComplete {
 
   Clear-Host
   Write-Host ""
-  Show-JobHeading $jobTitle $jobType $jobRate
-  Write-Host "  |$(Get-PaddedString)|  "
-  
+  Show-JobHeading "Complete: $jobTitle" $jobType $jobRate
+
   $passedNotes = $global:notesStepPassed
   $notes = $global:notes
   $duration = $global:duration
@@ -20,12 +19,13 @@ function Show-JobConfirmComplete {
       Write-Host "  |$(Get-PaddedString "  [...]")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
-      Write-Host "   $(Get-PaddedString "(enter 'q' to quit)" -Right $true)"
+      Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
       Write-Host ""
       $duration = Read-Host "  Duration (in hours, i.e. 1 or .75)"
       $global:inputValue = $duration
       return
-    } else {
+    }
+    else {
       # show duration
       Write-Host "  |$(Get-PaddedString "  Duration: $duration")|  "
     }
@@ -35,19 +35,27 @@ function Show-JobConfirmComplete {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
+    Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+    Write-Host ""
     $notes = Read-Host "  Notes (optional)"
     $global:inputValue = $notes
-  } else {
+  }
+  else {
     Write-Host "  |$(Get-PaddedString "  Notes:    [...]")|  "
     Write-Host "  |$(Get-PaddedString)|  "
-    Write-Host "  |$(Get-PaddedString "  Complete Job? Enter [y/n]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Complete Job?"
+    Write-Host "  [Y] Yes  [N] No: "
     Write-Host ""
     do {
       $char = Read-Character
     } until ($char -eq 'y' `
-      -or $char -eq 'n' `
-      -or $char -eq [System.ConsoleKey]::Escape)
+        -or $char -eq 'n' `
+        -or $char -eq [System.ConsoleKey]::Escape `
+        -or $char -eq [System.ConsoleKey]::Backspace)
     $global:inputValue = $char
   }
 }
@@ -63,8 +71,9 @@ function Show-JobCompleteSuccess {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  $Message")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
@@ -81,11 +90,12 @@ function Show-JobCompleteFailed {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Job not completed.")|  "
   if ($reason) {
-    Write-Host "  |$(Get-PaddedString "  $reason")|  "  
+    Write-Host "  |$(Get-PaddedString "  $reason")|  "
   }
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
@@ -95,13 +105,14 @@ function Show-JobCompleteDurationWarning {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Notice")|  "
+  Write-Host "  |$(Get-PaddedString "  Notice!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Enter duration as a decimal")|  "
-  Write-Host "  |$(Get-PaddedString "  ... i.e., 1 or .25")|  "
+  Write-Host "  |$(Get-PaddedString "  ... i.e. 1 or .25")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }

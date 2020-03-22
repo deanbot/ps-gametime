@@ -103,7 +103,7 @@ function Get-PaddedString {
   $padded
 }
 
-function Read-Character() {
+function Read-Character {
   param(
     [bool]$Blocking = $true
   )

@@ -8,8 +8,9 @@ function Show-JobSingle {
 
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate
+  Write-Host "  |$(Get-PaddedString "  Options:")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Complete job (log completion)"
+  $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Complete job"
   Write-Host "  |$completeLine|  "
   $editLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Edit job"
   Write-Host "  |$editLine|  "

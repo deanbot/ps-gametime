@@ -3,12 +3,13 @@ function Show-JobTitleWarning {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Notice")|  "
+  Write-Host "  |$(Get-PaddedString "  Notice!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Enter a job title")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
@@ -18,13 +19,14 @@ function Show-JobRateWarning {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Notice")|  "
+  Write-Host "  |$(Get-PaddedString "  Notice!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Enter rewards as a decimal")|  "
-  Write-Host "  |$(Get-PaddedString "  ... i.e., 1 or .25")|  "
+  Write-Host "  |$(Get-PaddedString "  ... i.e. 1 or .25")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
   Write-Host ""
   $char = Read-Character -Blocking $true
 }
@@ -54,7 +56,6 @@ function Show-JobsTabs {
   $isDaily = $posX -eq 1
   $isRare = $posx -eq 2
 
-  # Write-Host "   [<]                                 [>]   "
   # Write-Host "   / Quest /_/ Daily /_/ Rare /___________   "
 
   if ($isQuest) {
@@ -97,15 +98,29 @@ function Show-JobHeading {
   else {
     $jobRateSuffix = " pts"
   }
-
-  Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
   if ($Edit) {
-    Write-Host "   /$(Get-PaddedString "Edit: $JobTitle" -Center $true -Width ($width-2))\  "
+    $heading = "Edit: $JobTitle"
   }
   else {
-    Write-Host "   /$(Get-PaddedString "$JobTitle" -Center $true -Width ($width-2))\  "
+    $heading = $JobTitle
   }
-  Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
+
+  Show-Heading $heading
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Type: $JobType" -Width $widthLeft)$(Get-PaddedString "Rate: $JobRate$jobRateSuffix  " -Right $true -Width $widthRight)|  "
+
+  $widthField = 13
+  $widthHeading = $widthField - 2
+  $widthBorder = $widthField - 2
+  $widthValue = $widthField - 4
+  $labelLineLeft = Get-PaddedString "   $(Get-PaddedString -Width $widthHeading "Type" )" -Width $widthLeft
+  $labelLineRight = Get-PaddedString "$(Get-PaddedString -Width $widthHeading "Rate" )   " -Width $widthRight -Right $true
+  Write-Host "  |$labelLineLeft$labelLineRight|  "
+  $borderLineLeft = Get-PaddedString "  +$(Get-PaddedString -Fill "-" -Width $widthBorder )+" -Width $widthLeft
+  $borderLineRight = Get-PaddedString "+$(Get-PaddedString -Fill "-" -Width $widthBorder )+  " -Width $widthRight -Right $true
+  Write-Host "  |$borderLineLeft$borderLineRight|  "
+  $valueLineLeft = Get-PaddedString "  | $(Get-PaddedString $JobType -Width $widthValue ) |" -Width $widthLeft
+  $valueLineRight = Get-PaddedString "| $(Get-PaddedString "$JobRate$jobRateSuffix" -Width $widthValue ) |  " -Width $widthRight -Right $true
+  Write-Host "  |$valueLineLeft$valueLineRight|  "
+  Write-Host "  |$borderLineLeft$borderLineRight|  "
+  Write-Host "  |$(Get-PaddedString)|  "
 }

@@ -1,9 +1,7 @@
 function Show-LogsMenu {
   $width = $global:containerWidth
   Write-Host ""
-  Write-Host "    .------,"
-  # Write-Host "  / Logs /___________________________   "
-  Write-Host "   $(Get-PaddedString '/ Logs /' '_')  "
+  Show-Heading "Logs"
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""

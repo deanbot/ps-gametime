@@ -4,11 +4,9 @@ function Show-GameMenu {
   $widthRight = [System.Math]::Ceiling($width / 2)
 
   Write-Host ""
-  Write-Host "    .-----------,"
-  # Write-Host "  / Game Time /___________________________   "
-  Write-Host "   $(Get-PaddedString '/ Game Time /' '_')  "
+  Show-Heading "Spend Points"
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Spend Points" -Width $widthLeft)$(Get-PaddedString "1 pt = 20 m  " -Right $true -Width $widthRight)|  "
+  Write-Host "  |$(Get-PaddedString "  " -Width $widthLeft)$(Get-PaddedString "1 pt = 20 m  " -Right $true -Width $widthRight)|  "
   Write-Host "  |$(Get-PaddedString)|  "
 
   $available = Get-AvailableBalance
@@ -28,8 +26,8 @@ function Show-GameMenu {
   }
   else {
     Write-Host "  |$(Get-PaddedString "  No game time points to spend...")|  "
+    Write-Host "  |$(Get-PaddedString "  Complete jobs to earn points.")|  "
     Write-Host "  |$(Get-PaddedString)|  "
-    Write-Host "  |$(Get-PaddedString "  Press [any key] to continue.")|  "
   }
 
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
