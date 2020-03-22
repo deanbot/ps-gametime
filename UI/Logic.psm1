@@ -29,7 +29,7 @@ function Initialize-Variables {
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $false
   $global:showReturn = $false
-  $global:showSelect = $true
+
   $global:showQuit = $true
   $global:hideHeader = $false
   $global:hideFooter = $false
@@ -177,6 +177,7 @@ function Initialize-GameMenu {
   $global:notes = ""
   $global:hideFooter = $false
   $global:showReturn = $true
+  $global:showSelect = $false
 
   $availableBalance = Get-AvailableBalance
   $hasAvailableBalance = $availableBalance -gt 0
@@ -209,6 +210,7 @@ function Initialize-LogsMenu {
   $global:canChangeMenuPositionX = $false
   $global:canChangeMenuPositionY = $false
   $global:showReturn = $true
+  $global:showSelect = $false
 }
 
 function Read-QuitInput {
@@ -456,6 +458,14 @@ function Read-Input {
         }
       }
     }
+    if ($section -eq $sectionGameMenu) {
+      if ($global:menuPositionY -gt 0) {
+        $global:showSelect = $true
+      }
+      else {
+        $global:showSelect = $false
+      }
+    }
   }
   if (!$foundMatch) {
     $foundMatch = Read-QuitInput $character
@@ -536,9 +546,8 @@ function Show-BodyContent {
       do {
         Show-GameConfirmSpend
         Read-GameConfirmInputVal
-      } while ($global:subPage -eq $gameSpageSpend)
+      } while ($global:subPage -eq $gamePageSpend)
     }
-
   }
   elseif ($section -eq $sectionLogsMenu) {
     Show-LogsMenu
@@ -558,6 +567,7 @@ function Read-GameConfirmInputVal {
   # confirm step
   else {
     if ($inputVal -eq 'y') {
+
     }
     elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
       $quit = $true
