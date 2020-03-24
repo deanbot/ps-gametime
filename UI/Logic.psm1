@@ -596,7 +596,6 @@ function Read-GameConfirmInputVal {
   }
 }
 
-
 function Read-JobRemoveInputVal {
   $inputVal = $global:inputValue
   $quit = $false
@@ -709,8 +708,7 @@ function Read-JobCompleteInputVal {
   }
 
   if ($quit) {
-    Initialize-JobsMenu $global:prevMenuPositionX
-    $global:prevMenuPositionX = 0
+    Initialize-JobSingle
     $global:forceRepaint = $true
   }
 }

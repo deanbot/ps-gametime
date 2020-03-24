@@ -16,7 +16,6 @@ function Show-JobSingle {
   Write-Host "  |$editLine|  "
   $removeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))Remove job"
   Write-Host "  |$removeLine|  "
-  Write-Host "  |$(Get-PaddedString)|  "
   # Show-ControlsFooter
   # Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
