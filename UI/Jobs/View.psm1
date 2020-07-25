@@ -1,7 +1,9 @@
-Import-Module $pwd\UI\Jobs\Shared.psm1 -Force
-Import-Module $pwd\UI\Jobs\Complete.psm1 -Force
-Import-Module $pwd\UI\Jobs\Edit.psm1 -Force
-Import-Module $pwd\UI\Jobs\Index.psm1 -Force
-Import-Module $pwd\UI\Jobs\New.psm1 -Force
-Import-Module $pwd\UI\Jobs\Remove.psm1 -Force
-Import-Module $pwd\UI\Jobs\Single.psm1 -Force
+$Path = $PSScriptRoot
+
+Import-Module $Path\Shared.psm1 -Force
+Import-Module $Path\Complete.psm1 -Force
+Import-Module $Path\Edit.psm1 -Force
+Import-Module $Path\Index.psm1 -Force
+Import-Module $Path\New.psm1 -Force
+Import-Module $Path\Remove.psm1 -Force
+Import-Module $Path\Single.psm1 -Force
