@@ -4,7 +4,7 @@
 
 PowerShell implementation of Game Time - a gamified habit-tracking/rewards system.
 
-Read more about the [Game Time system](./about.md).
+Read more about the [Game Time system](./ABOUT.md).
 
 ## Setup
 
