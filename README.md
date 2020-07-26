@@ -8,7 +8,7 @@ PowerShell implementation of [Game Time](./ABOUT.md) - a gamified habit-tracking
 
 1. Review [Requirements](#Requirements) and [Install](#Install).
 2. Learn how to use [Game Time](./ABOUT.md).
-3. Launch `gametime` from a terminal.
+3. Launch `gametime` from a terminal. Use arrow keys and on-screen prompts to navigate.
 
 _Productivity ensues._
 
