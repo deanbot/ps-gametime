@@ -2,9 +2,11 @@
 
 Game Time is a gamified habit-tracking/rewards system that helps you progress on goals and play games.
 
-The system is meant to encourage game-lovers to complete meaningful work towards a chosen area in their life, aka reaching a goal or completing a passion project. Using Game Time has a side effect of enhancing the gaming experience:
+The system is meant to encourage game-lovers to complete meaningful work towards a chosen area in their life, aka reaching a goal or completing a passion project. In Game Time, progress on goals has the added benefit of rewarding you gaming time.
 
-- Gaming feels more meaningful with set play-time boundaries.
+Side effects include increased productivity, and an enhanced gaming experience:
+
+- Gaming feels more meaningful with set play-time limits.
 - Gamers experience less guilt for 'gaming' vs 'working on goals'.
 
 Game Time in a nutshell:
