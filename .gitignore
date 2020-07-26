@@ -1,2 +1,3 @@
 Job*.csv
 Transaction*.csv
+!bin

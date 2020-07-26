@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# check_command returns an empty string on missing command.
+# Otherwise, returns a description of the command.
+check_command() {
+    COMMAND="$1"
+    command -v "$COMMAND" 2>/dev/null ||
+        echo ''
+}
+
+CANDIDATES="pwsh \
+    powershell"
+
+CLIENT=
+
+for CANDIDATE in $CANDIDATES; do
+    if [ "$(check_command "$CANDIDATE")" != '' ]; then
+        CLIENT="$CANDIDATE"
+        break
+    fi
+done
+
+if [ "$CLIENT" = '' ]; then
+    echo "Error: No HTTP client detected"
+    exit 1
+fi
+
+"$CLIENT" "${0%/*}"/../Start.ps1

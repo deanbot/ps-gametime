@@ -1,0 +1,1 @@
+powershell "%~dpn0"\..\Start.ps1
