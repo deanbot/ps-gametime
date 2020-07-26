@@ -11,12 +11,12 @@ function Show-JobNew {
     Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
     if ($rate) {
-      Write-Host "  |$(Get-PaddedString "  Rewards: $rate")|  "
+      Write-Host "  |$(Get-PaddedString "  Rewards: $rate pts")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
       Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
       Write-Host ""
-      Write-Host "  Complete Job?"
+      Write-Host "  Create Job?"
       Write-Host "  [Y] Yes  [N] No: "
       do {
         $createJob = Read-Character
@@ -35,7 +35,7 @@ function Show-JobNew {
         Write-Host "  Game Time points per hour"
       }
       else {
-        Write-Host "  Game Time points per completion"
+        Write-Host "  Game Time points earned for completion"
       }
       $rate = Read-Host "  Rewards"
       $global:inputValue = $rate

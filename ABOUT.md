@@ -32,14 +32,14 @@ Also, remember that experimentation is key. It's hard to know which jobs/rewards
 - **Quests**
   - Quests are concrete, repeatable, tasks that push you forward towards reaching your goals.
   - Quests can be logged by completion or by time spent.
-    - A **standard** quest will reward the points specified by the job's value when completed.
-    - A **timed** quest will reward the points specified by the job's rate (i.e. .5 points per hour) multiplied by the duration of time spent (i.e. 1.5 hours). In other words, the longer you do the job the more points you get.
+    - A **standard** quest will reward the points specified by the job's rewards when completed.
+    - A **timed** quest will reward the points specified by the job's rate (i.e. .5 points per hour) and the amount of time spent (i.e. 1.5 hours). In other words, the longer you do the job the more points you get.
 - **Daily Jobs**
   - Daily jobs are positive habits, self care, or maintenance tasks which help you be the person who will reach your goals.
-  - A daily job will reward the points specified by the job's value when completed.
+  - A daily job will reward the points specifiedfor the job when completed.
 - **Rare Jobs**
   - Rare jobs are difficult tasks or milestones that deserve celebration.
-  - A rare job will reward the points specified by the job's value when completed, and then the job will be removed.
+  - A rare job will reward the points specified for the job completed, and then the job will be removed.
 
 ### Choose a Focus Goal
 
@@ -81,15 +81,15 @@ As you complete jobs, log them in Game Time and watch your points accumulate.
 
 ### Quests
 
-Standard Quests reward the value assigned to the job, i.e. .75 points per completion. Timed Quests reward points based on the job's rate and the duration of time spent on the quest. Example: your "Study Latin" goal is worth .75 points per hour, and you worked for 2 hours. Thus you gain 1.5 points.
+Standard Quests reward the rewards assigned to the job, i.e. .75 points per completion. Timed Quests reward points based on the job's rate and the duration of time spent on the quest. Example: your "Study Latin" goal is worth .75 points per hour, and you worked for 2 hours. Thus you gain 1.5 points.
 
 ### Dailies
 
-Daily jobs can be compeleted once per day and reward the value assigned to the job, i.e. .25 points. Each daily can be completed once per that calendar date.
+Daily jobs can be compeleted once per day and reward the rewards assigned to the job, i.e. .25 points. Each daily can be completed once per that calendar date.
 
 ### Rare jobs
 
-Rare jobs can be completed once and reward the value assigned to the job, i.e. 2 points. Once completed, the job is removed from your list of available jobs.
+Rare jobs can be completed once and reward the rewards assigned to the job, i.e. 2 points. Once completed, the job is removed from your list of available jobs.
 
 ## Game
 

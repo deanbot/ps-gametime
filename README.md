@@ -2,7 +2,7 @@
 
 ## Overview
 
-PowerShell implementation of [Game Time](./ABOUT.md) - a gamified habit-tracking/rewards system where progress on goals equates to real life gaming time.
+PowerShell implementation of [Game Time](./ABOUT.md) - a gamified habit-tracking & rewards system where progress on goals equates to real life gaming time.
 
 ## Get Started
 
