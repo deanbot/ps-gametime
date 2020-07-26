@@ -9,13 +9,13 @@ The system is meant to encourage game-lovers to complete meaningful work towards
 
 Game Time in a nutshell:
 
-1. **Create Jobs** - Create Quest, Daily, and Rare jobs.
-2. **Do Work** - Log job completions and get Game Time Points.
-3. **Game** - Spend your points to get gaming time. 1 point equals 20 minutes of gaming.
+1. **[Create Jobs](#Create-Jobs)** - Create Quest, Daily, and Rare jobs.
+2. **[Do Work](#Do-Work)** - Log job completions and get Game Time points.
+3. **[Game](#Game)** - Spend your points to get gaming time. 1 point equals 20 minutes of gaming.
 
 ## Create Jobs
 
-Creating jobs in Game Time is easy but requires some foresight and experimentation.
+Creating jobs in Game Time is easy but requires some forethought and experimentation.
 
 To get started:
 
@@ -28,16 +28,16 @@ Also, remember that experimentation is key. It's hard to know which jobs/rewards
 ### Job Types
 
 - **Quests**
-  - Quests are concrete repeatable tasks that push you forward towards reaching your goals.
+  - Quests are concrete, repeatable, tasks that push you forward towards reaching your goals.
   - Quests can be logged by completion or by time spent.
-    - A **standard** quest will reward the points specified by the job's value.
-    - A **timed** quest will reward the points specified by the job's rate (i.e. .5 points per hour) multiplied by the duration of time spent (i.e. 1.5 hours). Aka, the longer you do the job the more points you get.
+    - A **standard** quest will reward the points specified by the job's value when completed.
+    - A **timed** quest will reward the points specified by the job's rate (i.e. .5 points per hour) multiplied by the duration of time spent (i.e. 1.5 hours). In other words, the longer you do the job the more points you get.
 - **Daily Jobs**
-  - Daily jobs are positive habits or self care and maintenance tasks that help you be the person who will reach your goals.
-  - A daily job completion will reward the points specified by the job's value.
+  - Daily jobs are positive habits, self care, or maintenance tasks which help you be the person who will reach your goals.
+  - A daily job will reward the points specified by the job's value when completed.
 - **Rare Jobs**
-  - Rare jobs are big hairy tasks or goal milestones that deserve celebration.
-  - A rare job completion will reward the points specified by the job's value, and then the job will be removed.
+  - Rare jobs are difficult tasks or milestones that deserve celebration.
+  - A rare job will reward the points specified by the job's value when completed, and then the job will be removed.
 
 ### Choose a Focus Goal
 
@@ -73,7 +73,7 @@ Some indicators the job is rare:
 
 That said, there's no one-size fits all. If you're goal is to become a monk, "meditate" might be better as a quest than as a daily.
 
-## Complete Jobs
+## Do Work
 
 As you complete jobs, log them in Game Time and watch your points accumulate.
 
@@ -89,16 +89,20 @@ Daily jobs can be compeleted once per day and reward the value assigned to the j
 
 Rare jobs can be completed once and reward the value assigned to the job, i.e. 2 points. Once completed, the job is removed from your list of available jobs.
 
-## Using Game Time Points
+## Game
 
-Game Time points accumulate as jobs are completed. Only whole points can be used. I.e., if you have 3.5 points, only 3 points are available to use. Once used, the points are removed from your balance.
+Spend Game Time points in order to play video games, computer games, etc... for a set period of time.
 
-Points equate to an amount of real life gaming time, aka 20 minutes.
+**A Game Time point equates to 20 minutes of real life gaming time.**
 
-Once you have earned a quantity of Game Time points, choose the amount you wish to use to game for the equivalent aount of time. I.e. spend 3 point to game for an hour.
+_Of course, the assumption here is that you won't play games otherwise._
 
-## Make Adjustments
+When spending Game Time points, only whole points can be used. I.e., if you have 3.5 points, only 3 points are available for use. Choose the amount you wish to and game for the equivalent amount of time. I.e. spend 3 point to game for an hour. Used points are removed from your balance.
 
-Your jobs in game time are not set it stone. If you feel you're accumulating Game Time points too quickly try reducing rewards. You may want to reduce rewards for all jobs or only for specific jobs. Consider removing jobs that you are completing with little effort. Rare jobs, by nature will be added as time goes on when they are identified.
+## Adapt as you go
+
+Your jobs in Game Time are not set it stone. Create, edit, and remove jobs as you go. Rare jobs, by nature will be added as time goes on.
+
+If you feel that you're accumulating Game Time points too quickly try reducing rewards. You may want to reduce rewards across the board or only for specific jobs. Consider removing jobs that require little effort.
 
 If you achieve your focus goal, congratulations! Also, it might be time to restart Game Time.
