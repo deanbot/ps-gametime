@@ -1,14 +1,17 @@
+$Path = $PSScriptRoot
+
 # set testing data access path
-$Global:JobCsvPath = "$pwd\Database\Job-Test.csv"
-$Global:TansactionCsvPath = "$pwd\Database\Transaction-Test.csv"
+$Global:JobCsvPath = "$Path\Database\Job-Test.csv"
+$Global:TansactionCsvPath = "$Path\Database\Transaction-Test.csv"
 $Global:Debug = ""
 # $Global:Debug = "Continue"
 $Global:SilentStatusReturn = $true
 $ErrorActionPreference = "Stop"
 
 # import game time utilities
-Import-Module $pwd\DataAccess.psm1 -Force
-Import-Module $pwd\Utilities.psm1 -Force
+
+Import-Module $Path\DataAccess.psm1 -Force
+Import-Module $Path\Utilities.psm1 -Force
 
 function Clear-Jobs {
   if (Test-Path $Global:JobCsvPath -PathType Leaf) {

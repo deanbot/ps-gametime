@@ -1,0 +1,30 @@
+#!/bin/bash
+l_flag=''
+
+print_usage() {
+  printf "Specify -l to launch via windows powershell"
+}
+
+while getopts 'l' flag; do
+  case "${flag}" in
+    l) l_flag='true' ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+# get path to actual source
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+# run start script
+if [ "$l_flag" == "true" ]; then
+  powershell "$DIR/Start.ps1"
+else
+  pwsh "$DIR/Start.ps1"
+fi
