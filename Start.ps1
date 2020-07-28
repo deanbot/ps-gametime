@@ -11,19 +11,19 @@ param(
 )
 
 # import game time utilities
-$global:DevMode = $true
+$Global:DevMode = $true
 $Global:Debug = "Continue"
+$Global:Debug = "SilentlyContinue"
 $Global:SilentStatusReturn = $false
 $Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation
+$Global:ScriptRoot = $PSScriptRoot
 
-# . $pwd\Config.ps1
+# . $Global:ScriptRoot\Config.ps1
 
-$Path = $PSScriptRoot
-
-Import-Module $Path\DataAccess.psm1 -Force
-Import-Module $Path\Utilities.psm1 -Force
-Import-Module $Path\UI\UI.psm1 -Force
+Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
+Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
+Import-Module $Global:ScriptRoot\UI\UI.psm1 -Force
 
 function Main {
   try {
@@ -41,15 +41,15 @@ function Main {
       }
 
       # respond to input and check if screen should repaint
-      if (!$global:forceRepaint) {
+      if (!$Global:forceRepaint) {
         $repaint = Read-Input
       }
       else {
         $repaint = $true
-        $global:forceRepaint = $false
+        $Global:forceRepaint = $false
       }
     }
-    while (-not $global:quit)
+    while (-not $Global:quit)
   }
   finally {
     Restore-Display

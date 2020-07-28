@@ -91,8 +91,18 @@ function Show-JobHeading {
   $width = $global:containerWidth
   $widthLeft = [System.Math]::Floor($width / 2)
   $widthRight = [System.Math]::Ceiling($width / 2)
+
+  $Type = $JobType
+  $isTimed = $false
+  if ($Type -like '*Quest*') {
+    if ($Type -eq 'Quest-Timed') {
+      $Type = 'Quest'
+      $isTimed = $true
+    }
+  }
+
   $jobRateSuffix = ""
-  if ($JobType -eq "Quest") {
+  if ($isTimed -eq "Quest") {
     $jobRateSuffix = " pts/h"
   }
   else {
@@ -118,7 +128,7 @@ function Show-JobHeading {
   $borderLineLeft = Get-PaddedString "  +$(Get-PaddedString -Fill "-" -Width $widthBorder )+" -Width $widthLeft
   $borderLineRight = Get-PaddedString "+$(Get-PaddedString -Fill "-" -Width $widthBorder )+  " -Width $widthRight -Right $true
   Write-Host "  |$borderLineLeft$borderLineRight|  "
-  $valueLineLeft = Get-PaddedString "  | $(Get-PaddedString $JobType -Width $widthValue ) |" -Width $widthLeft
+  $valueLineLeft = Get-PaddedString "  | $(Get-PaddedString $Type -Width $widthValue ) |" -Width $widthLeft
   $valueLineRight = Get-PaddedString "| $(Get-PaddedString "$JobRate$jobRateSuffix" -Width $widthValue ) |  " -Width $widthRight -Right $true
   Write-Host "  |$valueLineLeft$valueLineRight|  "
   Write-Host "  |$borderLineLeft$borderLineRight|  "

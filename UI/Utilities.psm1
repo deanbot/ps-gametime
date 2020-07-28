@@ -21,14 +21,14 @@ function Get-TextLines {
   )
 
   if (!$width) {
-    $width = $global:containerWidth
+    $width = $Global:containerWidth
   }
   $lines = @()
   if ($text.Length -lt $width) {
     $lines = @($text)
   }
   else {
-    $original = $text;
+    # $original = $text;
     do {
       $pullLength = $width
       if ($pullLength -gt $text.Length - 1) {
@@ -68,7 +68,7 @@ function Get-PaddedString {
     [boolean]$Right = $false
   )
   if (!$Width) {
-    $Width = $global:containerWidth
+    $Width = $Global:containerWidth
   }
   $padded = $Text
   if ($padded.Length -lt $Width -and $Fill.Length -gt 0) {
@@ -119,11 +119,12 @@ function Read-Character {
   # }
 }
 
+
 function Initialize-Display {
-  $global:originalBufferWidth = [System.Console]::BufferWidth
-  $global:originalBufferHeight = [System.Console]::BufferHeight
-  $global:originalWindowHeight = [System.Console]::WindowHeight
-  $global:originalWindowWidth = [System.Console]::WindowWidth
+  $Global:originalBufferWidth = [System.Console]::BufferWidth
+  $Global:originalBufferHeight = [System.Console]::BufferHeight
+  $Global:originalWindowHeight = [System.Console]::WindowHeight
+  $Global:originalWindowWidth = [System.Console]::WindowWidth
   # $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.Size(55, 110)
   # $host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.Size(160, 5000)
   # $width = 160
@@ -137,11 +138,11 @@ function Initialize-Display {
 function Restore-Display {
   Clear-Host
   try {
-    if ([System.Console]::BufferWidth -gt $global:originalBufferWidth -or [System.Console]::BufferHeight -gt $global:originalBufferHeight) {
+    if ([System.Console]::BufferWidth -gt $Global:originalBufferWidth -or [System.Console]::BufferHeight -gt $Global:originalBufferHeight) {
       [System.Console]::SetWindowSize(1, 1);
     }
-    [System.Console]::SetBufferSize($global:originalBufferWidth, $global:originalBufferHeight);
-    [System.Console]::SetWindowSize($global:originalWindowWidth, $global:originalWindowHeight);
+    [System.Console]::SetBufferSize($Global:originalBufferWidth, $Global:originalBufferHeight);
+    [System.Console]::SetWindowSize($Global:originalWindowWidth, $Global:originalWindowHeight);
   }
   catch {
     # 'not supported on this platform'

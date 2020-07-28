@@ -1,6 +1,6 @@
 function Show-JobsMenu {
   $posX = $global:menuPositionX
-  $posY = $global:menuPositionY
+  # $posY = $global:menuPositionY
   $jobs = $global:currentJobs
   $width = $global:containerWidth
   $widthLeft = [System.Math]::Floor($width / 2)

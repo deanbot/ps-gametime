@@ -1,10 +1,13 @@
 function Show-JobEdit {
-  $pos = $global:menuPositionY
-  $job = $global:currentJob
+  $pos = $Global:menuPositionY
+  $job = $Global:currentJob
   $jobType = $job.Type
   $jobTitle = $job.Title
   $jobRate = $job.Rate
-  $width = $global:containerWidth
+  # $width = $Global:containerWidth
+
+  $isQuest = $jobType -like '*Quest*';
+  $isTimed = $jobType -eq 'Quest-Timed';
 
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate $true
@@ -12,7 +15,21 @@ function Show-JobEdit {
   Write-Host "  |$(Get-PaddedString $titleLine)|  "
   $typeLine = "  $(Get-CheckBox ($pos -eq 1))Type"
   Write-Host "  |$(Get-PaddedString $typeLine)|  "
-  $rateLine = "  $(Get-CheckBox ($pos -eq 2))Rewards"
+  if ($isQuest) {
+    if ($isTimed) {
+      $subTypeLine = "  $(Get-CheckBox ($pos -eq 2))Change to Standard"
+    }
+    else {
+      $subTypeLine = "  $(Get-CheckBox ($pos -eq 2))Change to Timed"
+    }
+    Write-Host "  |$(Get-PaddedString $subTypeLine)|  "
+  }
+  if ($isQuest) {
+    $rateLine = "  $(Get-CheckBox ($pos -eq 3))Rewards"
+  }
+  else {
+    $rateLine = "  $(Get-CheckBox ($pos -eq 2))Rewards"
+  }
   Write-Host "  |$(Get-PaddedString $rateLine)|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
@@ -38,15 +55,17 @@ function Show-JobEditFailed {
   Write-Host ""
   Write-Host "  Press [any key] to continue..."
   Write-Host ""
+
   $char = Read-Character -Blocking $true
 }
 
 function Show-JobField {
-  $job = $global:currentJob
+  $job = $Global:currentJob
   $jobType = $job.Type
   $jobTitle = $job.Title
   $jobRate = $job.Rate
-  $field = $global:currentField
+
+  $field = $Global:currentField
 
   Clear-Host
   Write-Host ""
@@ -60,7 +79,9 @@ function Show-JobField {
     Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
     Write-Host ""
     $title = Read-Host "  Title"
-    $global:inputValue = $title
+
+    # ignore warning
+    $Global:inputValue = $title
   }
   elseif ($field -eq 'Type') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
@@ -78,7 +99,7 @@ function Show-JobField {
         -or $type -eq 'r' `
         -or $type -eq [System.ConsoleKey]::Escape `
         -or $type -eq [System.ConsoleKey]::Backspace)
-    $global:inputValue = $type
+    $Global:inputValue = $type
   }
   elseif ($field -eq 'Rate') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
@@ -93,6 +114,6 @@ function Show-JobField {
       Write-Host "  Game Time points per completion"
     }
     $rate = Read-Host "  Rewards"
-    $global:inputValue = $rate
+    $Global:inputValue = $rate
   }
 }

@@ -1,5 +1,5 @@
 function Show-JobConfirmRemove {
-  $job = $global:currentJob
+  $job = $Global:currentJob
   $jobType = $job.Type
   $jobTitle = $job.Title
   $jobRate = $job.Rate
@@ -20,7 +20,9 @@ function Show-JobConfirmRemove {
       -or $char -eq 'n' `
       -or $char -eq [System.ConsoleKey]::Escape `
       -or $char -eq [System.ConsoleKey]::Backspace)
-  $global:inputValue = $char
+
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectComparisonWithNull", Scope = "Function", Target = "*")]
+  $Global:inputValue = $char
 }
 
 function Show-JobRemoveFailed {

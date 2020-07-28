@@ -9,16 +9,16 @@ Import-Module $Path\Jobs\View.psm1 -Force
 Import-Module $Path\Logs\View.psm1 -Force
 
 function Show-Header {
-  $width = $global:containerWidth
+  $width = $Global:containerWidth
   $widthLeft = [System.Math]::Floor($width / 2) - 6
   $widthRight = [System.Math]::Ceiling($width / 2) + 6
-  if (!$global:hideHeader) {
+  if (!$Global:hideHeader) {
     Write-Host "    _____                 _______            "
     Write-Host "   / ___/__  __ _  ___   /_  __(_)_ _  ___   "
     Write-Host "  / (_ / _ ``/  ' \/ -_)   / / / /  ' \/ -_)  "
     Write-Host "  \___/\_,_/_/_/_/\__/   /_/ /_/_/_/_/\__/   "
     Write-Host "                                             "
-    if ($global:showQuit) {
+    if ($Global:showQuit) {
       Write-Host "  $(Get-PaddedString "Bal: $(Get-Balance)" -Width $widthLeft)$(Get-PaddedString "[Q] Quit" -Right $true -Width $widthRight)"
     }
     else {
@@ -28,20 +28,20 @@ function Show-Header {
 }
 
 function Show-Footer {
-  if (!$global:hideFooter) {
+  if (!$Global:hideFooter) {
     Show-ControlsFooter
   }
   Write-Host ""
 }
 
 function Show-ControlsFooter {
-  $canNavX = $global:canChangeMenuPositionX
-  $canNavY = $global:canChangeMenuPositionY
-  $posX = $global:menuPositionX
-  $posY = $global:menuPositionY
-  $maxX = $global:maxMenuPositionsX
-  $maxY = $global:maxMenuPositionsY
-  $invertY = $global:invertY
+  $canNavX = $Global:canChangeMenuPositionX
+  $canNavY = $Global:canChangeMenuPositionY
+  $posX = $Global:menuPositionX
+  $posY = $Global:menuPositionY
+  $maxX = $Global:maxMenuPositionsX
+  $maxY = $Global:maxMenuPositionsY
+  $invertY = $Global:invertY
   $n = '0'
   $e = '0'
   $s = '0'
@@ -73,18 +73,18 @@ function Show-ControlsFooter {
       }
     }
   }
-  # $width = $global:containerWidth
+  # $width = $Global:containerWidth
   # $widthLeft = [System.Math]::Floor($width / 2) - 6
   # $widthRight = [System.Math]::Ceiling($width / 2) + 6
 
-  if ($global:showSelect) {
+  if ($Global:showSelect) {
     Write-Host "  $(Get-PaddedString "   Press [Enter] to select      [$n]")  "
   }
   else {
     Write-Host "  $(Get-PaddedString "                                [$n]")  "
   }
   Write-Host "  $(Get-PaddedString "                             [$w]   [$e]")  "
-  if ($global:showReturn) {
+  if ($Global:showReturn) {
     Write-Host "  $(Get-PaddedString "   <- [Esc/Bksp]                [$s]")  "
   }
   else {
@@ -97,7 +97,7 @@ function Show-Heading {
     [Parameter(Mandatory = $true, Position = 0)]
     [string]$Text
   )
-  $width = $global:containerWidth
+  $width = $Global:containerWidth
   Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
   Write-Host "   /$(Get-PaddedString $Text -Center $true -Width ($width-2))\  "
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "

@@ -6,6 +6,7 @@ else {
 }
 
 $JobTypeQuest = 'Quest'
+$JobTypeQuestTimed = 'Quest-Timed'
 $JobTypeDaily = 'Daily'
 $JobTypeRare = 'Rare'
 
@@ -16,6 +17,7 @@ function Get-TypeIsValid {
     [string]$Type
   )
   if ($Type -eq $JobTypeQuest `
+      -or $Type -eq $JobTypeQuestTimed `
       -or $Type -eq $JobTypeDaily `
       -or $Type -eq $JobTypeRare) {
     $true

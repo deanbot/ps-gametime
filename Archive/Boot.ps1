@@ -1,9 +1,9 @@
 # import game time utilities
 $Global:Debug = "Continue"
 $Global:SilentStatusReturn = $false
-Import-Module $pwd\DataAccess.psm1 -Force
-Import-Module $pwd\Utilities.psm1 -Force
-Import-Module $pwd\UI.psm1 -Force
+Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
+Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
+Import-Module $Global:ScriptRoot\UI.psm1 -Force
 
 do {
   Show-Menu

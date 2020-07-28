@@ -1,5 +1,13 @@
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
+}
+
+
 function Show-JobConfirmComplete {
-  $job = $global:currentJob
+  $job = $Global:currentJob
   $jobType = $job.Type
   $jobTitle = $job.Title
   $jobRate = $job.Rate
@@ -8,12 +16,12 @@ function Show-JobConfirmComplete {
   Write-Host ""
   Show-JobHeading "Complete: $jobTitle" $jobType $jobRate
 
-  $passedNotes = $global:notesStepPassed
-  $notes = $global:notes
-  $duration = $global:duration
-  $isQuest = $jobType -eq 'Quest'
+  $passedNotes = $Global:notesStepPassed
+  $notes = $Global:notes
+  $duration = $Global:duration
+  $isTimed = $jobType -eq 'Quest-Timed'
 
-  if ($isQuest) {
+  if ($isTimed) {
     if (!$duration) {
       # prompt for duration
       Write-Host "  |$(Get-PaddedString "  [...]")|  "
@@ -22,7 +30,7 @@ function Show-JobConfirmComplete {
       Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
       Write-Host ""
       $duration = Read-Host "  Duration (in hours, i.e. 1 or .75)"
-      $global:inputValue = $duration
+      $Global:inputValue = $duration
       return
     }
     else {
@@ -38,7 +46,7 @@ function Show-JobConfirmComplete {
     Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
     Write-Host ""
     $notes = Read-Host "  Notes (optional)"
-    $global:inputValue = $notes
+    $Global:inputValue = $notes
   }
   else {
     Write-Host "  |$(Get-PaddedString "  Notes:    [...]")|  "
@@ -47,16 +55,14 @@ function Show-JobConfirmComplete {
     Write-Host ""
     Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
     Write-Host ""
-    Write-Host "  Complete Job?"
-    Write-Host "  [Y] Yes  [N] No: "
+    Write-Host "  Press [Enter] to complete"
     Write-Host ""
     do {
       $char = Read-Character
-    } until ($char -eq 'y' `
-        -or $char -eq 'n' `
+    } until ($char -eq [System.ConsoleKey]::Enter `
         -or $char -eq [System.ConsoleKey]::Escape `
         -or $char -eq [System.ConsoleKey]::Backspace)
-    $global:inputValue = $char
+    $Global:inputValue = $char
   }
 }
 

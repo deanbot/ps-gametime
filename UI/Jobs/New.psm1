@@ -3,45 +3,71 @@ function Show-JobNew {
   Write-Host ""
   Show-Heading "New Job"
   Write-Host "  |$(Get-PaddedString)|  "
-  $title = $global:newJobTitle
-  $type = $global:currentJobType
-  $rate = $global:newJobRate
+  $title = $Global:newJobTitle
+  $type = $Global:currentJobType
+  $rate = $Global:newJobRate
+  $subType = $Global:newJobSubType
+  $isTimed = $subType -eq 'Timed'
 
   if ($title) {
     Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
-    if ($rate) {
-      Write-Host "  |$(Get-PaddedString "  Rewards: $rate pts")|  "
+
+    if ($subType) {
+      if (!$rate) {
+        # Rewards/Rate prompt
+        Write-Host "  |$(Get-PaddedString "  [...]")|  "
+        Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+        Write-Host ""
+        Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+        Write-Host ""
+        if ($isTimed) {
+          Write-Host "  Game Time points per hour"
+        }
+        else {
+          Write-Host "  Game Time points earned for completion"
+        }
+        $rate = Read-Host "  Rewards"
+        $Global:inputValue = $rate
+      }
+      else {
+        if ($isTimed) {
+          Write-Host "  |$(Get-PaddedString "  Rewards: $rate pts/h")|  "
+        }
+        else {
+          Write-Host "  |$(Get-PaddedString "  Rewards: $rate pts")|  "
+        }
+        Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+        Write-Host ""
+        Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+        Write-Host ""
+        Write-Host "  Create Job?"
+        Write-Host "  [Y] Yes  [N] No: "
+        do {
+          $createJob = Read-Character
+        } until ($createJob -eq 'y' `
+            -or $createJob -eq 'n' `
+            -or $createJob -eq 'q')
+        $Global:inputValue = $createJob
+      }
+    }
+    else {
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
       Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
       Write-Host ""
-      Write-Host "  Create Job?"
+      Write-Host "  Is Quest Timed"
       Write-Host "  [Y] Yes  [N] No: "
       do {
-        $createJob = Read-Character
+        $timed = Read-Character
       } until ($createJob -eq 'y' `
           -or $createJob -eq 'n' `
           -or $createJob -eq 'q')
-      $global:inputValue = $createJob
-    }
-    else {
-      Write-Host "  |$(Get-PaddedString "  [...]")|  "
-      Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-      Write-Host ""
-      Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
-      Write-Host ""
-      if ($type -eq 'Quest') {
-        Write-Host "  Game Time points per hour"
-      }
-      else {
-        Write-Host "  Game Time points earned for completion"
-      }
-      $rate = Read-Host "  Rewards"
-      $global:inputValue = $rate
+      $Global:inputValue = $timed
     }
   }
   else {
+    # Title Prompt
     Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
@@ -49,9 +75,11 @@ function Show-JobNew {
     Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
     Write-Host ""
     $title = Read-Host "  Title"
-    $global:inputValue = $title
+    $Global:inputValue = $title
   }
+
 }
+
 
 function Show-JobNewFailed {
   Param(

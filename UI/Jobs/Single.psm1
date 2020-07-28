@@ -4,7 +4,7 @@ function Show-JobSingle {
   $jobType = $job.Type
   $jobTitle = $job.Title
   $jobRate = $job.Rate
-  $width = $global:containerWidth
+  # $width = $global:containerWidth
 
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate
