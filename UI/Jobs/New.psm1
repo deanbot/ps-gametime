@@ -10,10 +10,14 @@ function Show-JobNew {
   $isTimed = $subType -eq 'Timed'
 
   if ($title) {
-    Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
+    if ($isTimed) {
+      Write-Host "  |$(Get-PaddedString "  Type:    $type (Timed)")|  "
+    } else {
+      Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
+    }
     Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
 
-    if ($subType) {
+    if ($subType -or $type -ne 'Quest') {
       if (!$rate) {
         # Rewards/Rate prompt
         Write-Host "  |$(Get-PaddedString "  [...]")|  "
@@ -60,11 +64,13 @@ function Show-JobNew {
       Write-Host "  [Y] Yes  [N] No: "
       do {
         $timed = Read-Character
-      } until ($createJob -eq 'y' `
-          -or $createJob -eq 'n' `
-          -or $createJob -eq 'q')
+      } until ($timed -eq 'y' `
+          -or $timed -eq 'n' `
+          -or $timed -eq [System.ConsoleKey]::Escape `
+          -or $timed -eq [System.ConsoleKey]::Backspace)
       $Global:inputValue = $timed
     }
+    Write-Debug "Hey"
   }
   else {
     # Title Prompt
