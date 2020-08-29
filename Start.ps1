@@ -13,7 +13,7 @@ param(
 # import game time utilities
 $Global:DevMode = $true
 $Global:Debug = "Continue"
-# $Global:Debug = "SilentlyContinue"
+$Global:Debug = "SilentlyContinue"
 $Global:SilentStatusReturn = $false
 $Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation

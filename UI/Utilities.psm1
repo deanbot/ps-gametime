@@ -119,6 +119,78 @@ function Read-Character {
   # }
 }
 
+# Read-Line but respond to Esc
+function Read-InputLine {
+  param (
+    [Parameter(Mandatory = $false, Position = 0)]
+    [string]$Prompt = ""
+  )
+
+  # display initial prompt
+  if ($Prompt.Length -gt 0) {
+    Write-Host "`r$Prompt" -NoNewLine
+  }
+
+  # accept and display input until enter or esc is pressed
+  $cancelled = $false
+  $inputLine = "";
+  do {
+    # Test to see if escape was pressed within the loop
+    $key = $Host.UI.RawUI.ReadKey("IncludeKeyUp,NoEcho")
+
+    # exit if enter or esc pressed
+    # 13 = Enter, 27 = Esc
+    $exit = $key.VirtualKeyCode -eq 13 -or $key.VirtualKeyCode -eq 27
+
+    # add char to input line
+    if (!$exit) {
+      $inputLine += $key.Character
+    }
+    elseif ($key.VirtualKeyCode -eq 27) {
+      $cancelled
+    }
+
+    # 8 = Backspace
+    if ($key.VirtualKeyCode -eq 8) {
+      # remove last character from input line
+      $newLength = $inputLine.Length - 2;
+      if ($newLength -lt 0) {
+        $newLength = 0
+      }
+      $inputLine = $inputLine.Substring(0, $newLength)
+
+      # replace line with blank space
+      $blank = ""
+      $lineLength = $prompt.length + $inputLine.Length
+      for ($l = 0; $l -le $lineLength; $l++) {
+        $blank = $blank + " "
+      }
+      Write-Host "`r$blank" -NoNewline
+    }
+
+    # replace line with new input line
+    if (!$exit) {
+      Write-Host "`r$prompt$inputLine" -NoNewline
+    }
+  } while (!$exit)
+
+  # replace line with blank space
+  $blank = ""
+  $lineLength = $prompt.length + $inputLine.Length
+  for ($l = 0; $l -le $lineLength; $l++) {
+    $blank = $blank + " "
+  }
+  Write-Host "`r$blank" -NoNewline
+
+  # empty input line if esc pressed
+  if ($cancelled) {
+    $inputLine = $false
+  }
+
+  # start console at beginning of line
+  Write-Host "`r" -NoNewline
+  $inputLine
+}
 
 function Initialize-Display {
   $Global:originalBufferWidth = [System.Console]::BufferWidth

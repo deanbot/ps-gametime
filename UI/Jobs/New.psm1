@@ -12,7 +12,8 @@ function Show-JobNew {
   if ($title) {
     if ($isTimed) {
       Write-Host "  |$(Get-PaddedString "  Type:    $type (Timed)")|  "
-    } else {
+    }
+    else {
       Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     }
     Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
@@ -23,7 +24,7 @@ function Show-JobNew {
         Write-Host "  |$(Get-PaddedString "  [...]")|  "
         Write-Host "  |$(Get-PaddedString -Fill '_')|  "
         Write-Host ""
-        Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+        Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
         Write-Host ""
         if ($isTimed) {
           Write-Host "  Game Time points per hour"
@@ -31,7 +32,7 @@ function Show-JobNew {
         else {
           Write-Host "  Game Time points earned for completion"
         }
-        $rate = Read-Host "  Rewards"
+        $rate = Read-InputLine "  Rewards: "
         $Global:inputValue = $rate
       }
       else {
@@ -70,7 +71,6 @@ function Show-JobNew {
           -or $timed -eq [System.ConsoleKey]::Backspace)
       $Global:inputValue = $timed
     }
-    Write-Debug "Hey"
   }
   else {
     # Title Prompt
@@ -78,9 +78,9 @@ function Show-JobNew {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
-    $title = Read-Host "  Title"
+    $title = Read-InputLine "  Title: "
     $Global:inputValue = $title
   }
 

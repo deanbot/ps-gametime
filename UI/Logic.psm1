@@ -502,7 +502,8 @@ function Read-Input {
     if ($section -eq $sectionJobsMenu) {
       # get jobs for current section
       if (!$subPage) {
-        if ($character -eq [System.ConsoleKey]::LeftArrow -or $character -eq [System.ConsoleKey]::RightArrow) {
+        if ($character -eq [System.ConsoleKey]::LeftArrow `
+            -or $character -eq [System.ConsoleKey]::RightArrow) {
           Initialize-JobsSubSection
         }
       }

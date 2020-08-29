@@ -27,9 +27,9 @@ function Show-JobConfirmComplete {
       Write-Host "  |$(Get-PaddedString "  [...]")|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
-      Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
       Write-Host ""
-      $duration = Read-Host "  Duration (in hours, i.e. 1 or .75)"
+      $duration = Read-InputLine "  Duration (in hours, i.e. 1 or .75): "
       $Global:inputValue = $duration
       return
     }
@@ -43,9 +43,9 @@ function Show-JobConfirmComplete {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
-    $notes = Read-Host "  Notes (optional)"
+    $notes = Read-InputLine "  Notes (optional): "
     $Global:inputValue = $notes
   }
   else {

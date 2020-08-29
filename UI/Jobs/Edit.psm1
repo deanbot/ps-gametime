@@ -76,11 +76,9 @@ function Show-JobField {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
-    $title = Read-Host "  Title"
-
-    # ignore warning
+    $title = Read-InputLine "  Title: "
     $Global:inputValue = $title
   }
   elseif ($field -eq 'Type') {
@@ -105,7 +103,7 @@ function Show-JobField {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "Enter [Q] to return" -Right $true)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
     if ($jobType -eq 'Quest') {
       Write-Host "  Game Time points per hour"
@@ -113,7 +111,7 @@ function Show-JobField {
     else {
       Write-Host "  Game Time points per completion"
     }
-    $rate = Read-Host "  Rewards"
+    $rate = Read-InputLine "  Rewards: "
     $Global:inputValue = $rate
   }
 }
