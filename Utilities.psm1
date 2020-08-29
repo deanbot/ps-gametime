@@ -208,7 +208,7 @@ function Edit-Job {
 
     # rate of return (per hour)
     [Parameter(Mandatory = $false, Position = 3)]
-    [decimal]$Rate = 1
+    [decimal]$Rate
   )
 
   # validate
