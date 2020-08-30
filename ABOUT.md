@@ -22,7 +22,7 @@ Creating jobs in Game Time is easy but requires some forethought and experimenta
 To get started:
 
 - **Learn the job types.** Familiarize yourself with the different types of jobs you can create.
-- **Determine your focus goal** Figure out an overarching goal to help you focus your efforts.
+- **Determine your focus goal.** Figure out an overarching goal to help you focus your efforts.
 - **Brainstorm jobs and their rewards.** Brainstorm jobs that help you achieve your goals. Choose the right rewards for the job.
 
 Also, remember that experimentation is key. It's hard to know which jobs/rewards work best for you without experimenting. You can adapt as you go.
