@@ -9,8 +9,7 @@ function Show-JobTitleWarning {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
+  Write-Host "  Press [any key] to continue... " -NoNewline
   $char = Read-Character -Blocking $true
 }
 
@@ -27,7 +26,7 @@ function Show-JobRateWarning {
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
   Write-Host "  Press [any key] to continue..."
-  Write-Host ""
+  Write-Host "  "
   $char = Read-Character -Blocking $true
 }
 

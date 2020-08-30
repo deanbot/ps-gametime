@@ -105,6 +105,7 @@ function Get-PaddedString {
 
 function Read-Character {
   param(
+    [Parameter(Mandatory = $false, Position = 0)]
     [bool]$Blocking = $true
   )
   if ($Blocking) {
@@ -147,7 +148,7 @@ function Read-InputLine {
       $inputLine += $key.Character
     }
     elseif ($key.VirtualKeyCode -eq 27) {
-      $cancelled
+      $cancelled = $true
     }
 
     # 8 = Backspace
@@ -193,6 +194,16 @@ function Read-InputLine {
 }
 
 function Initialize-Display {
+  # hide cursor
+  try {
+    $Global:originalCursorVisible = [System.Console]::CursorVisible
+  }
+  catch {
+    # 'not supported on this platform
+    $Global:originalCursorVisible = $true
+  }
+  [System.Console]::CursorVisible = $false
+
   $Global:originalBufferWidth = [System.Console]::BufferWidth
   $Global:originalBufferHeight = [System.Console]::BufferHeight
   $Global:originalWindowHeight = [System.Console]::WindowHeight
@@ -208,6 +219,9 @@ function Initialize-Display {
 }
 
 function Restore-Display {
+  # reset cursor visible
+  [System.Console]::CursorVisible = $Global:originalCursorVisible
+
   Clear-Host
   try {
     if ([System.Console]::BufferWidth -gt $Global:originalBufferWidth -or [System.Console]::BufferHeight -gt $Global:originalBufferHeight) {

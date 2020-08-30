@@ -110,7 +110,6 @@ function Initialize-JobEdit {
   else {
     $Global:maxMenuPositionsY = 3
   }
-  $Global:maxMenuPositionsY = 4
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $true
   $Global:currentField = $false
@@ -691,7 +690,7 @@ function Read-JobCompleteInputVal {
 
   # first form step
   if (!$Global:duration) {
-    if ($inputVal -eq 'q') {
+    if ($inputVal -eq $false) {
       $quit = $true
     }
     else {
@@ -723,14 +722,18 @@ function Read-JobCompleteInputVal {
 
   # second form step
   elseif (!$Global:notesStepPassed) {
-    $Global:notesStepPassed = $true
-    $Global:notes = $inputVal
+    if ($inputVal -eq $false) {
+      $quit = $true
+    }
+    else {
+      $Global:notesStepPassed = $true
+      $Global:notes = $inputVal
+    }
   }
 
   # confirm step
   else {
-    if ($inputVal -eq [System.ConsoleKey]::Escape `
-        -or $inputVal -eq [System.ConsoleKey]::Backspace) {
+    if ($inputVal -eq [System.ConsoleKey]::Escape) {
       $quit = $true
     }
     elseif ($inputVal -eq [System.ConsoleKey]::Enter) {
@@ -774,9 +777,7 @@ function Read-NewJobInputVal {
 
   # step 1 of input form
   if (!$Global:newJobTitle) {
-    # if empty title return
-    if ($inputVal -eq 'q') {
-      # Show-JobNewFailed
+    if ($inputVal -eq $false) {
       $quit = $true
     }
     elseif (!$inputVal) {
@@ -787,13 +788,11 @@ function Read-NewJobInputVal {
       $Global:newJobTitle = $inputVal
     }
   }
-
   else {
     $type = $Global:currentJobType
     $subType = $Global:newJobSubType
     if ($type -like '*Quest*' -and !$subType) {
-      if ($inputVal -eq 'q') {
-        # Show-JobNewFailed
+      if ($inputVal -eq 'Escape') {
         $quit = $true
       }
       elseif ($inputVal -eq 'n') {
@@ -804,8 +803,7 @@ function Read-NewJobInputVal {
       }
     }
     elseif (!$Global:newJobRate) {
-      if ($inputVal -eq 'q') {
-        # Show-JobNewFailed
+      if ($inputVal -eq $false) {
         $quit = $true
       }
       else {
@@ -835,9 +833,9 @@ function Read-NewJobInputVal {
       }
     }  # step 3 of input form
     else {
-      if ($inputVal -eq 'q' `
+      if ($inputVal -eq 'Escape' `
           -or $inputVal -eq 'n') {
-        Show-JobNewFailed
+        # Show-JobNewFailed
         $quit = $true
       }
       else {
@@ -878,7 +876,10 @@ function Read-JobEditInputVal {
     $job = $Global:currentJob
     $jobId = $job.Id
     if ($field -eq 'Title') {
-      if (!$inputVal) {
+      if ($inputVal -eq $false) {
+        $quit = $true
+      }
+      elseif (!$inputVal) {
         Show-JobTitleWarning
       }
       else {
@@ -927,7 +928,10 @@ function Read-JobEditInputVal {
       }
     }
     elseif ($field -eq 'Rate') {
-      if (!$inputVal) {
+      if ($inputVal -eq $false) {
+        $quit = $true
+      }
+      elseif (!$inputVal) {
         $warn = $true
       }
       else {
@@ -943,10 +947,11 @@ function Read-JobEditInputVal {
           $warn = $true
         }
       }
-      if ($warn -eq $true) {
+
+      if (!$quit -and $warn -eq $true) {
         Show-JobRateWarning
       }
-      else {
+      elseif (!$quit) {
         $success = Edit-Job $jobId -Rate $inputVal
         if (!$success) {
           Show-JobEditFailed

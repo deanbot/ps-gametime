@@ -29,7 +29,9 @@ function Show-JobConfirmComplete {
       Write-Host ""
       Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
       Write-Host ""
-      $duration = Read-InputLine "  Duration (in hours, i.e. 1 or .75): "
+      Write-Host "  Input hours then press [Enter]..."
+      Write-Host ""
+      $duration = Read-InputLine "  Duration: "
       $Global:inputValue = $duration
       return
     }
@@ -45,6 +47,8 @@ function Show-JobConfirmComplete {
     Write-Host ""
     Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
+    Write-Host "  Input notes then press [Enter]..."
+    Write-Host ""
     $notes = Read-InputLine "  Notes (optional): "
     $Global:inputValue = $notes
   }
@@ -53,15 +57,14 @@ function Show-JobConfirmComplete {
     Write-Host "  |$(Get-PaddedString)|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
     Write-Host "  Press [Enter] to complete"
     Write-Host ""
     do {
       $char = Read-Character
     } until ($char -eq [System.ConsoleKey]::Enter `
-        -or $char -eq [System.ConsoleKey]::Escape `
-        -or $char -eq [System.ConsoleKey]::Backspace)
+        -or $char -eq [System.ConsoleKey]::Escape)
     $Global:inputValue = $char
   }
 }

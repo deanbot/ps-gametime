@@ -18,6 +18,7 @@ function Show-JobSingle {
   Write-Host "  |$removeLine|  "
   # Show-ControlsFooter
   # Write-Host "  |$(Get-PaddedString '  Press [Enter] to select' -Width ($width ))|  "
+  Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
 }

@@ -10,28 +10,30 @@ function Show-JobNew {
   $isTimed = $subType -eq 'Timed'
 
   if ($title) {
+    Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
     if ($isTimed) {
       Write-Host "  |$(Get-PaddedString "  Type:    $type (Timed)")|  "
     }
     else {
       Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     }
-    Write-Host "  |$(Get-PaddedString "  Title:   $title")|  "
 
     if ($subType -or $type -ne 'Quest') {
       if (!$rate) {
         # Rewards/Rate prompt
         Write-Host "  |$(Get-PaddedString "  [...]")|  "
+        Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
         Write-Host "  |$(Get-PaddedString -Fill '_')|  "
         Write-Host ""
         Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
         Write-Host ""
         if ($isTimed) {
-          Write-Host "  Game Time points per hour"
+          Write-Host "  Input pts/h then press [Enter]..."
         }
         else {
-          Write-Host "  Game Time points earned for completion"
+          Write-Host "  Input pts then press [Enter]..."
         }
+        Write-Host ""
         $rate = Read-InputLine "  Rewards: "
         $Global:inputValue = $rate
       }
@@ -42,9 +44,10 @@ function Show-JobNew {
         else {
           Write-Host "  |$(Get-PaddedString "  Rewards: $rate pts")|  "
         }
+        Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
         Write-Host "  |$(Get-PaddedString -Fill '_')|  "
         Write-Host ""
-        Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+        Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
         Write-Host ""
         Write-Host "  Create Job?"
         Write-Host "  [Y] Yes  [N] No: "
@@ -52,38 +55,40 @@ function Show-JobNew {
           $createJob = Read-Character
         } until ($createJob -eq 'y' `
             -or $createJob -eq 'n' `
-            -or $createJob -eq 'q')
+            -or $createJob -eq [System.ConsoleKey]::Escape)
         $Global:inputValue = $createJob
       }
     }
     else {
+      Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
       Write-Host ""
-      Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
       Write-Host ""
-      Write-Host "  Is Quest Timed"
+      Write-Host "  Is Quest Timed?"
       Write-Host "  [Y] Yes  [N] No: "
       do {
         $timed = Read-Character
       } until ($timed -eq 'y' `
           -or $timed -eq 'n' `
-          -or $timed -eq [System.ConsoleKey]::Escape `
-          -or $timed -eq [System.ConsoleKey]::Backspace)
+          -or $timed -eq [System.ConsoleKey]::Escape)
       $Global:inputValue = $timed
     }
   }
   else {
     # Title Prompt
-    Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
+    Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
+    Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
     Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
     Write-Host ""
+    Write-Host "  Input title then press [Enter]..."
+    Write-Host ""
     $title = Read-InputLine "  Title: "
     $Global:inputValue = $title
   }
-
 }
 
 

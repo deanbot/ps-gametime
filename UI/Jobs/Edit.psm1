@@ -95,8 +95,7 @@ function Show-JobField {
     } until($type -eq 'q' `
         -or $type -eq 'd' `
         -or $type -eq 'r' `
-        -or $type -eq [System.ConsoleKey]::Escape `
-        -or $type -eq [System.ConsoleKey]::Backspace)
+        -or $type -eq [System.ConsoleKey]::Escape)
     $Global:inputValue = $type
   }
   elseif ($field -eq 'Rate') {
