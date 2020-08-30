@@ -1,3 +1,8 @@
+$Global:DevMode = $true
+$Global:Debug = "Continue"
+# $Global:Debug = "SilentlyContinue"
+$Global:SilentStatusReturn = $false
+
 if ($Global:Debug) {
   $DebugPreference = $Global:Debug
 }
@@ -5,15 +10,11 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-$Global:DevMode = $true
-$Global:Debug = "Continue"
-$Global:Debug = "SilentlyContinue"
-$Global:SilentStatusReturn = $false
-
 Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
 Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
 Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
 Import-Module $Global:ScriptRoot\ViewEngine.psm1 -Force
+
 
 function Main {
   try {

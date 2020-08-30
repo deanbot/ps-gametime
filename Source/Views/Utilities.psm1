@@ -1,4 +1,11 @@
 # UI utilities
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
+}
+
 
 function Read-Character {
   param(
@@ -21,7 +28,10 @@ function Read-Character {
 function Read-InputLine {
   param (
     [Parameter(Mandatory = $false, Position = 0)]
-    [string]$Prompt = ""
+    [string]$Prompt = "",
+
+    [Parameter(Mandatory = $false, Position = 1)]
+    [int]$CancelKeyCode = 27 # 27 = Escape
   )
 
   # display initial prompt
@@ -32,21 +42,24 @@ function Read-InputLine {
   # accept and display input until enter or esc is pressed
   $cancelled = $false
   $inputLine = "";
+  $inputLineDisplay = ""
   do {
     # Test to see if escape was pressed within the loop
     $key = $Host.UI.RawUI.ReadKey("IncludeKeyUp,NoEcho")
 
     # exit if enter or esc pressed
-    # 13 = Enter, 27 = Esc
-    $exit = $key.VirtualKeyCode -eq 13 -or $key.VirtualKeyCode -eq 27
+    # 13 = Enter
+    $exit = $key.VirtualKeyCode -eq 13 -or $key.VirtualKeyCode -eq $CancelKeyCode
 
     # add char to input line
-    if (!$exit) {
+    if (!$exit -and $key.Character) {
       $inputLine += $key.Character
     }
-    elseif ($key.VirtualKeyCode -eq 27) {
+    elseif ($key.VirtualKeyCode -eq $CancelKeyCode) {
       $cancelled = $true
     }
+
+    $maxWidth = $Host.Ui.RawUI.WindowSize.Width
 
     # 8 = Backspace
     if ($key.VirtualKeyCode -eq 8) {
@@ -56,10 +69,26 @@ function Read-InputLine {
         $newLength = 0
       }
       $inputLine = $inputLine.Substring(0, $newLength)
+    }
 
-      # replace line with blank space
+    # update display line (truncate if console edge reached)
+    $startIndex = 0
+    $totalLength = $prompt.Length + $inputLine.Length
+    $inputLineDisplay = if ($totalLength -le $maxWidth - 1) {
+      $inputLine
+    }
+    else {
+      $startIndex = $totalLength - $maxWidth
+      $inputLine.SubString($startIndex, ($inputLine.Length - $startIndex))
+    }
+
+    # replace line with blank space
+    if ($totalLength -le $maxWidth - 1) {
       $blank = ""
       $lineLength = $prompt.length + $inputLine.Length
+      if ($lineLength -gt $maxWidth) {
+        $lineLength = $maxWidth
+      }
       for ($l = 0; $l -le $lineLength; $l++) {
         $blank = $blank + " "
       }
@@ -68,13 +97,16 @@ function Read-InputLine {
 
     # replace line with new input line
     if (!$exit) {
-      Write-Host "`r$prompt$inputLine" -NoNewline
+      Write-Host "`r$prompt$inputLineDisplay" -NoNewline
     }
   } while (!$exit)
 
   # replace line with blank space
   $blank = ""
   $lineLength = $prompt.length + $inputLine.Length
+  if ($lineLength -gt $maxWidth) {
+    $lineLength = $maxWidth
+  }
   for ($l = 0; $l -le $lineLength; $l++) {
     $blank = $blank + " "
   }
