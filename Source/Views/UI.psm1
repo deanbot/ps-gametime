@@ -1,12 +1,4 @@
-# $DebugPreference = "Continue"
-$Path = $PSScriptRoot
-
-Import-Module $Path\Utilities.psm1 -Force
-Import-Module $Path\Logic.psm1 -Force
-Import-Module $Path\Game\View.psm1 -Force
-Import-Module $Path\Index\View.psm1 -Force
-Import-Module $Path\Jobs\View.psm1 -Force
-Import-Module $Path\Logs\View.psm1 -Force
+# Shared layout elements
 
 function Show-Header {
   $width = $Global:containerWidth

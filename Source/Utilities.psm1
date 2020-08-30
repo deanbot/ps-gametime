@@ -10,6 +10,27 @@ $JobTypeQuestTimed = 'Quest-Timed'
 $JobTypeDaily = 'Daily'
 $JobTypeRare = 'Rare'
 
+function Get-CurrentJob {
+  $pos = $Global:menuPositionY
+  $jobs = $Global:currentJobs
+  if ($jobs -and $jobs.Length -ge ($pos - 1) ) {
+    return $jobs[$pos]
+  }
+  return $false
+}
+
+function Get-CurrentJobType {
+  $pos = $Global:menuPositionX
+  $jobType = Get-JobTypeByPosition $pos
+  $jobType
+}
+
+function Get-CurrentJobs {
+  $jobType = Get-CurrentJobType
+  $jobs = (Get-Jobs) | Where-Object { $_.Type -like "*$jobType*" }
+  $jobs
+}
+
 function Get-TypeIsValid {
   Param(
     # input type
@@ -25,6 +46,24 @@ function Get-TypeIsValid {
   else {
     $false
   }
+}
+
+function Get-JobTypeByPosition {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int32]$posX
+  )
+  $jobType = "";
+  switch ($posX) {
+    0 {
+      $jobType = 'Quest'
+    } 1 {
+      $jobType = 'Daily'
+    } 2 {
+      $jobType = 'Rare'
+    }
+  }
+  $jobType
 }
 
 function Get-MessageNoJobFound {
@@ -91,350 +130,4 @@ function Get-MessageTransactionLog {
     }
   }
   $message
-}
-
-function Get-Jobs {
-  return Get-JobsDb
-}
-
-function Get-Transactions {
-  Get-TransactionsDb
-}
-
-function Get-Balance {
-  $transactions = Get-Transactions
-  $balance = $transactions | Select-Object Change, @{Name = "CastedChange"; Expression = { [decimal]$_.Change } } | Measure-Object CastedChange -Sum
-  if ($balance.Sum) {
-    $balance.Sum
-  }
-  else {
-    0
-  }
-}
-
-function Get-AvailableBalance {
-  $balance = Get-Balance
-  [Math]::Floor([decimal]($balance))
-}
-
-function Get-Job {
-  Param(
-    # id of job to get
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
-  )
-  $Job = Get-JobDb $JobId
-  if ($Job) {
-    $Job
-  }
-  else {
-    Throw $(Get-MessageNoJobFound $JobId)
-    if (!$Global:SilentStatusReturn) {
-      $false
-    }
-  }
-}
-
-
-function New-Job {
-  Param(
-    # title of job
-    [Parameter(Mandatory = $true, Position = 0)]
-    [string]$Title,
-
-    # job type: Quest, Daily, or Rare
-    [Parameter(Mandatory = $true, Position = 1)]
-    [string]$Type,
-
-    # rate of return (per hour)
-    [Parameter(Mandatory = $false, Position = 2)]
-    [decimal]$Rate = 1
-  )
-
-  # normalize
-  if ($Rate -eq "") {
-    $Rate = 1
-  }
-
-  # validate
-  $valid = $true
-  $validType = Get-TypeIsValid $Type
-  if (!$validType) {
-    $valid = $false
-  }
-
-  # create new job
-  if ($valid) {
-    $job = [PSCustomObject]@{
-      Type  = $Type
-      Id    = 0
-      Title = $Title
-      Rate  = [decimal]$Rate
-    }
-    $success = Add-JobDb $job
-    if ($success) {
-      Write-Debug "Job created successfully."
-    }
-    else {
-      Write-Debug "Job not created."
-    }
-    if (!$Global:SilentStatusReturn) {
-      return $success
-    }
-  }
-  else {
-    Throw $(Get-MessageInvalidJobType $Type)
-    Write-Debug "Job not created."
-    if (!$Global:SilentStatusReturn) {
-      return $false
-    }
-  }
-}
-
-
-function Edit-Job {
-  Param(
-    # id of job to edit
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
-
-    # title of job
-    [Parameter(Mandatory = $false, Position = 1)]
-    [string]$Title,
-
-    # job type: Quest, Daily, or Rare
-    [Parameter(Mandatory = $false, Position = 2)]
-    [string]$Type,
-
-    # rate of return (per hour)
-    [Parameter(Mandatory = $false, Position = 3)]
-    [decimal]$Rate
-  )
-
-  # validate
-  $valid = $true
-  if ($Type) {
-    $validType = Get-TypeIsValid $Type
-    if (!$validType) {
-      $valid = $false
-    }
-  }
-  $previousJob = Get-JobDb $JobId
-  if (!$previousJob) {
-    $valid = $false
-  }
-
-  if ($valid) {
-    $job = [PSCustomObject]@{
-      Type  = if ($Type) { $Type } else { $previousJob.Type }
-      Id    = $JobId
-      Title = if ($Title) { $Title } else { $previousJob.Title }
-      Rate  = if ($Rate) { $Rate } else { $previousJob.Rate }
-    }
-    $success = Set-JobDb $JobId $job
-    if ($success) {
-      Write-Debug "Job editted successfully."
-    }
-    else {
-      Write-Debug "Job not editted."
-    }
-    if (!$Global:SilentStatusReturn) {
-      return $success
-    }
-  }
-  else {
-    if (!$jobExists) {
-      Throw $(Get-MessageNoJobFound $JobId)
-    }
-    elseif (!$validType) {
-      Throw $(Get-MessageInvalidJobType $Type)
-    }
-    Write-Debug "Job not editted."
-    if (!$Global:SilentStatusReturn) {
-      return $false
-    }
-  }
-}
-
-function Remove-Job {
-  Param(
-    # id of job to remove
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
-  )
-
-  $success = Remove-JobDb $JobId
-  if ($success) {
-    Write-Debug "Job removed successfully."
-  }
-  else {
-    Throw $(Get-MessageNoJobFound $JobId)
-  }
-  if (!$Global:SilentStatusReturn) {
-    $success
-  }
-}
-
-
-function New-Transaction {
-  Param(
-    # id of job being performed. use -1 to deduct from balance instead
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
-
-    # duration (hours) job is performed (for quest type jobs)
-    [Parameter(Mandatory = $false, Position = 1)]
-    $Degree = 1,
-
-    # note
-    [Parameter(Mandatory = $false, Position = 2)]
-    [string]$Note = ""
-  )
-
-  if ($JobId -eq -1) {
-    $TransactionDegree = [int]$Degree
-    return New-DeductTransaction $TransactionDegree $Note
-  }
-  else {
-    $TransactionDegree = [decimal]$Degree
-    return New-JobTransaction $JobId $TransactionDegree $Note
-  }
-}
-
-function New-JobTransaction {
-  Param(
-    # id of job being performed. use -1 to deduct from balance instead
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
-
-    # duration (hours) job is performed (for quest type jobs)
-    [Parameter(Mandatory = $false, Position = 1)]
-    [decimal]$Degree = 1,
-
-    # note
-    [Parameter(Mandatory = $false, Position = 2)]
-    [string]$Note = ""
-  )
-
-  $valid = $true
-  $job = Get-JobDb $JobId
-  if (!$job) {
-    $valid = $false
-  }
-  $isDaily = $job.Type -eq $JobTypeDaily
-  $isRare = $job.Type -eq $JobTypeRare
-  $dailyJobAlreadyAdded = $false
-  $date = Get-Date -format 'MM/dd/yyyy'
-  if ($isDaily) {
-    # check transactions for same day same job id
-    $transactions = Get-TransactionsDb
-    $foundTransaction = $transactions | Where-Object { $_.Date -eq $date -and $_.JobId -eq $JobId }
-    if ($foundTransaction) {
-      $dailyJobAlreadyAdded = $true
-      $valid = $false
-    }
-  }
-
-  if ($valid) {
-    $change = $Degree * $job.Rate
-    $log = Get-MessageTransactionLog -JobType $job.Type -JobTitle $job.Title -JobRate $job.Rate -Degree $Degree
-    $transaction = [PSCustomObject]@{
-      Date   = $date
-      JobId  = $JobId
-      Change = $change
-      Log    = $log
-      Note   = $Note
-    }
-    $success = Add-TransactionDb $transaction
-    if ($success) {
-      Write-Debug "Transaction created successfully."
-      if ($isRare) {
-        $removeJobSuccess = Remove-Job $JobId
-        if ($removeJobSuccess) {
-          Write-Debug "Rare job removed successfully."
-        }
-        else {
-          Write-Debug "Rare job not removed"
-        }
-      }
-    }
-    else {
-      Write-Debug "Transaction not created."
-    }
-    if (!$Global:SilentStatusReturn) {
-      if ($isRare -and $success) {
-        if ($removeJobSuccess) {
-          return $transaction
-        }
-        else {
-          return $false
-        }
-      }
-      elseif ($success) {
-        return $transaction
-      }
-      else {
-        return $false
-      }
-    }
-  }
-  else {
-    if (!$job) {
-      Throw $(Get-MessageNoJobFound $JobId)
-    }
-    elseif ($dailyJobAlreadyAdded) {
-      Throw "Daily transaction already created for date: $date"
-    }
-    Write-Debug "Transaction not created."
-    if (!$Global:SilentStatusReturn) {
-      return $false
-    }
-  }
-}
-
-function New-DeductTransaction {
-  param(
-    # amount of game time points to use
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int]$Degree,
-
-    # note
-    [Parameter(Mandatory = $false, Position = 1)]
-    [string]$Note = ""
-  )
-
-  $available = Get-AvailableBalance
-  if ($Degree -lt 1) {
-    throw "Must spend at least one point"
-  }
-  elseif ($Degree -gt $available) {
-    throw $(Get-MessageTooFewPoints $available)
-  }
-  else {
-    $date = Get-Date -format 'MM/dd/yyyy'
-    $log = Get-MessageDeductTransactionLog $Degree
-    $transaction = [PSCustomObject]@{
-      Date   = $date
-      JobId  = -1
-      Change = ($Degree * -1)
-      Log    = $log
-      Note   = $Note
-    }
-    $success = Add-TransactionDb $transaction
-    if ($success) {
-      Write-Debug "Transaction created successfully."
-    }
-    else {
-      Write-Debug "Transaction not created."
-    }
-    if (!$Global:SilentStatusReturn) {
-      if ($success) {
-        return $transaction
-      }
-      else {
-        return $false
-      }
-
-    }
-  }
 }
