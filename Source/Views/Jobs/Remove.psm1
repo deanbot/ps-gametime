@@ -21,7 +21,6 @@ function Show-JobConfirmRemove {
       -or $char -eq [System.ConsoleKey]::Escape `
       -or $char -eq [System.ConsoleKey]::Backspace)
 
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSPossibleIncorrectComparisonWithNull", Scope = "Function", Target = "*")]
   $Global:inputValue = $char
 }
 
