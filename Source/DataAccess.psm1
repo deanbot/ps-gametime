@@ -27,7 +27,7 @@ function Get-JobCsvPath {
       }
     }
     else {
-      $path = "$Global:ScriptRoot\Database\"
+      $path = "$Global:ScriptRoot\..\Database\"
     }
     return "$path$filename"
   }
@@ -51,7 +51,7 @@ function Get-TransactionCsvPath {
       }
     }
     else {
-      $path = "$Global:ScriptRoot\Database\"
+      $path = "$Global:ScriptRoot\..\Database\"
     }
     return "$path$filename"
   }

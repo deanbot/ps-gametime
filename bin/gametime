@@ -8,6 +8,7 @@ check_command() {
         echo ''
 }
 
+# Find a suitable PowerShell client and start the script
 CANDIDATES="pwsh \
     powershell"
 
@@ -21,8 +22,8 @@ for CANDIDATE in $CANDIDATES; do
 done
 
 if [ "$CLIENT" = '' ]; then
-    echo "Error: No HTTP client detected"
+    echo "Error: No PowerShell client detected"
     exit 1
 fi
 
-"$CLIENT" "${0%/*}"/../Start.ps1
+"$CLIENT" "${0%/*}"/../Source/Start.ps1
