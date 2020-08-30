@@ -9,7 +9,7 @@ function Show-JobConfirmRemove {
   Show-JobHeading "Remove: $jobTitle" $jobType $jobRate
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
-  Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+  Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
   Write-Host ""
   Write-Host "  Remove Job?"
   Write-Host "  [Y] Yes  [N] No"

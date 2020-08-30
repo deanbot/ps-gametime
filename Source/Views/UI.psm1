@@ -91,6 +91,6 @@ function Show-Heading {
   )
   $width = $Global:containerWidth
   Write-Host "    .$(Get-PaddedString -Fill '-' -Width ($width -4)).  "
-  Write-Host "   /$(Get-PaddedString $Text -Center $true -Width ($width-2))\  "
+  Write-Host "   /$(Get-PaddedString $(Get-TextExcerpt $Text ($width-6)) -Center $true -Width ($width-2))\  "
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
 }

@@ -103,6 +103,29 @@ function Get-CheckBox {
   }
 }
 
+function Get-TextExcerpt {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Text,
+
+    [Parameter(Mandatory = $false, Position = 1)]
+    [int]$Length = 20,
+
+    [Parameter(Mandatory = $false, Position = 2)]
+    [string]$Suffix = "...",
+
+    [Parameter(Mandatory = $false, Position = 3)]
+    [bool]$OmitSuffix = $false
+  )
+  $excerpt = $Text
+  if ($Text.Length -gt $Length) {
+    $pullLength = if ($OmitSuffix) { $Length } else { $Length - $Suffix.Length }
+    $excerpt = $excerpt.Substring(0, $pullLength)
+    $excerpt = "$excerpt$suffix"
+  }
+  $excerpt
+}
+
 function Get-TextLines {
   param(
     [Paramter(Mandatory = $true, Position = 0)]

@@ -35,12 +35,12 @@ function Show-JobCheckBoxes {
     [Parameter(Mandatory = $true, Position = 0)]
     $jobs
   )
-
+  $width = $global:containerWidth
   $pos = $global:menuPositionY
   for ($i = 0; $i -lt @($jobs).Length; $i++) {
     $job = $jobs[$i]
     $selected = $pos -eq $i
-    $jobLine = "  $(Get-CheckBox $selected)$($job.Title)"
+    $jobLine = "  $(Get-CheckBox $selected)$(Get-TextExcerpt $job.Title ($width-8))"
     Write-Host "  |$(Get-PaddedString $jobLine)|  "
   }
 }
