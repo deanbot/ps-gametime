@@ -53,7 +53,9 @@ function Show-GameConfirmSpend {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
-    $notes = Read-Host "  Notes (optional)"
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    $notes = Read-InputLine "  Notes (optional): "
     $global:inputValue = $notes
   }
   else {

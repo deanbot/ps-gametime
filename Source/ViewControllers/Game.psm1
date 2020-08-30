@@ -8,6 +8,8 @@ else {
 
 # constants
 $sectionGameMenu = 'Game Time'
+$gamePageSpend = 'Spend'
+
 
 function Initialize-GameMenu {
   $Global:section = $sectionGameMenu
@@ -49,8 +51,13 @@ function Read-GameConfirmInputVal {
 
   # first form step
   if (!$Global:notesStepPassed) {
-    $Global:notesStepPassed = $true
-    $Global:notes = $inputVal
+    if ($inputVal -eq $false) {
+      $quit = $true
+    }
+    else {
+      $Global:notesStepPassed = $true
+      $Global:notes = $inputVal
+    }
   }
 
   # confirm step
