@@ -5,7 +5,6 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-$Global:ScriptRoot = $PSScriptRoot
 $Global:DevMode = $true
 $Global:Debug = "Continue"
 $Global:Debug = "SilentlyContinue"

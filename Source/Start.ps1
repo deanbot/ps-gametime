@@ -11,5 +11,6 @@ param(
 
 $Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation
+$Global:ScriptRoot = $PSScriptRoot
 
 . $Global:ScriptRoot\Main.ps1
