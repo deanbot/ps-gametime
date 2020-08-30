@@ -1,6 +1,6 @@
 $Global:DevMode = $true
 $Global:Debug = "Continue"
-# $Global:Debug = "SilentlyContinue"
+$Global:Debug = "SilentlyContinue"
 $Global:SilentStatusReturn = $false
 
 if ($Global:Debug) {
