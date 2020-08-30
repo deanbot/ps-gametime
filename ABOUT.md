@@ -65,7 +65,7 @@ Some inidcators the job is a quest:
 Some indicators the job is a daily:
 
 - the real benefit of this job comes from building it into a daily practice
-- you receive deminisihing returns from completing this job more than once in a given day
+- you receive diminishing returns from completing this job more than once in a given day
 - completing this job helps you be the person who will achieve your goal
 
 Some indicators the job is rare:
@@ -73,7 +73,7 @@ Some indicators the job is rare:
 - completing this task deserves proper celebration
 - this job can only be completed once
 
-That said, there's no one-size fits all. If you're goal is to become a monk, "meditate" might be better as a quest than as a daily.
+That said, there's no one-size fits all. If your goal is to become a monk, "meditate" might be better as a quest than as a daily.
 
 ## Do Work
 
