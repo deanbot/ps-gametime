@@ -16,6 +16,7 @@ function Show-JobConfirmComplete {
   Write-Host ""
   Show-JobHeading "Complete: $jobTitle" $jobType $jobRate
 
+  $width = $Global:containerWidth
   $passedNotes = $Global:notesStepPassed
   $notes = $Global:notes
   $duration = $Global:duration
@@ -53,7 +54,7 @@ function Show-JobConfirmComplete {
     $Global:inputValue = $notes
   }
   else {
-    Write-Host "  |$(Get-PaddedString "  Notes:    [...]")|  "
+    Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
     Write-Host "  |$(Get-PaddedString)|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""

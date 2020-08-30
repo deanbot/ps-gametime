@@ -38,6 +38,7 @@ function Show-GameConfirmSpend {
   $passedNotes = $global:notesStepPassed
   $notes = $global:notes
   $points = $global:menuPositionY
+  $width = $global:containerWidth
 
   Clear-Host
   Write-Host ""
@@ -59,7 +60,7 @@ function Show-GameConfirmSpend {
     $global:inputValue = $notes
   }
   else {
-    Write-Host "  |$(Get-PaddedString "  Notes:  [...]")|  "
+    Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
     Write-Host "  |$(Get-PaddedString)|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
     Write-Host ""
