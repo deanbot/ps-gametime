@@ -5,6 +5,12 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
+$Global:ScriptRoot = $PSScriptRoot
+$Global:DevMode = $true
+$Global:Debug = "Continue"
+$Global:Debug = "SilentlyContinue"
+$Global:SilentStatusReturn = $false
+
 Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
 Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
 Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
