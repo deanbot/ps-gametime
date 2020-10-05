@@ -10,7 +10,9 @@ check_command() {
 
 # Find a suitable PowerShell client and start the script
 CANDIDATES="pwsh \
-    powershell"
+    powershell \
+    pwsh.exe \ 
+    powershell.exe"
 
 CLIENT=
 
