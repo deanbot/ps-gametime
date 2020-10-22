@@ -1,7 +1,3 @@
-function Show-PromptEditJob {
-
-}
-
 function Show-JobEdit {
   $pos = $Global:menuPositionY
   $job = $Global:currentJob
@@ -63,6 +59,46 @@ function Show-JobEditFailed {
   $char = Read-Character -Blocking $true
 }
 
+function Show-PromptEditJob {
+  $job = $Global:currentJob
+  $jobType = $job.Type
+  $field = $Global:currentField
+
+  if ($field -eq 'Title') {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    $title = Read-InputLine "  Title: "
+    $Global:inputValue = $title
+  } elseif ($field -eq 'Type') {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Select Job Type "
+    Write-Host "  [Q] Quest  [D] Daily  [R] Rare: "
+    Write-Host ""
+    do {
+      $type = Read-Character
+    } until($type -eq 'q' `
+        -or $type -eq 'd' `
+        -or $type -eq 'r' `
+        -or $type -eq [System.ConsoleKey]::Escape)
+    $Global:inputValue = $type
+  } elseif ($field -eq 'Rate') {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    if ($jobType -eq 'Quest') {
+      Write-Host "  Game Time points per hour"
+    }
+    else {
+      Write-Host "  Game Time points per completion"
+    }
+    $rate = Read-InputLine "  Rewards: "
+    $Global:inputValue = $rate
+  }
+}
+
 function Show-JobField {
   $job = $Global:currentJob
   $jobType = $job.Type
@@ -79,42 +115,13 @@ function Show-JobField {
   if ($field -eq 'Title') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    $title = Read-InputLine "  Title: "
-    $Global:inputValue = $title
   }
   elseif ($field -eq 'Type') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc/Bksp] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Select Job Type "
-    Write-Host "  [Q] Quest  [D] Daily  [R] Rare: "
-    Write-Host ""
-    do {
-      $type = Read-Character
-    } until($type -eq 'q' `
-        -or $type -eq 'd' `
-        -or $type -eq 'r' `
-        -or $type -eq [System.ConsoleKey]::Escape)
-    $Global:inputValue = $type
   }
   elseif ($field -eq 'Rate') {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    if ($jobType -eq 'Quest') {
-      Write-Host "  Game Time points per hour"
-    }
-    else {
-      Write-Host "  Game Time points per completion"
-    }
-    $rate = Read-InputLine "  Rewards: "
-    $Global:inputValue = $rate
   }
 }
