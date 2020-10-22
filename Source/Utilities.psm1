@@ -31,6 +31,11 @@ function Get-CurrentJobs {
   $jobs
 }
 
+function Get-Logs {
+  $logs = (Get-TransactionsDb)
+  $logs
+}
+
 function Get-TypeIsValid {
   Param(
     # input type

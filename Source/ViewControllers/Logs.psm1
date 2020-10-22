@@ -20,4 +20,5 @@ function Initialize-LogsMenu {
   $Global:canChangeMenuPositionY = $false
   $Global:showReturn = $true
   $Global:showSelect = $false
+  $Global:logs = Get-Logs
 }
