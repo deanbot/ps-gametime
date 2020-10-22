@@ -104,10 +104,26 @@ function Read-PositionInput {
 }
 
 function Read-PromptInput {
+  $section = $Global:section
+  $subPage = $Global:subPage
   if ($section -eq $sectionJobsMenu) {
     if ($subPage -eq $jobPageNew) {
       # call helper which sets appropriate prompts and records inputs
-      Read-NewNewJobInputVal
+      Read-NewJobInputVal
+    } elseif ($subPage -eq $jobPageComplete) {
+      # TODO #35
+      # Read-JobCompleteInputVal
+    } elseif ($subPage -eq $jobPageRemove) {
+      # TODO #35
+      # Read-JobRemoveInputVal
+    } elseif ($subPage -eq $jobPageEdit) {
+      # TODO #35
+      # Read-JobEditInputVal
+    }
+  } elseif ($section -eq $sectionGameMenu) {
+    if ($subPage -eq $gamePageSpend) {
+      # TODO #35
+      # Read-GameConfirmInputVal
     }
   }
 }
@@ -228,12 +244,6 @@ function Read-Input {
         }
       }
       elseif ($subPage -eq $jobPageNew) {
-      # if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-      # init jobs menu and restore menu section
-      # Initialize-JobsMenu $Global:prevMenuPositionX
-      #   $foundMatch = $true
-      #   $Global:prevMenuPositionX = 0
-      # }
       }
     }
     # game menu
@@ -323,18 +333,16 @@ function Show-BodyContent {
     }
     elseif ($jobPage -eq $jobPageNew) {
       Show-JobNew
-      # Write-debug "hey"
-      # do {
-      #   Read-NewJobInputVal
-      # } while ($Global:subPage -eq $jobPageNew)
     }
     elseif ($jobPage -eq $jobPageComplete) {
+      # TODO #35
       do {
         Show-JobConfirmComplete
         Read-JobCompleteInputVal
       } while ($Global:subPage -eq $jobPageComplete)
     }
     elseif ($jobPage -eq $jobPageRemove) {
+      # TODO #35
       do {
         Show-JobConfirmRemove
         Read-JobRemoveInputVal
@@ -342,6 +350,7 @@ function Show-BodyContent {
     }
     elseif ($jobPage -eq $jobPageEdit) {
       if ($Global:currentField) {
+        # TODO #35
         do {
           Show-JobField
           Read-JobEditInputVal
@@ -358,6 +367,7 @@ function Show-BodyContent {
       Show-GameMenu
     }
     elseif ($subPage -eq $gamePageSpend) {
+      # TODO #35
       do {
         Show-GameConfirmSpend
         Read-GameConfirmInputVal
@@ -375,6 +385,11 @@ function Show-Prompt {
   if ($prompt -eq $promptNewJob) {
     Show-PromptNewJob
   }
+  # TODO #35
+  # job complete
+  # job edit
+  # job remove
+  # game spend
 }
 
 # full layout

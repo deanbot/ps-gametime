@@ -308,14 +308,7 @@ function Read-JobCompleteInputVal {
   }
 }
 
-# function Set-JobPrompt {
-#   if (!$Global:newJobTitle) {
-#     $prompt = $promptNewJob
-#   }
-#   $Global:currentPrompt = $prompt
-# }
-
-function Read-NewNewJobInputVal {
+function Read-NewJobInputVal {
   $inputVal = $Global:inputValue
   $quit = $false
 
@@ -405,99 +398,6 @@ function Read-NewNewJobInputVal {
     $Global:prevMenuPositionX = 0
   }
   $true
-}
-
-function Read-NewJobInputVal {
-  $inputVal = $Global:inputValue
-  $quit = $false
-
-  # step 1 of input form
-  if (!$Global:newJobTitle) {
-    if ($inputVal -eq $false) {
-      $quit = $true
-    }
-    elseif (!$inputVal) {
-      Show-JobTitleWarning
-    }
-    # set new title
-    else {
-      $Global:newJobTitle = $inputVal
-      $Global:currentPrompt = ''
-    }
-  }
-  else {
-    $type = $Global:currentJobType
-    $subType = $Global:newJobSubType
-    if ($type -like '*Quest*' -and !$subType) {
-      if ($inputVal -eq [System.ConsoleKey]::Escape) {
-        $quit = $true
-      }
-      elseif ($inputVal -eq 'n') {
-        $Global:newJobSubType = 'Standard'
-      }
-      elseif ($inputVal -eq 'y') {
-        $Global:newJobSubType = 'Timed'
-      }
-    }
-    elseif (!$Global:newJobRate) {
-      if ($inputVal -eq $false) {
-        $quit = $true
-      }
-      else {
-        $warn = $false
-        if (!$inputVal) {
-          $warn = $true
-        }
-        else {
-          try {
-            if ([decimal]$inputVal -is [decimal]) {
-              $inputVal = [decimal]$inputVal
-            }
-            else {
-              $warn = $true
-            }
-          }
-          catch {
-            $warn = $true
-          }
-        }
-        if ($warn -eq $true) {
-          Show-JobRateWarning
-        }
-        else {
-          $Global:newJobRate = $inputVal
-        }
-      }
-    }  # step 3 of input form
-    else {
-      if ($inputVal -eq [System.ConsoleKey]::Escape `
-          -or $inputVal -eq 'n') {
-        # Show-JobNewFailed
-        $quit = $true
-      }
-      else {
-        $newType = $Global:currentJobType;
-        if ($type -eq $JobTypeQuest -and $subType -eq 'Timed') {
-          $newType = $JobTypeQuestTimed
-        }
-        $success = New-Job $Global:newJobTitle $newType $Global:newJobRate
-        if ($success) {
-          Show-JobNewSuccess
-        }
-        else {
-          Show-JobNewFailed
-        }
-        $quit = $true
-      }
-    }
-
-  }
-
-  if ($quit) {
-    Initialize-JobsMenu $Global:prevMenuPositionX
-    $Global:prevMenuPositionX = 0
-    $Global:forceRepaint = $true
-  }
 }
 
 function Read-JobEditInputVal {
