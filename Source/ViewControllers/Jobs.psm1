@@ -17,6 +17,9 @@ $JobTypeQuestTimed = 'Quest-Timed'
 $JobTypeDaily = 'Daily'
 $JobTypeRare = 'Rare'
 $promptNewJob = 'NewJob'
+$promptCompleteJob = 'CompleteJob'
+$promptEditJob = 'EditJob'
+$promptRemoveJob = 'RemoveJob'
 
 function Initialize-JobsMenu {
   param(
@@ -57,6 +60,7 @@ function Initialize-JobEdit {
   $Global:currentField = $false
   $Global:showQuit = $true
   $Global:showSelect = $true
+  $Global:currentPrompt = ''
 }
 
 function Initialize-JobEditField {
@@ -83,7 +87,6 @@ function Initialize-JobEditField {
         $Global:currentJob = Get-Job $jobId
         Initialize-JobEdit
         $Global:menuPositionY = $posY
-        # $Global:forceRepaint = $true
       }
     }
     else {
@@ -112,6 +115,7 @@ function Initialize-JobEditField {
 
   if ($field) {
     $Global:currentField = $field
+    $Global:currentPrompt = $promptEditJob
     if ($field -eq 'Type') {
       $Global:showQuit = $false
     }
@@ -128,7 +132,6 @@ function Initialize-JobNew {
   $Global:newJobTitle = ""
   $Global:newJobSubtype = ""
   $Global:newJobRate = 0
-  $Global:hasPreInput = $true
   $Global:currentPrompt = $promptNewJob
 }
 
@@ -138,6 +141,7 @@ function Initialize-JobRemove {
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
+  $Global:currentPrompt = $promptRemoveJob
 }
 
 function Initialize-JobComplete {
@@ -155,6 +159,7 @@ function Initialize-JobComplete {
   else {
     $Global:duration = 0
   }
+  $Global:currentPrompt = $promptCompleteJob
 }
 
 function Initialize-JobSingle {
@@ -164,6 +169,7 @@ function Initialize-JobSingle {
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $true
   $Global:showSelect = $true
+  $Global:currentPrompt = ''
 }
 
 function Initialize-JobsSubSection {
@@ -217,7 +223,6 @@ function Read-JobRemoveInputVal {
   if ($quit) {
     Initialize-JobsMenu $Global:prevMenuPositionX
     $Global:prevMenuPositionX = 0
-    $Global:forceRepaint = $true
   }
 }
 
@@ -259,6 +264,7 @@ function Read-JobCompleteInputVal {
 
   # second form step
   elseif (!$Global:notesStepPassed) {
+    write-debug "read notes input"
     if ($inputVal -eq $false) {
       $quit = $true
     }
@@ -304,7 +310,6 @@ function Read-JobCompleteInputVal {
 
   if ($quit) {
     Initialize-JobSingle
-    $Global:forceRepaint = $true
   }
 }
 
@@ -397,7 +402,6 @@ function Read-NewJobInputVal {
     Initialize-JobsMenu $Global:prevMenuPositionX
     $Global:prevMenuPositionX = 0
   }
-  $true
 }
 
 function Read-JobEditInputVal {
@@ -508,6 +512,5 @@ function Read-JobEditInputVal {
 
   if ($quit) {
     Initialize-JobEdit
-    $Global:forceRepaint = $true
   }
 }

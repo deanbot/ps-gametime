@@ -34,6 +34,28 @@ function Show-GameMenu {
   Write-Host ""
 }
 
+function Show-PromptSpend {
+  $passedNotes = $global:notesStepPassed
+  if (!$passedNotes) {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    $notes = Read-InputLine "  Notes (optional): "
+    $global:inputValue = $notes
+  } else {
+    Write-Host ""
+    Write-Host "  Spend Game Time Points?"
+    Write-Host "  [Y] Yes  [N] No:"
+    Write-Host ""
+    do {
+      $char = Read-Character
+    } until ($char -eq 'y' `
+        -or $char -eq 'n' `
+        -or $char -eq [System.ConsoleKey]::Escape)
+    $global:inputValue = $char
+  }
+}
+
 function Show-GameConfirmSpend {
   $passedNotes = $global:notesStepPassed
   $notes = $global:notes
@@ -53,26 +75,13 @@ function Show-GameConfirmSpend {
   if (!$passedNotes) {
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    $notes = Read-InputLine "  Notes (optional): "
-    $global:inputValue = $notes
   }
   else {
-    Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
-    Write-Host "  |$(Get-PaddedString)|  "
+    if ($notes) {
+      Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
+      Write-Host "  |$(Get-PaddedString)|  "
+    }
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "  Spend Game Time Points?"
-    Write-Host "  [Y] Yes  [N] No:"
-    Write-Host ""
-    do {
-      $char = Read-Character
-    } until ($char -eq 'y' `
-        -or $char -eq 'n' `
-        -or $char -eq [System.ConsoleKey]::Escape)
-    $global:inputValue = $char
   }
 }
 

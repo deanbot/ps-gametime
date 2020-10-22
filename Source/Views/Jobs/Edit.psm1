@@ -1,3 +1,7 @@
+function Show-PromptEditJob {
+
+}
+
 function Show-JobEdit {
   $pos = $Global:menuPositionY
   $job = $Global:currentJob

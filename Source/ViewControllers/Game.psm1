@@ -9,7 +9,7 @@ else {
 # constants
 $sectionGameMenu = 'Game Time'
 $gamePageSpend = 'Spend'
-
+$promptGameSpend = 'GameSpend'
 
 function Initialize-GameMenu {
   $Global:section = $sectionGameMenu
@@ -23,6 +23,7 @@ function Initialize-GameMenu {
   $Global:hideFooter = $false
   $Global:showReturn = $true
   $Global:showSelect = $false
+  $Global:currentPrompt = ''
 
   $availableBalance = Get-AvailableBalance
   $hasAvailableBalance = $availableBalance -gt 0
@@ -43,6 +44,7 @@ function Initialize-GameConfirmPage {
   $Global:subPage = $gamePageSpend
   $Global:showReturn = $true
   $Global:hideFooter = $true
+  $Global:currentPrompt = $promptGameSpend
 }
 
 function Read-GameConfirmInputVal {
@@ -88,6 +90,5 @@ function Read-GameConfirmInputVal {
 
   if ($quit) {
     Initialize-GameMenu
-    $Global:forceRepaint = $true
   }
 }

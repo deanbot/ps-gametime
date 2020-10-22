@@ -6,6 +6,44 @@ else {
 }
 
 
+function Show-PromptCompleteJob {
+  $job = $Global:currentJob
+  $jobType = $job.Type
+  $passedNotes = $Global:notesStepPassed
+  $notes = $Global:notes
+  $duration = $Global:duration
+  $isTimed = $jobType -eq 'Quest-Timed'
+
+  if ($isTimed -and !$duration) {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Input hours then press [Enter]..."
+    Write-Host ""
+    $duration = Read-InputLine "  Duration: "
+    $Global:inputValue = $duration
+  } if (!$passedNotes) {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Input notes then press [Enter]..."
+    Write-Host ""
+    $notes = Read-InputLine "  Notes (optional): "
+    $Global:inputValue = $notes
+  } else {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Press [Enter] to complete"
+    Write-Host ""
+    do {
+      $char = Read-Character
+    } until ($char -eq [System.ConsoleKey]::Enter `
+      -or $char -eq [System.ConsoleKey]::Escape)
+    $Global:inputValue = $char
+  }
+}
+
 function Show-JobConfirmComplete {
   $job = $Global:currentJob
   $jobType = $job.Type
@@ -22,51 +60,24 @@ function Show-JobConfirmComplete {
   $duration = $Global:duration
   $isTimed = $jobType -eq 'Quest-Timed'
 
-  if ($isTimed) {
-    if (!$duration) {
-      # prompt for duration
-      Write-Host "  |$(Get-PaddedString "  [...]")|  "
-      Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-      Write-Host ""
-      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-      Write-Host ""
-      Write-Host "  Input hours then press [Enter]..."
-      Write-Host ""
-      $duration = Read-InputLine "  Duration: "
-      $Global:inputValue = $duration
-      return
-    }
-    else {
-      # show duration
-      Write-Host "  |$(Get-PaddedString "  Duration: $duration")|  "
-    }
-  }
-
-  if (!$passedNotes) {
+  if ($isTimed -and !$duration) {
+    # prompt for duration
     Write-Host "  |$(Get-PaddedString "  [...]")|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Input notes then press [Enter]..."
-    Write-Host ""
-    $notes = Read-InputLine "  Notes (optional): "
-    $Global:inputValue = $notes
-  }
-  else {
-    Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
-    Write-Host "  |$(Get-PaddedString)|  "
-    Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Press [Enter] to complete"
-    Write-Host ""
-    do {
-      $char = Read-Character
-    } until ($char -eq [System.ConsoleKey]::Enter `
-        -or $char -eq [System.ConsoleKey]::Escape)
-    $Global:inputValue = $char
+  } else {
+    # show duration
+    Write-Host "  |$(Get-PaddedString "  Duration: $duration")|  "
+    if (!$passedNotes) {
+      Write-Host "  |$(Get-PaddedString "  [...]")|  "
+      Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+    }
+    else {
+      if ($notes) {
+        Write-Host "  |$(Get-PaddedString "  Notes: $(Get-TextExcerpt $notes ($width-11))")|  "
+        Write-Host "  |$(Get-PaddedString)|  "
+      }
+      Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+    }
   }
 }
 

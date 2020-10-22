@@ -15,7 +15,6 @@ Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
 Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
 Import-Module $Global:ScriptRoot\ViewEngine.psm1 -Force
 
-
 function Main {
   try {
     # set up console and store initial settings

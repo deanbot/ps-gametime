@@ -21,4 +21,5 @@ function Initialize-MainMenu {
   $Global:showReturn = $false
   $Global:showSelect = $true
   $Global:invertY = $false
+  $Global:currentPrompt = ''
 }
