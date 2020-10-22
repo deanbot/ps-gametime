@@ -24,6 +24,7 @@ $jobPageComplete = 'Complete'
 $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
+$promptNewJob = 'NewJob'
 
 function Initialize-Variables {
   $Global:quit = $false
@@ -37,12 +38,12 @@ function Initialize-Variables {
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
   $Global:showReturn = $false
-
   $Global:showQuit = $true
   $Global:hideHeader = $false
   $Global:hideFooter = $false
   $Global:forceRepaint = $false
   $Global:invertY = $false
+  $Global:currentPrompt = '';
 }
 
 function Read-PositionInput {
@@ -101,6 +102,16 @@ function Read-PositionInput {
   }
   $foundMatch
 }
+
+function Read-PromptInput {
+  if ($section -eq $sectionJobsMenu) {
+    if ($subPage -eq $jobPageNew) {
+      # call helper which sets appropriate prompts and records inputs
+      Read-NewNewJobInputVal
+    }
+  }
+}
+
 
 function Read-Input {
   $character = Read-Character
@@ -216,14 +227,14 @@ function Read-Input {
           $foundMatch = $true
         }
       }
-      # elseif ($subPage -eq $jobPageNew) {
+      elseif ($subPage -eq $jobPageNew) {
       # if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
       # init jobs menu and restore menu section
       # Initialize-JobsMenu $Global:prevMenuPositionX
       #   $foundMatch = $true
       #   $Global:prevMenuPositionX = 0
       # }
-      # }
+      }
     }
     # game menu
     elseif ($section -eq $sectionGameMenu) {
@@ -296,7 +307,6 @@ function Read-Input {
   $foundMatch
 }
 
-
 # view body content routing
 function Show-BodyContent {
   $section = $Global:section
@@ -312,10 +322,11 @@ function Show-BodyContent {
       Show-JobSingle
     }
     elseif ($jobPage -eq $jobPageNew) {
-      do {
-        Show-JobNew
-        Read-NewJobInputVal
-      } while ($Global:subPage -eq $jobPageNew)
+      Show-JobNew
+      # Write-debug "hey"
+      # do {
+      #   Read-NewJobInputVal
+      # } while ($Global:subPage -eq $jobPageNew)
     }
     elseif ($jobPage -eq $jobPageComplete) {
       do {
@@ -358,9 +369,21 @@ function Show-BodyContent {
   }
 }
 
+function Show-Prompt {
+  $prompt = $Global:currentPrompt
+
+  if ($prompt -eq $promptNewJob) {
+    Show-PromptNewJob
+  }
+}
+
 # full layout
 function Show-Screen {
   Show-Header
   Show-BodyContent
-  Show-Footer
+  if ($Global:currentPrompt -eq '') {
+    Show-Footer
+  } else {
+    Show-Prompt
+  }
 }

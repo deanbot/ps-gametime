@@ -16,6 +16,7 @@ $JobTypeQuest = 'Quest'
 $JobTypeQuestTimed = 'Quest-Timed'
 $JobTypeDaily = 'Daily'
 $JobTypeRare = 'Rare'
+$promptNewJob = 'NewJob'
 
 function Initialize-JobsMenu {
   param(
@@ -35,6 +36,7 @@ function Initialize-JobsMenu {
   $Global:showReturn = $true
   $Global:hideHeader = $false
   $Global:hideFooter = $false
+  $Global:currentPrompt = ''
   Initialize-JobsSubSection
 }
 
@@ -59,7 +61,6 @@ function Initialize-JobEdit {
 
 function Initialize-JobEditField {
   $posY = $Global:menuPositionY
-
   $current = $Global:currentJob
   $type = $current.Type
 
@@ -127,6 +128,8 @@ function Initialize-JobNew {
   $Global:newJobTitle = ""
   $Global:newJobSubtype = ""
   $Global:newJobRate = 0
+  $Global:hasPreInput = $true
+  $Global:currentPrompt = $promptNewJob
 }
 
 function Initialize-JobRemove {
@@ -178,7 +181,6 @@ function Initialize-JobsSubSection {
   $Global:canChangeMenuPositionY = $jobCount -gt 1
   $Global:showSelect = $jobCount -gt 0
 }
-
 
 function Read-JobRemoveInputVal {
   $inputVal = $Global:inputValue
@@ -306,6 +308,105 @@ function Read-JobCompleteInputVal {
   }
 }
 
+# function Set-JobPrompt {
+#   if (!$Global:newJobTitle) {
+#     $prompt = $promptNewJob
+#   }
+#   $Global:currentPrompt = $prompt
+# }
+
+function Read-NewNewJobInputVal {
+  $inputVal = $Global:inputValue
+  $quit = $false
+
+  if (!$Global:newJobTitle) {
+    Write-Debug "reading title input"
+    if ($inputVal -eq $false) {
+      $quit = $true
+    }
+    elseif (!$inputVal) {
+      Show-JobTitleWarning
+    }
+    # set new title
+    else {
+      $Global:newJobTitle = $inputVal
+    }
+  }
+  else {
+    $type = $Global:currentJobType
+    $subType = $Global:newJobSubType
+    if ($type -like '*Quest*' -and !$subType) {
+      if ($inputVal -eq [System.ConsoleKey]::Escape) {
+        $quit = $true
+      }
+      elseif ($inputVal -eq 'n') {
+        $Global:newJobSubType = 'Standard'
+      }
+      elseif ($inputVal -eq 'y') {
+        $Global:newJobSubType = 'Timed'
+      }
+    }
+    elseif (!$Global:newJobRate) {
+      if ($inputVal -eq $false) {
+        $quit = $true
+      }
+      else {
+        $warn = $false
+        if (!$inputVal) {
+          $warn = $true
+        }
+        else {
+          try {
+            if ([decimal]$inputVal -is [decimal]) {
+              $inputVal = [decimal]$inputVal
+            }
+            else {
+              $warn = $true
+            }
+          }
+          catch {
+            $warn = $true
+          }
+        }
+        if ($warn -eq $true) {
+          Show-JobRateWarning
+        }
+        else {
+          $Global:newJobRate = $inputVal
+        }
+      }
+    }  # step 3 of input form
+    else {
+      if ($inputVal -eq [System.ConsoleKey]::Escape `
+          -or $inputVal -eq 'n') {
+        # Show-JobNewFailed
+        $quit = $true
+      }
+      else {
+        $newType = $Global:currentJobType;
+        if ($type -eq $JobTypeQuest -and $subType -eq 'Timed') {
+          $newType = $JobTypeQuestTimed
+        }
+        $success = New-Job $Global:newJobTitle $newType $Global:newJobRate
+        if ($success) {
+          Show-JobNewSuccess
+        }
+        else {
+          Show-JobNewFailed
+        }
+        $quit = $true
+      }
+    }
+
+  }
+
+  if ($quit) {
+    Initialize-JobsMenu $Global:prevMenuPositionX
+    $Global:prevMenuPositionX = 0
+  }
+  $true
+}
+
 function Read-NewJobInputVal {
   $inputVal = $Global:inputValue
   $quit = $false
@@ -321,6 +422,7 @@ function Read-NewJobInputVal {
     # set new title
     else {
       $Global:newJobTitle = $inputVal
+      $Global:currentPrompt = ''
     }
   }
   else {

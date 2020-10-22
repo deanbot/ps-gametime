@@ -7,11 +7,19 @@ else {
 }
 
 
+function Wait-ForKeyPress {
+  do {
+    Start-Sleep -milliseconds 100
+  } until ($Host.UI.RawUI.KeyAvailable)
+  $Host.UI.RawUI.FlushInputBuffer()
+}
+
 function Read-Character {
   param(
     [Parameter(Mandatory = $false, Position = 0)]
     [bool]$Blocking = $true
   )
+
   if ($Blocking) {
     return [System.Console]::ReadKey($true).Key.ToString()
   }
@@ -33,6 +41,7 @@ function Read-InputLine {
     [Parameter(Mandatory = $false, Position = 1)]
     [int]$CancelKeyCode = 27 # 27 = Escape
   )
+  $Host.UI.RawUI.FlushInputBuffer()
 
   # display initial prompt
   if ($Prompt.Length -gt 0) {

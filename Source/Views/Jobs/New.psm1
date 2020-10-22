@@ -1,3 +1,11 @@
+
+if ($Global:Debug) {
+  $DebugPreference = $Global:Debug
+}
+else {
+  $DebugPreference = "SilentlyContinue"
+}
+
 function Show-JobNew {
   Clear-Host
   Write-Host ""
@@ -24,18 +32,6 @@ function Show-JobNew {
         Write-Host "  |$(Get-PaddedString "  [...]")|  "
         Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
         Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-        Write-Host ""
-        Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-        Write-Host ""
-        if ($isTimed) {
-          Write-Host "  Input pts/h then press [Enter]..."
-        }
-        else {
-          Write-Host "  Input pts then press [Enter]..."
-        }
-        Write-Host ""
-        $rate = Read-InputLine "  Rewards: "
-        $Global:inputValue = $rate
       }
       else {
         if ($isTimed) {
@@ -46,33 +42,11 @@ function Show-JobNew {
         }
         Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
         Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-        Write-Host ""
-        Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-        Write-Host ""
-        Write-Host "  Create Job?"
-        Write-Host "  [Y] Yes  [N] No: "
-        do {
-          $createJob = Read-Character
-        } until ($createJob -eq 'y' `
-            -or $createJob -eq 'n' `
-            -or $createJob -eq [System.ConsoleKey]::Escape)
-        $Global:inputValue = $createJob
       }
     }
     else {
       Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
       Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-      Write-Host ""
-      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-      Write-Host ""
-      Write-Host "  Is Quest Timed?"
-      Write-Host "  [Y] Yes  [N] No: "
-      do {
-        $timed = Read-Character
-      } until ($timed -eq 'y' `
-          -or $timed -eq 'n' `
-          -or $timed -eq [System.ConsoleKey]::Escape)
-      $Global:inputValue = $timed
     }
   }
   else {
@@ -81,16 +55,62 @@ function Show-JobNew {
     Write-Host "  |$(Get-PaddedString "  Type:    $type")|  "
     Write-Host "  |$(Get-PaddedString -Fill ' ')|  "
     Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Input title then press [Enter]..."
-    Write-Host ""
-    $title = Read-InputLine "  Title: "
-    $Global:inputValue = $title
   }
 }
 
+function Show-PromptNewJob() {
+  $title = $Global:newJobTitle
+  $type = $Global:currentJobType
+  $rate = $Global:newJobRate
+  $subType = $Global:newJobSubType
+  $isTimed = $subType -eq 'Timed'
+  if (!$title) {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    $title = Read-InputLine "  Title: "
+    $Global:inputValue = $title
+  } elseif ($subType -or $type -ne 'Quest') {
+    if (!$rate) {
+      Write-Host ""
+      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+      Write-Host ""
+      if ($isTimed) {
+        Write-Host "  Input pts/h..."
+      }
+      else {
+        Write-Host "  Input pts..."
+      }
+      Write-Host ""
+      $rate = Read-InputLine "  Rewards: "
+      $Global:inputValue = $rate
+    } else {
+      Write-Host ""
+      Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+      Write-Host ""
+      Write-Host "  Create Job?"
+      Write-Host "  [Y] Yes  [N] No: "
+      do {
+        $createJob = Read-Character
+      } until ($createJob -eq 'y' `
+        -or $createJob -eq 'n' `
+        -or $createJob -eq [System.ConsoleKey]::Escape)
+      $Global:inputValue = $createJob
+    }
+  } else {
+    Write-Host ""
+    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+    Write-Host ""
+    Write-Host "  Is Quest Timed?"
+    Write-Host "  [Y] Yes  [N] No: "
+    do {
+      $timed = Read-Character
+    } until ($timed -eq 'y' `
+      -or $timed -eq 'n' `
+      -or $timed -eq [System.ConsoleKey]::Escape)
+    $Global:inputValue = $timed
+  }
+}
 
 function Show-JobNewFailed {
   Param(

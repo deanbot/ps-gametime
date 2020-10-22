@@ -1,6 +1,6 @@
 $Global:DevMode = $true
 $Global:Debug = "Continue"
-$Global:Debug = "SilentlyContinue"
+# $Global:Debug = "SilentlyContinue"
 $Global:SilentStatusReturn = $false
 
 if ($Global:Debug) {
@@ -37,7 +37,12 @@ function Main {
       }
 
       # respond to input and check if screen should repaint
-      if (!$Global:forceRepaint) {
+      if (Get-HasPromptInput) {
+        # maybe fall back to Read-Input but this could cause unexpected errors
+        Read-PromptInput
+        $repaint = $true
+      }
+      elseif (!$Global:forceRepaint) {
         $repaint = Read-Input
       }
       else {

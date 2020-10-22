@@ -131,3 +131,10 @@ function Get-MessageTransactionLog {
   }
   $message
 }
+
+function Get-HasPromptInput {
+  if ($Global:currentPrompt -ne '') {
+    $true
+  }
+  $false
+}
