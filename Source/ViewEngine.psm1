@@ -396,7 +396,7 @@ function Show-Prompt {
 function Show-Screen {
   Show-Header
   Show-BodyContent
-  if ($Global:currentPrompt -eq '') {
+  if (!Get-HasPromptInput) {
     Show-Footer
   } else {
     Show-Prompt
