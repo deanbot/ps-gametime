@@ -15,7 +15,7 @@ function Show-LogsMenu {
       if ($log.Log) {
         $logNote = $log.Log
       } elseif ($log.Note) {
-        $logNote = $log.NOte
+        $logNote = $log.Note
       }
       if ($logNote) {
         $logLine = "  $(Get-TextExcerpt $logNote ($width-4))"
