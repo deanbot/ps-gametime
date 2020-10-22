@@ -298,12 +298,18 @@ function Read-Input {
         }
       }
     }
-    if ($section -eq $sectionGameMenu) {
+    elseif ($section -eq $sectionGameMenu) {
       if ($Global:menuPositionY -gt 0) {
         $Global:showSelect = $true
       }
       else {
         $Global:showSelect = $false
+      }
+    }
+    elseif ($section -eq $sectionLogsMenu) {
+      if ($character -eq [System.ConsoleKey]::LeftArrow `
+          -or $character -eq [System.ConsoleKey]::RightArrow) {
+        Initialize-LogsPage
       }
     }
   }
