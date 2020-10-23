@@ -21,6 +21,46 @@ $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
 $promptRemoveJob = 'RemoveJob'
 
+
+function Get-JobTypeByPosition {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [int32]$posX
+  )
+  $jobType = "";
+  switch ($posX) {
+    0 {
+      $jobType = 'Quest'
+    } 1 {
+      $jobType = 'Daily'
+    } 2 {
+      $jobType = 'Rare'
+    }
+  }
+  $jobType
+}
+
+function Get-CurrentJob {
+  $pos = $Global:menuPositionY
+  $jobs = $Global:currentJobs
+  if ($jobs -and $jobs.Length -ge ($pos - 1) ) {
+    return $jobs[$pos]
+  }
+  return $false
+}
+
+function Get-CurrentJobType {
+  $pos = $Global:menuPositionX
+  $jobType = Get-JobTypeByPosition $pos
+  $jobType
+}
+
+function Get-CurrentJobs {
+  $jobType = Get-CurrentJobType
+  $jobs = (Get-Jobs) | Where-Object { $_.Type -like "*$jobType*" }
+  $jobs
+}
+
 function Initialize-JobsMenu {
   param(
     [Parameter(Mandatory = $false, Position = 0)]

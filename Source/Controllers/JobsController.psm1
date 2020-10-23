@@ -5,6 +5,11 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
+$JobTypeQuest = 'Quest'
+$JobTypeQuestTimed = 'Quest-Timed'
+$JobTypeDaily = 'Daily'
+$JobTypeRare = 'Rare'
+
 function Get-Jobs {
   return Get-JobsDb
 }
@@ -26,7 +31,6 @@ function Get-Job {
     }
   }
 }
-
 
 function New-Job {
   Param(
@@ -164,5 +168,24 @@ function Remove-Job {
   }
   if (!$Global:SilentStatusReturn) {
     $success
+  }
+}
+
+
+
+function Get-TypeIsValid {
+  Param(
+    # input type
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Type
+  )
+  if ($Type -eq $JobTypeQuest `
+      -or $Type -eq $JobTypeQuestTimed `
+      -or $Type -eq $JobTypeDaily `
+      -or $Type -eq $JobTypeRare) {
+    $true
+  }
+  else {
+    $false
   }
 }

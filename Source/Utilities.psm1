@@ -5,70 +5,11 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-$JobTypeQuest = 'Quest'
-$JobTypeQuestTimed = 'Quest-Timed'
-$JobTypeDaily = 'Daily'
-$JobTypeRare = 'Rare'
-
-function Get-CurrentJob {
-  $pos = $Global:menuPositionY
-  $jobs = $Global:currentJobs
-  if ($jobs -and $jobs.Length -ge ($pos - 1) ) {
-    return $jobs[$pos]
-  }
-  return $false
-}
-
-function Get-CurrentJobType {
-  $pos = $Global:menuPositionX
-  $jobType = Get-JobTypeByPosition $pos
-  $jobType
-}
-
-function Get-CurrentJobs {
-  $jobType = Get-CurrentJobType
-  $jobs = (Get-Jobs) | Where-Object { $_.Type -like "*$jobType*" }
-  $jobs
-}
-
-function Get-Logs {
-  $logs = (Get-TransactionsDb)
-  $logs
-}
-
-function Get-TypeIsValid {
-  Param(
-    # input type
-    [Parameter(Mandatory = $true, Position = 0)]
-    [string]$Type
-  )
-  if ($Type -eq $JobTypeQuest `
-      -or $Type -eq $JobTypeQuestTimed `
-      -or $Type -eq $JobTypeDaily `
-      -or $Type -eq $JobTypeRare) {
+function Get-HasPromptInput {
+  if ($Global:currentPrompt -ne '') {
     $true
   }
-  else {
-    $false
-  }
-}
-
-function Get-JobTypeByPosition {
-  param(
-    [Parameter(Mandatory = $true, Position = 0)]
-    [int32]$posX
-  )
-  $jobType = "";
-  switch ($posX) {
-    0 {
-      $jobType = 'Quest'
-    } 1 {
-      $jobType = 'Daily'
-    } 2 {
-      $jobType = 'Rare'
-    }
-  }
-  $jobType
+  $false
 }
 
 function Get-MessageNoJobFound {
@@ -135,11 +76,4 @@ function Get-MessageTransactionLog {
     }
   }
   $message
-}
-
-function Get-HasPromptInput {
-  if ($Global:currentPrompt -ne '') {
-    $true
-  }
-  $false
 }

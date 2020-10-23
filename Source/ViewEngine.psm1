@@ -24,6 +24,7 @@ $jobPageComplete = 'Complete'
 $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
+$logPageSingle = 'Single'
 $promptNewJob = 'NewJob'
 $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
@@ -126,7 +127,6 @@ function Read-PromptInput {
     }
   }
 }
-
 
 function Read-Input {
   $character = Read-Character
@@ -281,9 +281,26 @@ function Read-Input {
     }
     # logs menu
     elseif ($section -eq $sectionLogsMenu) {
-      if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-        Initialize-MainMenu
-        $foundMatch = $true
+      if (!$subPage) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          Initialize-MainMenu
+          $foundMatch = $true
+        }
+        elseif ($character -eq [System.ConsoleKey]::Enter) {
+          $Global:prevMenuPositionX = $Global:menuPositionX
+          $Global:currentTransaction = Get-CurrentTransaction
+          if ($Global:currentTransaction) {
+            Initialize-LogSingle
+            $foundMatch = $true
+          }
+        }
+      } elseif ($subPage -eq $logPageSingle) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          # init jobs menu and restore menu section
+          Initialize-LogsMenu $Global:prevMenuPositionX
+          $foundMatch = $true
+          $Global:prevMenuPositionX = 0
+        }
       }
     }
   }
@@ -325,27 +342,27 @@ function Read-Input {
 # view body content routing
 function Show-BodyContent {
   $section = $Global:section
+  $subPage = $Global:subPage
   if ($section -eq $sectionMainMenu) {
     Show-MainMenu
   }
   elseif ($section -eq $sectionJobsMenu) {
-    $jobPage = $Global:subPage
-    if (!$jobPage) {
+    if (!$subPage) {
       Show-JobsMenu
     }
-    elseif ($jobPage -eq $jobPageSingle) {
+    elseif ($subPage -eq $jobPageSingle) {
       Show-JobSingle
     }
-    elseif ($jobPage -eq $jobPageNew) {
+    elseif ($subPage -eq $jobPageNew) {
       Show-JobNew
     }
-    elseif ($jobPage -eq $jobPageComplete) {
+    elseif ($subPage -eq $jobPageComplete) {
       Show-JobConfirmComplete
     }
-    elseif ($jobPage -eq $jobPageRemove) {
+    elseif ($subPage -eq $jobPageRemove) {
       Show-JobConfirmRemove
     }
-    elseif ($jobPage -eq $jobPageEdit) {
+    elseif ($subPage -eq $jobPageEdit) {
       if ($Global:currentField) {
         Show-JobField
       }
@@ -355,7 +372,6 @@ function Show-BodyContent {
     }
   }
   elseif ($section -eq $sectionGameMenu) {
-    $subPage = $Global:subPage
     if (!$subPage) {
       Show-GameMenu
     }
@@ -364,7 +380,11 @@ function Show-BodyContent {
     }
   }
   elseif ($section -eq $sectionLogsMenu) {
-    Show-LogsMenu
+    if (!$subPage) {
+      Show-LogsMenu
+    } elseif ($subPage -eq $logPageSingle) {
+      Show-LogSingle
+    }
   }
 }
 

@@ -10,6 +10,9 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
+# UI Labels
+$Global:unit = "pts"
+
 Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
 Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
 Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
