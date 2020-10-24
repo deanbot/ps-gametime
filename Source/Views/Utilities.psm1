@@ -169,10 +169,10 @@ function Get-TextExcerpt {
 
 function Get-TextLines {
   param(
-    [Paramter(Mandatory = $true, Position = 0)]
+    [Parameter(Mandatory = $true, Position = 0)]
     [string]$text,
 
-    [Parameter(Mandatory = $false, Position = 2)]
+    [Parameter(Mandatory = $false, Position = 1)]
     [int]$width
   )
 
@@ -184,22 +184,18 @@ function Get-TextLines {
     $lines = @($text)
   }
   else {
-    # $original = $text;
+    $index = 0;
+    $remaining = $text.Length - 1
     do {
-      $pullLength = $width
-      if ($pullLength -gt $text.Length - 1) {
-        $pullLength = $text.Length - 1
+      if ($remaining - $width -lt 0) {
+        $line = $text.SubString($index, $remaining)
+      } else {
+        $line = $text.SubString($index, $width);
       }
-      $line = $text.SubString(0, $pullLength)
-      if ($pullLength -ge $text.Length - 1) {
-        $text = ""
-      }
-      else {
-        $text = $text.SubString($pullLength, $text.Length - 1)
-      }
+      $index += $width
+      $remaining -= $width
       $lines += $line
-    }
-    while ($text.Length -ne 0)
+    } while($index -lt $text.Length)
   }
   return , $lines
 }
