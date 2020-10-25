@@ -27,9 +27,13 @@ function Get-CurrentTransaction {
 }
 
 function Initialize-LogsMenu {
+  param(
+    [Parameter(Mandatory = $false, Position = 0)]
+    [int32]$menuPositionX = 0
+  )
   $Global:section = $sectionLogsMenu
   $Global:subPage = ''
-  $Global:menuPositionX = 0
+  $Global:menuPositionX = menuPositionX
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionY = $false

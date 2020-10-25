@@ -260,9 +260,9 @@ function Get-Page {
     [Parameter(Mandatory=$true, Position=0)]
     $items, # array to page
     [Parameter(Mandatory=$true, Position=1)]
-    $page,
+    [int32]$page,
     [Parameter(Mandatory=$true, Position=2)]
-    $perPage
+    [int32]$perPage
   )
   $paged = @()
   if ($items) {

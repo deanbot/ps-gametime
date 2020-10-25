@@ -296,7 +296,7 @@ function Read-Input {
         }
       } elseif ($subPage -eq $logPageSingle) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          # init jobs menu and restore menu section
+          # init logs menu and restore page
           Initialize-LogsMenu $Global:prevMenuPositionX
           $foundMatch = $true
           $Global:prevMenuPositionX = 0
