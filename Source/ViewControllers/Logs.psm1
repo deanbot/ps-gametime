@@ -8,23 +8,13 @@ else {
 # constants
 $sectionLogsMenu = 'Logs'
 $logPageSingle = 'Single'
-$logsPerPage = 1
+$logsPerPage = 5 # todo why is it showing 6?
 
 function Get-CurrentTransactions {
-  $logs = $Global:transactions
-  $currentLogs = @()
-  if ($logs) {
-    # get page of logs
-    $logCount = @($logs).Length
-    $page = $Global:menuPositionX
-    $logStart = $page * $logsPerPage
-    $logEnd = $logCount
-    if ($logStart + $logsPerPage -le $logCount) {
-      $logEnd = $logStart + $logsPerPage
-    }
-    $currentLogs = $logs[$logStart..$logEnd]
-  }
-  return $currentLogs
+  $transactions = $Global:transactions
+  $page = $Global:menuPositionX
+  $currentTransactions = Get-Page $transactions $page $logsPerPage
+  return $currentTransactions
 }
 
 function Get-CurrentTransaction {

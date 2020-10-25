@@ -4,7 +4,6 @@ Import-Module $Path\Shared.psm1 -Force
 Import-Module $Path\Single.psm1 -Force
 
 function Show-LogsMenu {
-  #$width = $global:containerWidth
   $logs = $Global:currentTransactions
   Write-Host ""
   Show-Heading "Logs"

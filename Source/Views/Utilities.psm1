@@ -254,3 +254,25 @@ function Get-PaddedString {
   }
   $padded
 }
+
+function Get-Page {
+  param (
+    [Parameter(Mandatory=$true, Position=0)]
+    $items, # array to page
+    [Parameter(Mandatory=$true, Position=1)]
+    $page,
+    [Parameter(Mandatory=$true, Position=2)]
+    $perPage
+  )
+  $paged = @()
+  if ($items) {
+    $total = @($items).Length
+    $start = $page * $perPage
+    $end = $start + $perPage - 1
+    if ($end -gt $total -1) {
+      $end = $total - 1
+    }
+    $paged = $items[$start..$end]
+  }
+  return $paged
+}
