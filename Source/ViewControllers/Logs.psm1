@@ -33,7 +33,7 @@ function Initialize-LogsMenu {
   )
   $Global:section = $sectionLogsMenu
   $Global:subPage = ''
-  $Global:menuPositionX = menuPositionX
+  $Global:menuPositionX = $menuPositionX
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionY = $false
