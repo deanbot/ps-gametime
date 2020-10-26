@@ -311,42 +311,62 @@ function Read-JobCompleteInputVal {
     else {
       $Global:notesStepPassed = $true
       $Global:notes = $inputVal
-    }
-  }
 
-  # confirm step
-  else {
-    if ($inputVal -eq [System.ConsoleKey]::Escape) {
-      $quit = $true
-    }
-    elseif ($inputVal -eq [System.ConsoleKey]::Enter) {
-      try {
-        $job = $Global:currentJob
-        $jobId = $job.Id
-        $notes = $Global:notes
-        $duration = $Global:duration
-        $transaction = New-JobTransaction $jobId $duration $notes
-        if ($transaction) {
-          if ($transaction.Change -ne 1) {
-            $message = "Gained $($transaction.Change) points!"
-          }
-          else {
-            $message = "Gained $($transaction.Change) point!"
-          }
-          Show-JobCompleteSuccess $message
-          $quit = $true
+      $job = $Global:currentJob
+      $jobId = $job.Id
+      $notes = $Global:notes
+      $duration = $Global:duration
+      $transaction = New-JobTransaction $jobId $duration $notes
+      if ($transaction) {
+        if ($transaction.Change -ne 1) {
+          $message = "Gained $($transaction.Change) points!"
         }
         else {
-          Show-JobCompleteFailed
-          $quit = $true
+          $message = "Gained $($transaction.Change) point!"
         }
+        Show-JobCompleteSuccess $message
+        $quit = $true
       }
-      catch {
+      else {
         Show-JobCompleteFailed
         $quit = $true
       }
     }
   }
+  # Uncomment to include confirm step
+  # confirm step
+  # else {
+  #   if ($inputVal -eq [System.ConsoleKey]::Escape) {
+  #     $quit = $true
+  #   }
+  #   elseif ($inputVal -eq [System.ConsoleKey]::Enter) {
+  #     try {
+  #       $job = $Global:currentJob
+  #       $jobId = $job.Id
+  #       $notes = $Global:notes
+  #       $duration = $Global:duration
+  #       $transaction = New-JobTransaction $jobId $duration $notes
+  #       if ($transaction) {
+  #         if ($transaction.Change -ne 1) {
+  #           $message = "Gained $($transaction.Change) points!"
+  #         }
+  #         else {
+  #           $message = "Gained $($transaction.Change) point!"
+  #         }
+  #         Show-JobCompleteSuccess $message
+  #         $quit = $true
+  #       }
+  #       else {
+  #         Show-JobCompleteFailed
+  #         $quit = $true
+  #       }
+  #     }
+  #     catch {
+  #       Show-JobCompleteFailed
+  #       $quit = $true
+  #     }
+  #   }
+  # }
 
   if ($quit) {
     Initialize-JobSingle

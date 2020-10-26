@@ -17,31 +17,31 @@ function Show-PromptCompleteJob {
   if ($isTimed -and !$duration) {
     Write-Host ""
     Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Input hours then press [Enter]..."
+    Write-Host "   $(Get-PaddedString "[Enter] to continue" -Right $true)"
     Write-Host ""
     $duration = Read-InputLine "  Duration: "
     $Global:inputValue = $duration
-  } if (!$passedNotes) {
+  } elseif (!$passedNotes) {
     Write-Host ""
     Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Input notes then press [Enter]..."
+    Write-Host "   $(Get-PaddedString "[Enter] to continue" -Right $true)"
     Write-Host ""
     $notes = Read-InputLine "  Notes (optional): "
     $Global:inputValue = $notes
-  } else {
-    Write-Host ""
-    Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-    Write-Host ""
-    Write-Host "  Press [Enter] to complete"
-    Write-Host ""
-    do {
-      $char = Read-Character
-    } until ($char -eq [System.ConsoleKey]::Enter `
-      -or $char -eq [System.ConsoleKey]::Escape)
-    $Global:inputValue = $char
   }
+  # Uncomment to add confirm step
+  #  else {
+  #   Write-Host ""
+  #   Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
+  #   Write-Host ""
+  #   Write-Host "  Press [any key] to continue..."
+  #   Write-Host ""
+  #   do {
+  #     $char = Read-Character
+  #   } until ($char -eq [System.ConsoleKey]::Enter `
+  #     -or $char -eq [System.ConsoleKey]::Escape)
+  #   $Global:inputValue = $char
+  # }
 }
 
 function Show-JobConfirmComplete {
