@@ -185,7 +185,7 @@ function Get-TextLines {
   }
   else {
     $index = 0;
-    $remaining = $text.Length - 1
+    $remaining = $text.Length
     do {
       if ($remaining - $width -lt 0) {
         $line = $text.SubString($index, $remaining)
@@ -195,7 +195,7 @@ function Get-TextLines {
       $index += $width
       $remaining -= $width
       $lines += $line
-    } while($index -lt $text.Length)
+    } while($index -le $text.Length)
   }
   return , $lines
 }

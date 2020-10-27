@@ -84,13 +84,24 @@ function Show-JobConfirmComplete {
 function Show-JobCompleteSuccess {
   param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [string]$Message
+    [string]$Heading,
+    [Parameter(Mandatory = $false, Position = 1)]
+    [string]$Message = ''
   )
+  $width = $global:containerWidth
+
   Clear-Host
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  $Message")|  "
+  Write-Host "  |$(Get-PaddedString "  $Heading")|  "
+  if ($Message -ne '') {
+    Write-Host "  |$(Get-PaddedString)|  "
+    $textLines = Get-TextLines $Message ($width - 4)
+    foreach ($line in $textLines) {
+      Write-Host "  |$(Get-PaddedString "  $line" )|  "
+    }
+  }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""

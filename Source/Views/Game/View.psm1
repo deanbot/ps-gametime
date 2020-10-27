@@ -108,13 +108,17 @@ function Show-GameSpendFailed {
 }
 
 function Show-GameSpendSuccess {
+  $width = $global:containerWidth
   $points = $global:menuPositionY
-  $minutes = $points * 20
   Clear-Host
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Spent $points points for $minutes minutes.")|  "
+  $message = Get-MessageDeductTransactionLog $points
+  $textLines = Get-TextLines $message ($width - 4)
+  foreach ($line in $textLines) {
+    Write-Host "  |$(Get-PaddedString "  $line" )|  "
+  }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Have fun!")|  "
   Write-Host "  |$(Get-PaddedString)|  "

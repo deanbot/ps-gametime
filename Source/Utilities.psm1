@@ -42,7 +42,12 @@ function Get-MessageDeductTransactionLog {
     [Parameter(Mandatory = $true, Position = 0)]
     [decimal]$Degree
   )
-  "Spent $Degree Game Time points for a total of $($Degree * 20) minutes of gaming."
+  if ($Degree -ne 1) {
+    $unit = "points"
+  } else {
+    $unit = "point"
+  }
+  "Exchanged $Degree $unit for $($Degree * 20) minutes of gaming time."
 }
 
 function Get-MessageTransactionLog {
@@ -65,14 +70,16 @@ function Get-MessageTransactionLog {
   )
 
   $message = ""
-  $value = $Degree * $JobRate
+  # $value = $Degree * $JobRate
   switch ($JobType) {
-    'Quest' {
-      $message = "Completed Quest, '$JobTitle', for $Degree hours. Awarded $value points (rated at $JobRate per hour)."
+    'Quest-Timed' {
+      $message = "Completed '$JobTitle' for $Degree hours."
     } 'Daily' {
-      $message = "Completed Daily Quest, '$JobTitle'. Awarded $value points."
+      $message = "Completed (Daily) '$JobTitle'."
     } 'Rare' {
-      $message = "Completed Rare Quest, '$JobTitle'. Awarded $value points."
+      $message = "Completed (Rare) '$JobTitle'."
+    } default {
+      $message = "Completed '$JobTitle'."
     }
   }
   $message

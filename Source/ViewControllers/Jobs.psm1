@@ -319,12 +319,13 @@ function Read-JobCompleteInputVal {
       $transaction = New-JobTransaction $jobId $duration $notes
       if ($transaction) {
         if ($transaction.Change -ne 1) {
-          $message = "Gained $($transaction.Change) points!"
+          $heading = "You gained $($transaction.Change) points!"
         }
         else {
-          $message = "Gained $($transaction.Change) point!"
+          $heading = "You gained $($transaction.Change) point!"
         }
-        Show-JobCompleteSuccess $message
+        $message = $transaction.Log
+        Show-JobCompleteSuccess $heading $message
         $quit = $true
       }
       else {
