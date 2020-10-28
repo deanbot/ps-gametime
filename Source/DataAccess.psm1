@@ -236,6 +236,10 @@ function Get-TransactionsDb {
       }
     }
   }
+
+  # Sort by date value descending
+  $transactions = $transactions | Sort-Object @{Expression = { [datetime]::Parse("$($_.Date)", (Get-Culture)) }; Ascending = $false }
+
   return , $transactions
 }
 
