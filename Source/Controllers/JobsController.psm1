@@ -87,7 +87,6 @@ function New-Job {
   }
 }
 
-
 function Edit-Job {
   Param(
     # id of job to edit
@@ -170,8 +169,6 @@ function Remove-Job {
     $success
   }
 }
-
-
 
 function Get-TypeIsValid {
   Param(

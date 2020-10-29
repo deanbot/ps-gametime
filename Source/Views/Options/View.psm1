@@ -1,20 +1,18 @@
-function Show-MainMenu {
+function Show-OptionsMenu {
   $width = $global:containerWidth
   $pos = $global:menuPositionY
-  $jobLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Browse Jobs"
-  $gameLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Spend Points"
-  $logLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))View Logs"
-  $optionsLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 3))Options"
+  $resetPointsLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Reset Points"
+  $factoryResetLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Factory Reset"
+
+
 
   Write-Host ""
   Show-Heading "Main Menu"
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Pages:")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$jobLine|  "
-  Write-Host "  |$gameLine|  "
-  Write-Host "  |$logLine|  "
-  Write-Host "  |$optionsLine|  "
+  Write-Host "  |$resetPointsLine|  "
+  Write-Host "  |$factoryResetLine|  "
   Write-Host "  |$(Get-PaddedString)|  "
   # Write-Host "  |$(Get-PaddedString '  Press [Enter] to select')|  "
   # Show-ControlsFooter

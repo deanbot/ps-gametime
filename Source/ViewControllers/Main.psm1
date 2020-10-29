@@ -14,7 +14,7 @@ function Initialize-MainMenu {
   $Global:menuPositionX = 0
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsX = 0
-  $Global:maxMenuPositionsY = 3
+  $Global:maxMenuPositionsY = 4
   $Global:canChangeMenuY = $true
   $Global:canChangeMenuPositionY = $true
   $Global:canChangeMenuPositionX = $false

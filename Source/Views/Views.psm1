@@ -8,6 +8,7 @@ Import-Module $Path\Game\View.psm1 -Force
 Import-Module $Path\Index\View.psm1 -Force
 Import-Module $Path\Jobs\View.psm1 -Force
 Import-Module $Path\Logs\View.psm1 -Force
+Import-Module $Path\Options\View.psm1 -Force
 
 function Initialize-Display {
   # hide cursor

@@ -18,6 +18,7 @@ $sectionMainMenu = 'Main Menu'
 $sectionJobsMenu = 'Jobs'
 $sectionGameMenu = 'Game Time'
 $sectionLogsMenu = 'Logs'
+$sectionOptionsMenu = 'Options'
 $jobPageSingle = 'Single'
 $jobPageNew = 'New'
 $jobPageComplete = 'Complete'
@@ -147,6 +148,8 @@ function Read-Input {
             Initialize-GameMenu
           } 2 {
             Initialize-LogsMenu
+          } 3 {
+            Initialize-OptionsMenu
           }
         }
         $foundMatch = $true
@@ -385,6 +388,12 @@ function Show-BodyContent {
     } elseif ($subPage -eq $logPageSingle) {
       Show-LogSingle
     }
+  }
+  elseif ($section -eq $sectionOptionsMenu) {
+    Show-OptionsMenu
+  } else {
+    write-Host $section
+    pause
   }
 }
 
