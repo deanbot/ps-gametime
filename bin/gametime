@@ -28,5 +28,5 @@ if [ "$CLIENT" = '' ]; then
     exit 1
 fi
 
-# pass supported params
-"$CLIENT" "${0%/*}"/../Source/Start.ps1 $1 $2
+# pass supported param
+"$CLIENT" "${0%/*}"/../Source/Start.ps1 $1

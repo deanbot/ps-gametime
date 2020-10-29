@@ -2,14 +2,9 @@
 param(
   # alternate storage directory
   [Parameter(Mandatory = $false, Position = 0)]
-  [string]$StorageLocation = "",
-
-  # optional suffix to db file names
-  [Parameter(Mandatory = $false, Position = 1)]
-  [string]$SessionName = ""
+  [string]$StorageLocation = ""
 )
 
-$Global:SessionName = $SessionName
 $Global:StorageLocation = $StorageLocation
 
 $Global:ScriptRoot = $PSScriptRoot

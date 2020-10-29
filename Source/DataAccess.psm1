@@ -14,12 +14,7 @@ function Get-JobCsvPath {
     return $Global:JobCsvPath
   }
   else {
-    if ($Global:SessionName) {
-      $filename = "Job-$($Global:SessionName).csv"
-    }
-    else {
-      $filename = "Job.csv"
-    }
+    $filename = "Job.csv"
     if ($Global:StorageLocation) {
       $path = $Global:StorageLocation
       if ($path[$path.Length - 1] -ne "\") {
@@ -38,12 +33,7 @@ function Get-TransactionCsvPath {
     return $Global:TansactionCsvPath
   }
   else {
-    if ($Global:SessionName) {
-      $filename = "Transaction-$($Global:SessionName).csv"
-    }
-    else {
-      $filename = "Transaction.csv"
-    }
+    $filename = "Transaction.csv"
     if ($Global:StorageLocation) {
       $path = $Global:StorageLocation
       if ($path[$path.Length - 1] -ne "\") {
