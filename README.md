@@ -18,7 +18,7 @@ The directory Game Time uses to store data (by default `<path/to/gametime>/Datab
 
 #### Synchronize across devices
 
-Game Time's minimal database can be synchronized across your devices specifying a storage location synchronized by a service such as OneDrive, Dropbox, SpiderOak, etc.
+Game Time's minimal database can be synchronized across your devices by specifying a storage location that is synchronized by a service such as OneDrive, Dropbox, SpiderOak, etc.
 
 ```bash
 gametime /c/Users/me/OneDrive/GameTime
