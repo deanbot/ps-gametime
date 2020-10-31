@@ -13,6 +13,9 @@ $logsPerPage = 5 # todo why is it showing 6?
 function Get-CurrentTransactions {
   $transactions = $Global:transactions
   $page = $Global:menuPositionX
+  if (!$transactions) {
+    $transactions = @()
+  }
   $currentTransactions = Get-Page $transactions $page $logsPerPage
   return $currentTransactions
 }
