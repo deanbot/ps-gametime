@@ -38,8 +38,7 @@ function Read-ResetPointsInputVal {
   $quit = $false
 
   if ($inputVal -eq 'y') {
-    Write-Host "todo reset points"
-    pause
+    Reset-Points
     $quit = $true
   }
   elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
@@ -56,8 +55,7 @@ function Read-FactoryResetInputVal {
   $quit = $false
 
   if ($inputVal -eq 'y') {
-    Write-Host "todo factory reset"
-    pause
+    Reset-GameTime
     $quit = $true
   }
   elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
