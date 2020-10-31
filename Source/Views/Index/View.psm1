@@ -1,7 +1,7 @@
 function Show-MainMenu {
   $width = $global:containerWidth
   $pos = $global:menuPositionY
-  $jobLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Browse Jobs"
+  $jobLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Browse $Label_Plural_Quest"
   $gameLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Spend Points"
   $logLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))View Logs"
   $optionsLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 3))Options"

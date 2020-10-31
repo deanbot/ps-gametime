@@ -17,7 +17,7 @@ function Get-MessageNoJobFound {
     [Parameter(Mandatory = $true, Position = 0)]
     [decimal]$JobId
   )
-  "No job found for id: $JobId."
+  "No $Label_Single_Quest_Lower found for id: $JobId."
 }
 
 function Get-MessageInvalidJobType {
@@ -25,7 +25,7 @@ function Get-MessageInvalidJobType {
     [Parameter(Mandatory = $true, Position = 0)]
     [string]$Type
   )
-  "Invalid job type: $Type."
+  "Invalid $Label_Single_Quest_Lower type: $Type."
 }
 
 function Get-MessageTooFewPoints {
@@ -33,7 +33,7 @@ function Get-MessageTooFewPoints {
     [Parameter(Mandatory = $true, Position = 0)]
     [int]$Available
   )
-  "Not enough game time points (available balance: $Available)"
+  "Not enough Game Time points (available balance: $Available)"
 }
 
 function Get-MessageDeductTransactionLog {
@@ -52,15 +52,15 @@ function Get-MessageDeductTransactionLog {
 
 function Get-MessageTransactionLog {
   param(
-    # type of job
+    # type of $Label_Single_Quest_Lower
     [Parameter(Mandatory = $false)]
     [string]$JobType = "",
 
-    # title of job
+    # title of $Label_Single_Quest_Lower
     [Parameter(Mandatory = $false)]
     [string]$JobTitle = "",
 
-    # rate of job
+    # rate of $Label_Single_Quest_Lower
     [Parameter(Mandatory = $false)]
     [decimal]$JobRate,
 

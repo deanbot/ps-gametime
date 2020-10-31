@@ -252,7 +252,7 @@ function Read-JobRemoveInputVal {
       }
     }
     else {
-      Show-JobRemoveFailed "Job ID not found"
+      Show-JobRemoveFailed "$Label_Single_Quest ID not found"
       $quit = $true
     }
   }

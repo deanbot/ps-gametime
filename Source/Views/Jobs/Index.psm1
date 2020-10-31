@@ -9,7 +9,7 @@ function Show-JobsMenu {
   Write-Host ""
   Show-JobsTabs $posX
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Jobs: " -Width $widthLeft)$(Get-PaddedString "[N] New  " -Right $true -Width $widthRight)|  "
+  Write-Host "  |$(Get-PaddedString "  Select a $($Label_Single_Quest_Lower): " -Width $widthLeft)$(Get-PaddedString "[N] New  " -Right $true -Width $widthRight)|  "
   Write-Host "  |$(Get-PaddedString)|  "
 
   if ($jobs) {
@@ -17,7 +17,7 @@ function Show-JobsMenu {
   }
   else {
     $jobType = Get-CurrentJobType
-    Write-Host "  |$(Get-PaddedString "  No $jobType Jobs found.")|  "
+    Write-Host "  |$(Get-PaddedString "  No $jobType $Label_Plural_Quest found.")|  "
   }
   # Write-Host "  |$(Get-PaddedString "  ")|  "
   # $addLine = "    [N] New job"

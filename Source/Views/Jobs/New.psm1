@@ -9,7 +9,7 @@ else {
 function Show-JobNew {
   Clear-Host
   Write-Host ""
-  Show-Heading "New Job"
+  Show-Heading "New $Label_Single_Quest"
   Write-Host "  |$(Get-PaddedString)|  "
   $title = $Global:newJobTitle
   $type = $Global:currentJobType
@@ -88,7 +88,7 @@ function Show-PromptNewJob() {
       Write-Host ""
       Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
       Write-Host ""
-      Write-Host "  Create Job?"
+      Write-Host "  Create $Label_Single_Quest"
       Write-Host "  [Y] Yes  [N] No: "
       do {
         $createJob = Read-Character
@@ -122,7 +122,7 @@ function Show-JobNewFailed {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  No job created.")|  "
+  Write-Host "  |$(Get-PaddedString "  No $Label_Single_Quest_Lower created.")|  "
   if ($reason) {
     Write-Host "  |$(Get-PaddedString "  $reason")|  "
   }
@@ -139,7 +139,7 @@ function Show-JobNewSuccess {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Job created successfully!")|  "
+  Write-Host "  |$(Get-PaddedString "  $Label_Single_Quest created successfully!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""

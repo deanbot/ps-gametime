@@ -25,8 +25,8 @@ function Show-GameMenu {
     # Show-ControlsFooter
   }
   else {
-    Write-Host "  |$(Get-PaddedString "  No game time points to spend...")|  "
-    Write-Host "  |$(Get-PaddedString "  Complete jobs to earn points.")|  "
+    Write-Host "  |$(Get-PaddedString "  No Game Time points to spend...")|  "
+    Write-Host "  |$(Get-PaddedString "  Complete $Label_Plural_Quest_Lower to earn points.")|  "
     Write-Host "  |$(Get-PaddedString)|  "
   }
 

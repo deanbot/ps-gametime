@@ -13,6 +13,7 @@ else {
 # UI Labels
 $Global:unit = "pts"
 
+Import-Module $Global:ScriptRoot\Labels.psm1 -Force
 Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
 Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
 Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
@@ -22,6 +23,9 @@ function Main {
   try {
     # set up console and store initial settings
     Initialize-Display
+
+    # set up shared labels
+    Initialize-Labels
 
     # initialzie view engine variables
     Initialize-Variables
