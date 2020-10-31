@@ -61,6 +61,19 @@ function Initialize-Path {
   }
 }
 
+function Remove-TransationsDb {
+  $path = Get-TransactionCsvPath
+  if (Test-Path $path -PathType Leaf) {
+    Remove-Item $path
+  }
+}
+
+function Remove-JobsDb {
+  $path = Get-JobCsvPath
+  if (Test-Path $path -PathType Leaf) {
+    Remove-Item $path
+  }
+}
 
 # get all jobs from db
 function Get-JobsDb {

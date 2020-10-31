@@ -46,7 +46,9 @@ function Read-ResetPointsInputVal {
   }
 
   if ($quit) {
+    $prevPosition = $Global:menuPositionY
     Initialize-OptionsMenu
+    $Global:menuPositionY = $prevPosition
   }
 }
 
@@ -63,7 +65,9 @@ function Read-FactoryResetInputVal {
   }
 
   if ($quit) {
+    $prevPosition = $Global:menuPositionY
     Initialize-OptionsMenu
+    $Global:menuPositionY = $prevPosition
   }
 }
 
