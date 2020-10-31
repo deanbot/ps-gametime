@@ -276,7 +276,7 @@ function Get-PaddedString {
 function Get-Page {
   param (
     [Parameter(Mandatory=$true, Position=0)]
-    $items, # array to page
+    $items=@(), # array to page
     [Parameter(Mandatory=$true, Position=1)]
     [int32]$page,
     [Parameter(Mandatory=$true, Position=2)]
