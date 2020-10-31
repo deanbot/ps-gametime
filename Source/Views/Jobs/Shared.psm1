@@ -5,7 +5,7 @@ function Show-JobTitleWarning {
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Notice!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Enter a job title")|  "
+  Write-Host "  |$(Get-PaddedString "  Enter a $Label_Single_Quest_Lower title")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""

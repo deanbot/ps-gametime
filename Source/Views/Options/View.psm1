@@ -54,7 +54,7 @@ function Show-OptionsConfirmResetPoints {
   foreach ($line in $textLines) {
     Write-Host "  |$(Get-PaddedString "  $line" )|  "
   }
-  if ($heading && $Main) {
+  if ($heading -and $Main) {
     Write-Host "  |$(Get-PaddedString)|  "
   }
   $textLines = Get-TextLines $main ($width - 4)
@@ -73,12 +73,12 @@ function Show-OptionsConfirmFactoryReset {
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
   $heading = "Reset Game Time?"
-  $main = "This will clear all jobs and logs?"
+  $main = "This will clear all $Label_Plural_Quest_Lower and logs?"
   $textLines = Get-TextLines $heading ($width - 4)
   foreach ($line in $textLines) {
     Write-Host "  |$(Get-PaddedString "  $line" )|  "
   }
-  if ($heading && $Main) {
+  if ($heading -and $Main) {
     Write-Host "  |$(Get-PaddedString)|  "
   }
   $textLines = Get-TextLines $main ($width - 4)

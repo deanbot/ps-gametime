@@ -69,10 +69,10 @@ function New-Job {
     }
     $success = Add-JobDb $job
     if ($success) {
-      Write-Debug "Job created successfully."
+      Write-Debug "$Label_Single_Quest created successfully."
     }
     else {
-      Write-Debug "Job not created."
+      Write-Debug "$Label_Single_Quest not created."
     }
     if (!$Global:SilentStatusReturn) {
       return $success
@@ -80,7 +80,7 @@ function New-Job {
   }
   else {
     Throw $(Get-MessageInvalidJobType $Type)
-    Write-Debug "Job not created."
+    Write-Debug "$Label_Single_Quest not created."
     if (!$Global:SilentStatusReturn) {
       return $false
     }
@@ -128,10 +128,10 @@ function Edit-Job {
     }
     $success = Set-JobDb $JobId $job
     if ($success) {
-      Write-Debug "Job editted successfully."
+      Write-Debug "$Label_Single_Quest editted successfully."
     }
     else {
-      Write-Debug "Job not editted."
+      Write-Debug "$Label_Single_Quest not editted."
     }
     if (!$Global:SilentStatusReturn) {
       return $success
@@ -144,7 +144,7 @@ function Edit-Job {
     elseif (!$validType) {
       Throw $(Get-MessageInvalidJobType $Type)
     }
-    Write-Debug "Job not editted."
+    Write-Debug "$Label_Single_Quest not editted."
     if (!$Global:SilentStatusReturn) {
       return $false
     }
@@ -160,7 +160,7 @@ function Remove-Job {
 
   $success = Remove-JobDb $JobId
   if ($success) {
-    Write-Debug "Job removed successfully."
+    Write-Debug "$Label_Single_Quest removed successfully."
   }
   else {
     Throw $(Get-MessageNoJobFound $JobId)

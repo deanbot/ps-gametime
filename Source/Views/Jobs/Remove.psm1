@@ -11,7 +11,7 @@ function Show-JobConfirmRemove {
   Write-Host ""
   Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
   Write-Host ""
-  Write-Host "  Remove Job?"
+  Write-Host "  Remove $Label_Single_Quest?"
   Write-Host "  [Y] Yes  [N] No"
   Write-Host ""
   do {
@@ -34,7 +34,7 @@ function Show-JobRemoveFailed {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Job not removed.")|  "
+  Write-Host "  |$(Get-PaddedString "  $Label_Single_Quest not removed.")|  "
   if ($reason) {
     Write-Host "  |$(Get-PaddedString "  $reason")|  "
   }
@@ -52,7 +52,7 @@ function Show-JobRemoveSuccess {
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
-  Write-Host "  |$(Get-PaddedString "  Job removed successfully!")|  "
+  Write-Host "  |$(Get-PaddedString "  $Label_Single_Quest removed successfully!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
