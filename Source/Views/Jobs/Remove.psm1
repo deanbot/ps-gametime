@@ -1,7 +1,3 @@
-function Show-PromptRemoveJob {
-
-}
-
 function Show-JobConfirmRemove {
   $job = $Global:currentJob
   $jobType = $job.Type

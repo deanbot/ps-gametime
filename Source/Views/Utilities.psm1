@@ -6,6 +6,24 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
+function Show-PromptBool  {
+  param (
+    [string]$Prompt = ""
+  )
+
+  Write-Host ""
+  if ($Prompt) {
+    Write-Host "  $Prompt"
+  }
+  Write-Host "  [Y] Yes  [N] No:"
+  Write-Host ""
+  do {
+    $char = Read-Character
+  } until ($char -eq 'y' `
+      -or $char -eq 'n' `
+      -or $char -eq [System.ConsoleKey]::Escape)
+  $global:inputValue = $char
+}
 
 function Wait-ForKeyPress {
   do {

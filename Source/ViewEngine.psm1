@@ -26,11 +26,15 @@ $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
 $logPageSingle = 'Single'
+$optionsPageResetPoints = 'ResetPoints'
+$optionsPageFactoryReset = 'FactoryReset'
 $promptNewJob = 'NewJob'
 $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
 $promptRemoveJob = 'RemoveJob'
 $promptGameSpend = 'GameSpend'
+$promptResetPoints = 'ResetPoints'
+$promptFactoryReset = 'FactoryReset'
 
 function Initialize-Variables {
   $Global:quit = $false
@@ -126,6 +130,8 @@ function Read-PromptInput {
     if ($subPage -eq $gamePageSpend) {
       Read-GameConfirmInputVal
     }
+  } elseif ($section -eq $sectionOptionsMenu) {
+    Read-OptionsPromptInputVals
   }
 }
 
@@ -306,6 +312,27 @@ function Read-Input {
         }
       }
     }
+    # options menu
+    elseif ($section -eq $sectionOptionsMenu) {
+      if (!$subPage) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          # init jobs menu and restore menu section
+          Initialize-MainMenu
+          $foundMatch = $true
+        }
+        elseif ($character -eq [System.ConsoleKey]::Enter) {
+          switch ($Global:menuPositionY) {
+            0 {
+              Initialize-OptionsResetPoints
+              $foundMatch = $true
+            } 1 {
+              Initialize-OptionsFactoryReset
+              $foundMatch = $true
+            }
+          }
+        }
+      }
+    }
   }
   else {
     # found direction instruction
@@ -390,10 +417,13 @@ function Show-BodyContent {
     }
   }
   elseif ($section -eq $sectionOptionsMenu) {
-    Show-OptionsMenu
-  } else {
-    write-Host $section
-    pause
+    if (!$subPage) {
+      Show-OptionsMenu
+    } elseif ($subPage -eq $optionsPageFactoryReset) {
+      Show-OptionsConfirmFactoryReset
+    } elseif ($subPage -eq $optionsPageResetPoints) {
+      Show-OptionsConfirmResetPoints
+    }
   }
 }
 
@@ -409,6 +439,10 @@ function Show-Prompt {
     Show-PromptRemoveJob
   } elseif ($prompt -eq $promptGameSpend) {
     Show-PromptSpend
+  } elseif ($prompt -eq $promptResetPoints) {
+    Show-PromptOptionsResetPoints
+  } elseif ($prompt -eq $promptFactoryReset) {
+    Show-PromptOptionsFactoryReset
   }
 }
 

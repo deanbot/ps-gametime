@@ -30,7 +30,6 @@ function Get-AvailableBalance {
   [Math]::Floor([decimal]($balance))
 }
 
-
 function New-Transaction {
   Param(
     # id of job being performed. use -1 to deduct from balance instead
