@@ -8,7 +8,7 @@ else {
 function Reset-Points {
   # add deduct transaction to set balance to 0
   $balance = [decimal](Get-Balance)
-  $date = Get-Date -format 'MM/dd/yyyy'
+  $date = Get-Date -format 'yyyyMMddTHHmmssffff'
   $transaction = [PSCustomObject]@{
     Date   = $date
     JobId  = -1

@@ -241,7 +241,18 @@ function Get-TransactionsDb {
   }
 
   # Sort by date value descending
-  $transactions = $transactions | Sort-Object @{Expression = { [datetime]::Parse("$($_.Date)", (Get-Culture)) }; Ascending = $false }
+  $transactions = $transactions | Sort-Object @{Expression = {
+    $date = $_.Date
+    try {
+      # return formatted date
+      $newDate = [datetime]::ParseExact($date, 'yyyyMMddTHHmmssffff', $null)
+      $_.Date = '{0:MM/dd/yyyy}' -f $newDate
+      $newDate
+    } catch {
+      # fall back to old date format
+      [datetime]::ParseExact($date, 'MM/dd/yyyy', $null)
+    }
+  }; Ascending = $false }
 
   return , $transactions
 }

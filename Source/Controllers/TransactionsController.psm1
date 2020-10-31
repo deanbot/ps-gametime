@@ -165,7 +165,7 @@ function New-DeductTransaction {
     throw $(Get-MessageTooFewPoints $available)
   }
   else {
-    $date = Get-Date -format 'MM/dd/yyyy'
+    $date = Get-Date -format 'yyyyMMddTHHmmssffff'
     $log = Get-MessageDeductTransactionLog $Degree
     $transaction = [PSCustomObject]@{
       Date   = $date
