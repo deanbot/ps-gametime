@@ -13,6 +13,12 @@ function Show-LogsMenu {
     Write-Host "  |$(Get-PaddedString)|  "
     Show-LogCheckBoxes $logs
     Show-LogPagination
+  } else {
+    Write-Host "  |$(Get-PaddedString "No logs found." -Center $true)|  "
+    Write-Host "  |$(Get-PaddedString)|  "
+    Write-Host "  |$(Get-PaddedString "Try completing some tasks or" -Center $true)|  "
+    Write-Host "  |$(Get-PaddedString "redeeming points to see logs here." -Center $true)|  "
+
   }
 
   Write-Host "  |$(Get-PaddedString)|  "
