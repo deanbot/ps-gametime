@@ -30,3 +30,8 @@ function Reset-GameTime {
   Remove-TransationsDb
   Remove-JobsDb
 }
+
+function Add-DemoContent {
+  Write-Host "TODO Add Demo Content"
+  pause
+}

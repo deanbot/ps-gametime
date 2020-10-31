@@ -26,6 +26,7 @@ $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
 $logPageSingle = 'Single'
+$optionsPageDemoContent = 'DemoContent'
 $optionsPageResetPoints = 'ResetPoints'
 $optionsPageFactoryReset = 'FactoryReset'
 $promptNewJob = 'NewJob'
@@ -33,6 +34,7 @@ $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
 $promptRemoveJob = 'RemoveJob'
 $promptGameSpend = 'GameSpend'
+$promptDemoContent = 'DemoContent'
 $promptResetPoints = 'ResetPoints'
 $promptFactoryReset = 'FactoryReset'
 
@@ -323,9 +325,12 @@ function Read-Input {
         elseif ($character -eq [System.ConsoleKey]::Enter) {
           switch ($Global:menuPositionY) {
             0 {
-              Initialize-OptionsResetPoints
+              Initialize-OptionsDemoContent
               $foundMatch = $true
             } 1 {
+              Initialize-OptionsResetPoints
+              $foundMatch = $true
+            } 2 {
               Initialize-OptionsFactoryReset
               $foundMatch = $true
             }
@@ -423,6 +428,8 @@ function Show-BodyContent {
       Show-OptionsConfirmFactoryReset
     } elseif ($subPage -eq $optionsPageResetPoints) {
       Show-OptionsConfirmResetPoints
+    } elseif ($subPage -eq $optionsPageDemoContent) {
+      Show-OptionsConfirmDemoContent
     }
   }
 }
@@ -443,6 +450,8 @@ function Show-Prompt {
     Show-PromptOptionsResetPoints
   } elseif ($prompt -eq $promptFactoryReset) {
     Show-PromptOptionsFactoryReset
+  } elseif ($prompt -eq $promptDemoContent) {
+    Show-PromptOptionsDemoContent
   }
 }
 

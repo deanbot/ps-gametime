@@ -1,8 +1,10 @@
 $setionOptionsMenu = 'Options'
 $promptResetPoints = 'ResetPoints'
 $promptFactoryReset = 'FactoryReset'
+$promptDemoContent = 'DemoContent'
 $optionsPageResetPoints = 'ResetPoints'
 $optionsPageFactoryReset = 'FactoryReset'
+$optionsPageDemoContent = 'DemoContent'
 
 function Initialize-OptionsMenu {
   $global:section = $setionOptionsMenu
@@ -10,13 +12,20 @@ function Initialize-OptionsMenu {
   $Global:menuPositionX = 0
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsX = 0
-  $Global:maxMenuPositionsY = 2
+  $Global:maxMenuPositionsY = 3
   $Global:canChangeMenuPositionY = $true
   $Global:canChangeMenuPositionX = $false
   $Global:showReturn = $false
   $Global:showSelect = $true
   $Global:invertY = $false
   $Global:currentPrompt = ''
+}
+
+function Initialize-OptionsDemoContent {
+  $global:subPage = $optionsPageDemoContent
+  $Global:currentPrompt = $promptDemoContent
+  $Global:canChangeMenuPositionX = $false
+  $Global:canChangeMenuPositionY = $false
 }
 
 function Initialize-OptionsResetPoints {
@@ -71,11 +80,32 @@ function Read-FactoryResetInputVal {
   }
 }
 
+function Read-DemoContentInputVal {
+  $inputVal = $Global:inputValue
+  $quit = $false
+
+  if ($inputVal -eq 'y') {
+    Add-DemoContent
+    $quit = $true
+  }
+  elseif ($inputVal -eq 'n' -or $inputVal -eq [System.ConsoleKey]::Escape) {
+    $quit = $true
+  }
+
+  if ($quit) {
+    $prevPosition = $Global:menuPositionY
+    Initialize-OptionsMenu
+    $Global:menuPositionY = $prevPosition
+  }
+}
+
 function Read-OptionsPromptInputVals {
   $subPage = $Global:subPage
   if ($subPage -eq $optionsPageResetPoints) {
     Read-ResetPointsInputVal
   } elseif ($subPage -eq $optionsPageFactoryReset) {
     Read-FactoryResetInputVal
+  } elseif ($subPage -eq $optionsPageDemoContent) {
+    Read-DemoContentInputVal
   }
 }
