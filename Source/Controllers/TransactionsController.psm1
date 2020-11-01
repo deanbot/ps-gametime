@@ -61,6 +61,7 @@ function New-JobTransaction {
     [Parameter(Mandatory = $true, Position = 0)]
     [int]$JobId,
 
+    # todo move degree to 3rd param
     # duration (hours) job is performed (for quest type jobs)
     [Parameter(Mandatory = $false, Position = 1)]
     [decimal]$Degree = 1,
