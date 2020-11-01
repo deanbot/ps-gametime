@@ -32,6 +32,7 @@ function Main {
 
     # start at main menu page
     Initialize-MainMenu
+    pause
 
     # main loop
     [bool]$repaint = $true

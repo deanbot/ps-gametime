@@ -6,7 +6,5 @@ param(
 )
 
 $Global:StorageLocation = $StorageLocation
-
 $Global:ScriptRoot = $PSScriptRoot
-
 . $Global:ScriptRoot\Main.ps1

@@ -32,6 +32,23 @@ function Reset-GameTime {
 }
 
 function Add-DemoContent {
-  Write-Host "TODO Add Demo Content"
+  param (
+    [Parameter(Mandatory=$true, Position=0)]
+    $pos
+  )
+  switch ($pos) {
+    # language learning
+    0 {
+      Write-Host "TODO add language learning demo content"
+    }
+    # weight loss
+    1 {
+      Write-Host "Todo add Weight Loss demo conent"
+    }
+    # Writing a book
+    2 {
+      Write-Host "Todo add writing a book demo content"
+    }
+  }
   pause
 }

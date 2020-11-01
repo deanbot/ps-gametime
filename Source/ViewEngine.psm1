@@ -27,6 +27,7 @@ $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
 $logPageSingle = 'Single'
 $optionsPageDemoContent = 'DemoContent'
+$optionsPageConfirmDemoContent = 'ConfirmDemoContent'
 $optionsPageResetPoints = 'ResetPoints'
 $optionsPageFactoryReset = 'FactoryReset'
 $promptNewJob = 'NewJob'
@@ -318,11 +319,11 @@ function Read-Input {
     elseif ($section -eq $sectionOptionsMenu) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          # init jobs menu and restore menu section
           Initialize-MainMenu
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
+          $global:prevMenuPositionY = $Global:menuPositionY
           switch ($Global:menuPositionY) {
             0 {
               Initialize-OptionsDemoContent
@@ -335,6 +336,17 @@ function Read-Input {
               $foundMatch = $true
             }
           }
+        }
+      }
+      elseif ($subPage -eq $optionsPageDemoContent) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          Initialize-OptionsMenu
+          $Global:menuPositionY = $global:prevMenuPositionY
+          $global:prevMenuPositionY = 0
+          $foundMatch = $true
+        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+          Initialize-OptionsConfirmDemoContent
+          $foundMatch = $true
         }
       }
     }
@@ -429,6 +441,8 @@ function Show-BodyContent {
     } elseif ($subPage -eq $optionsPageResetPoints) {
       Show-OptionsConfirmResetPoints
     } elseif ($subPage -eq $optionsPageDemoContent) {
+      Show-OptionsDemoContentMenu
+    } elseif ($subPage -eq $optionsPageConfirmDemoContent) {
       Show-OptionsConfirmDemoContent
     }
   }
