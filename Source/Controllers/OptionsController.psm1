@@ -40,24 +40,12 @@ function Add-DemoContent {
   switch ($pos) {
     # language learning
     0 {
-      Write-Host "TODO add language learning demo content"
-
       # Create Jobs
-
-      # example quest
       $quest1Id = New-Job "Course book Section" $jobTypeQuest .75
-
-      # example timed quest
       $timedQuest1Id = New-Job "Read fiction" $jobTypeQuestTimed .5
-
-      # example daily
       $dailyQuest1Id = New-Job "Duolingo" $jobTypeDaily .25
       $dailyQuest2Id = New-Job "Flash cards" $jobTypeDaily .5
-
-      # example rare
       $rareQuest1Id = New-Job "Complete practice test" $jobTypeRare 2
-
-      # Create Logs
 
       # example complete quest
       New-Transaction $quest1Id -Note "Chapter 2.3" # .75
@@ -74,11 +62,12 @@ function Add-DemoContent {
     # weight loss
     1 {
       Write-Host "Todo add Weight Loss demo conent"
+      pause
     }
     # Writing a book
     2 {
       Write-Host "Todo add writing a book demo content"
+      pause
     }
   }
-  pause
 }
