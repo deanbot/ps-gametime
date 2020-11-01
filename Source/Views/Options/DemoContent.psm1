@@ -4,6 +4,12 @@ function Show-OptionsDemoContentMenu {
   Write-Host ""
   Show-Heading "Install Demo Content"
   Write-Host "  |$(Get-PaddedString)|  "
+  $message = "Clear all existing data and add demo content. See how to use Game Time for different scenarios."
+  $textLines = Get-TextLines $message ($width - 4)
+  foreach ($line in $textLines) {
+    Write-Host "  |$(Get-PaddedString "  $line" )|  "
+  }
+  Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Select a demo:")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Language learning")|  "
@@ -21,7 +27,7 @@ function Show-OptionsConfirmDemoContent {
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
   $heading = "Install Demo Content?"
-  $main = "Example quests and logs will be created."
+  $main = "Warning: this will clear all game data. Example quests and logs will be created."
   $textLines = Get-TextLines $heading ($width - 4)
   foreach ($line in $textLines) {
     Write-Host "  |$(Get-PaddedString "  $line" )|  "
