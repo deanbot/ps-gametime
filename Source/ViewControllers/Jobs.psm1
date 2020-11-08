@@ -269,6 +269,7 @@ function Read-JobRemoveInputVal {
 function Read-JobCompleteInputVal {
   $inputVal = $Global:inputValue
   $quit = $false
+  $quitToIndex = $false
 
   # first form step
   if (!$Global:duration) {
@@ -328,7 +329,7 @@ function Read-JobCompleteInputVal {
           $heading = "You gained $($transaction.Change) point!"
         }
         $message = $transaction.Log
-        # Show-JobCompleteSuccess $heading $message
+        Show-JobCompleteSuccess $heading $message
         $quit = $true
       }
       else {
@@ -373,7 +374,11 @@ function Read-JobCompleteInputVal {
   # }
 
   if ($quit) {
-    Initialize-JobSingle
+    if (!$quitToIndex) {
+      Initialize-JobSingle
+    } else {
+
+    }
   }
 }
 
