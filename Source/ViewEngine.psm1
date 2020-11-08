@@ -184,6 +184,7 @@ function Read-Input {
           switch ($character) {
             'N' {
               $Global:currentJobType = Get-CurrentJobType
+              $Global:prevMenuPositionX = $Global:menuPositionX
               Initialize-JobNew
               $foundMatch = $true
             }
@@ -207,20 +208,6 @@ function Read-Input {
               $foundMatch = $true
             } 2 {
               Initialize-JobRemove
-              $foundMatch = $true
-            }
-          }
-        }
-        else {
-          switch ($character) {
-            'C' {
-              $Global:menuPositionY = 0
-              $foundMatch = $true
-            } 'E' {
-              $Global:menuPositionY = 1
-              $foundMatch = $true
-            } 'R' {
-              $Global:menuPositionY = 2
               $foundMatch = $true
             }
           }
