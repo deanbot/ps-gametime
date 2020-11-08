@@ -57,21 +57,21 @@ function Add-DemoContent {
 
       # example complete quest
       $transaction = New-Transaction $quest1Id -Note "Chapter 1.1"
-      $transaction = New-Transaction $quest2Id -Note "Wrote about what I did last summer" 
+      $transaction = New-Transaction $quest2Id -Note "Wrote about what I did last summer"
       $transaction = New-Transaction $quest1Id -Note "Chapter 1.2"
       $transaction = New-Transaction $quest2Id -Note "Short story about an office party"
-      $transaction = New-Transaction $quest1Id -Note "Chapter 1.3" 
-      $transaction = New-Transaction $quest2Id -Note "A family tree and memories of my immediate family" 
-      $transaction = New-Transaction $timedQuest1Id -Degree .75 -Note "Chapter 1 of Vorübergehend tot" 
-      $transaction = New-Transaction $timedQuest2Id -Degree 1.2 -Note "Watched two episodes of King of the Hill in German" 
-      $transaction = New-Transaction $dailyQuest1Id -Note "Downloaded the flirting module and completed it" 
+      $transaction = New-Transaction $quest1Id -Note "Chapter 1.3"
+      $transaction = New-Transaction $quest2Id -Note "A family tree and memories of my immediate family"
+      $transaction = New-Transaction $timedQuest1Id -Degree .75 -Note "Chapter 1 of Vorübergehend tot"
+      $transaction = New-Transaction $timedQuest2Id -Degree 1.2 -Note "Watched two episodes of King of the Hill in German"
+      $transaction = New-Transaction $dailyQuest1Id -Note "Downloaded the flirting module and completed it"
       $transaction = New-Transaction $dailyQuest2Id -Note "Studied Chapter 1.2 flashcards"
       $transaction = New-Transaction $rareQuest1Id -Note "Finished practice test and got 97%!"
 
       # example CA$H in
-      $transaction = New-DeductTransaction 3 "Played god of war. I learned a new <swordmagic>ability that lets me launch people into the air..."
-      $transaction = New-DeductTransaction 1 "Relaxed with a few rounds of Peggle 2 while waiting for pizza delivery"      
-      $transaction = New-DeductTransaction 2 "Co-op Breakforcist Battle with my favorite cousin"      
+      $transaction = New-DeductTransaction 3 "Ghost of Tsushima. 100% liberated!"
+      $transaction = New-DeductTransaction 1 "Relaxed with a few rounds of Peggle 2 while waiting for pizza delivery"
+      $transaction = New-DeductTransaction 2 "Co-op Breakforcist Battle with my favorite cousin"
       $transaction = New-DeductTransaction 2 "Hatoful Boyfriend was really weird"
 
     }
@@ -100,13 +100,13 @@ function Add-DemoContent {
       $transaction = New-Transaction $quest1Id -Note "Breakfast"
       $transaction = New-Transaction $quest1Id -Note "Lunch"
       $transaction = New-Transaction $quest1Id -Note "Dinner"
-      $transaction = New-Transaction $timedQuest1Id -Degree .3 -Note "Beat a high score for the balance mini-game." 
-      $transaction = New-Transaction $timedQuest2Id -Degree 1 -Note "Did a Zombie themed couch to 5k session. Ran 3 miles!" 
-      $transaction = New-Transaction $timedQuest1Id -Degree .5 -Note "Unlocked the wide squat exercise." 
-      $transaction = New-Transaction $dailyQuest1Id -Note "Hit my goal right on!" 
-      $transaction = New-Transaction $dailyQuest2Id 
-      $transaction = New-Transaction $rareQuest1Id 
-      $transaction = New-Transaction $rareQuest5Id 
+      $transaction = New-Transaction $timedQuest1Id -Degree .3 -Note "Beat a high score for the balance mini-game."
+      $transaction = New-Transaction $timedQuest2Id -Degree 1 -Note "Did a Zombie themed couch to 5k session. Ran 3 miles!"
+      $transaction = New-Transaction $timedQuest1Id -Degree .5 -Note "Unlocked the wide squat exercise."
+      $transaction = New-Transaction $dailyQuest1Id -Note "Hit my goal right on!"
+      $transaction = New-Transaction $dailyQuest2Id
+      $transaction = New-Transaction $rareQuest1Id
+      $transaction = New-Transaction $rareQuest5Id
 
       # example CA$H in
       $transaction = New-DeductTransaction 2 "The new Sonic game!"
@@ -128,17 +128,16 @@ function Add-DemoContent {
       $rareQuest4Id = New-Job "Complete Editors notes" $jobTypeRare 2
 
       # example complete quest
-      $transaction = New-Transaction $timedQuest1Id -Degree 4 -Note "Researched Civil War for Antebellum conversation in 3rd chapter" 
-      $transaction = New-Transaction $timedQuest3Id -Degree 1 -Note "Took note on natural conversation, changed pace of dialogue during breakup in epilogue." 
-      $transaction = New-Transaction $timedQuest1Id -Degree .75 -Note "Research on how railroads are constructed for character background" 
-      $transaction = New-Transaction $timedQuest2Id -Degree 2 -Note "Groove, finished 20 pages" 
-      $transaction = New-Transaction $dailyQuest1Id -Note "Volunteered for getaway camp next year" 
+      $transaction = New-Transaction $timedQuest1Id -Degree 4 -Note "Researched Civil War for Antebellum conversation in 3rd chapter"
+      $transaction = New-Transaction $timedQuest3Id -Degree 1 -Note "Took note on natural conversation, changed pace of dialogue during breakup in epilogue."
+      $transaction = New-Transaction $timedQuest1Id -Degree .75 -Note "Research on how railroads are constructed for character background"
+      $transaction = New-Transaction $timedQuest2Id -Degree 2 -Note "Groove, finished 20 pages"
+      $transaction = New-Transaction $dailyQuest1Id -Note "Volunteered for getaway camp next year"
       $transaction = New-Transaction $dailyQuest2Id -Note "Didn't do much today but did get in some research on timeline"
       $transaction = New-Transaction $rareQuest1Id -Note "Time traveling southern saytr on the run from dark past"
       $transaction = New-Transaction $rareQuest2Id -Note "Editor loved the first chapter and outline!!"
 
       # example CA$H in
-      # 1 hour of gaming
       $transaction = New-DeductTransaction 3 "The book club came over and we played Jackbox for hours"
     }
   }
