@@ -330,6 +330,9 @@ function Read-JobCompleteInputVal {
         }
         $message = $transaction.Log
         Show-JobCompleteSuccess $heading $message
+        if ($job.Type -eq $JobTypeRare) {
+          $quitToIndex = $true;
+        }
         $quit = $true
       }
       else {
@@ -377,7 +380,7 @@ function Read-JobCompleteInputVal {
     if (!$quitToIndex) {
       Initialize-JobSingle
     } else {
-
+      Initialize-JobsMenu $Global:prevMenuPositionX
     }
   }
 }
