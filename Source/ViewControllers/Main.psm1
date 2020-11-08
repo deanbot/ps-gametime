@@ -9,10 +9,14 @@ else {
 $sectionMainMenu = 'Main Menu'
 
 function Initialize-MainMenu {
+  param(
+    [Parameter(Mandatory = $false, Position = 0)]
+    [int32]$menuPositionY = 0
+  )
   $Global:section = $sectionMainMenu
   $Global:subPage = ''
   $Global:menuPositionX = 0
-  $Global:menuPositionY = 0
+  $Global:menuPositionY = $menuPositionY
   $Global:maxMenuPositionsX = 0
   $Global:maxMenuPositionsY = 4
   $Global:canChangeMenuY = $true
@@ -24,4 +28,5 @@ function Initialize-MainMenu {
   $Global:currentPrompt = ''
   $Global:prevMenuPositionY = 0
   $Global:prevMenuPositionX = 0
+  $Global:prevMainMenuPositionY = 0;
 }

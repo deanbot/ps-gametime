@@ -150,6 +150,7 @@ function Read-Input {
     #  main menu
     if ($section -eq $sectionMainMenu) {
       if ($character -eq [System.ConsoleKey]::Enter) {
+        $Global:prevMainMenuPositionY = $Global:menuPositionY
         switch ($Global:menuPositionY) {
           0 {
             Initialize-JobsMenu
@@ -163,26 +164,12 @@ function Read-Input {
         }
         $foundMatch = $true
       }
-      else {
-        switch ($character) {
-          'j' {
-            $Global:menuPositionY = 0
-            $foundMatch = $true
-          } 'g' {
-            $Global:menuPositionY = 1
-            $foundMatch = $true
-          } 'l' {
-            $Global:menuPositionY = 2
-            $foundMatch = $true
-          }
-        }
-      }
     }
     #  jobs menu
     elseif ($section -eq $sectionJobsMenu) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          Initialize-MainMenu
+          Initialize-MainMenu $Global:prevMainMenuPositionY
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
@@ -262,7 +249,7 @@ function Read-Input {
       $hasAvailableBalance = Get-AvailableBalance -gt 0
       if ($hasAvailableBalance) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          Initialize-MainMenu
+          Initialize-MainMenu $Global:prevMainMenuPositionY
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
@@ -286,7 +273,7 @@ function Read-Input {
       }
       else {
         if ($character) {
-          Initialize-MainMenu
+          Initialize-MainMenu $Global:prevMainMenuPositionY
           $foundMatch = $true
         }
       }
@@ -295,7 +282,7 @@ function Read-Input {
     elseif ($section -eq $sectionLogsMenu) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          Initialize-MainMenu
+          Initialize-MainMenu $Global:prevMainMenuPositionY
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
@@ -319,7 +306,7 @@ function Read-Input {
     elseif ($section -eq $sectionOptionsMenu) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          Initialize-MainMenu
+          Initialize-MainMenu $Global:prevMainMenuPositionY
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
