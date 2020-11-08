@@ -22,4 +22,6 @@ function Initialize-MainMenu {
   $Global:showSelect = $true
   $Global:invertY = $false
   $Global:currentPrompt = ''
+  $Global:prevMenuPositionY = 0
+  $Global:prevMenuPositionX = 0
 }

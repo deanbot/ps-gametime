@@ -26,6 +26,8 @@ $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
 $logPageSingle = 'Single'
+$optionsPageDemoContent = 'DemoContent'
+$optionsPageConfirmDemoContent = 'ConfirmDemoContent'
 $optionsPageResetPoints = 'ResetPoints'
 $optionsPageFactoryReset = 'FactoryReset'
 $promptNewJob = 'NewJob'
@@ -33,6 +35,7 @@ $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
 $promptRemoveJob = 'RemoveJob'
 $promptGameSpend = 'GameSpend'
+$promptDemoContent = 'DemoContent'
 $promptResetPoints = 'ResetPoints'
 $promptFactoryReset = 'FactoryReset'
 
@@ -316,20 +319,34 @@ function Read-Input {
     elseif ($section -eq $sectionOptionsMenu) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
-          # init jobs menu and restore menu section
           Initialize-MainMenu
           $foundMatch = $true
         }
         elseif ($character -eq [System.ConsoleKey]::Enter) {
+          $global:prevMenuPositionY = $Global:menuPositionY
           switch ($Global:menuPositionY) {
             0 {
-              Initialize-OptionsResetPoints
+              Initialize-OptionsDemoContent
               $foundMatch = $true
             } 1 {
+              Initialize-OptionsResetPoints
+              $foundMatch = $true
+            } 2 {
               Initialize-OptionsFactoryReset
               $foundMatch = $true
             }
           }
+        }
+      }
+      elseif ($subPage -eq $optionsPageDemoContent) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          Initialize-OptionsMenu
+          $Global:menuPositionY = $global:prevMenuPositionY
+          $global:prevMenuPositionY = 0
+          $foundMatch = $true
+        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+          Initialize-OptionsConfirmDemoContent
+          $foundMatch = $true
         }
       }
     }
@@ -423,6 +440,10 @@ function Show-BodyContent {
       Show-OptionsConfirmFactoryReset
     } elseif ($subPage -eq $optionsPageResetPoints) {
       Show-OptionsConfirmResetPoints
+    } elseif ($subPage -eq $optionsPageDemoContent) {
+      Show-OptionsDemoContentMenu
+    } elseif ($subPage -eq $optionsPageConfirmDemoContent) {
+      Show-OptionsConfirmDemoContent
     }
   }
 }
@@ -443,6 +464,8 @@ function Show-Prompt {
     Show-PromptOptionsResetPoints
   } elseif ($prompt -eq $promptFactoryReset) {
     Show-PromptOptionsFactoryReset
+  } elseif ($prompt -eq $promptDemoContent) {
+    Show-PromptOptionsDemoContent
   }
 }
 

@@ -59,7 +59,12 @@ function Read-InputLine {
     [Parameter(Mandatory = $false, Position = 1)]
     [int]$CancelKeyCode = 27 # 27 = Escape
   )
-  $Host.UI.RawUI.FlushInputBuffer()
+  Try {
+    $Host.UI.RawUI.FlushInputBuffer()
+  }
+  Catch {
+    
+  }
 
   # display initial prompt
   if ($Prompt.Length -gt 0) {
