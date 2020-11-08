@@ -81,6 +81,35 @@ function Show-JobConfirmComplete {
   }
 }
 
+function Show-JobCompleteSuccess {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Heading,
+    [Parameter(Mandatory = $false, Position = 1)]
+    [string]$Message = ''
+  )
+  $width = $global:containerWidth
+
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  $Heading")|  "
+  if ($Message -ne '') {
+    Write-Host "  |$(Get-PaddedString)|  "
+    $textLines = Get-TextLines $Message ($width - 4)
+    foreach ($line in $textLines) {
+      Write-Host "  |$(Get-PaddedString "  $line" )|  "
+    }
+  }
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
+
 function Show-JobCompleteFailed {
   Param(
     [Parameter(Mandatory = $false, Position = 0)]

@@ -451,7 +451,7 @@ function Read-NewJobInputVal {
         }
         $success = New-Job $Global:newJobTitle $newType $Global:newJobRate
         if ($success) {
-          Show-JobNewSuccess
+          # Show-JobNewSuccess
         }
         else {
           Show-JobNewFailed
