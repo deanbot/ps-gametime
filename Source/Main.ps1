@@ -24,6 +24,9 @@ try {
   pause
 }
 
+# write-host $(Get-JobCsvPath)
+# pause
+
 function Main {
   try {
     # set up console and store initial settings

@@ -8,6 +8,9 @@ function Show-JobConfirmRemove {
   Write-Host ""
   Show-JobHeading "Remove: $jobTitle" $jobType $jobRate
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+}
+
+function Show-PromptRemoveJob {
   Write-Host ""
   Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
   Write-Host ""
@@ -20,7 +23,6 @@ function Show-JobConfirmRemove {
       -or $char -eq 'n' `
       -or $char -eq [System.ConsoleKey]::Escape `
       -or $char -eq [System.ConsoleKey]::Backspace)
-
   $Global:inputValue = $char
 }
 
@@ -47,7 +49,6 @@ function Show-JobRemoveFailed {
 }
 
 function Show-JobRemoveSuccess {
-
   Clear-Host
   Write-Host ""
   Write-Host "   $(Get-PaddedString -Fill '_')  "

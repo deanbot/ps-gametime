@@ -104,8 +104,7 @@ function Set-JobsDb {
   param (
     # array of jobs
     [Parameter(Mandatory = $true, Position = 0)]
-    [array]
-    $Jobs
+    [array]$Jobs
   )
   $csvFile = Get-JobCsvPath
   Initialize-Path $csvFile
@@ -216,7 +215,11 @@ function Remove-JobDb {
 
   # set jobs and return success
   if ($jobFound) {
-    Set-JobsDb $jobs
+    if ($jobs.Length -ne 0) {
+      Set-JobsDb $jobs
+    } else {
+      Remove-JobsDb
+    }
     $true
   }
   else {
