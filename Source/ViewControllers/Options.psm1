@@ -16,7 +16,7 @@ function Initialize-OptionsMenu {
   $Global:maxMenuPositionsY = 3
   $Global:canChangeMenuPositionY = $true
   $Global:canChangeMenuPositionX = $false
-  $Global:showReturn = $false
+  $Global:showReturn = $true
   $Global:showSelect = $true
   $Global:invertY = $false
   $Global:currentPrompt = ''
