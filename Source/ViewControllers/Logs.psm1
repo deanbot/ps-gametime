@@ -8,7 +8,10 @@ else {
 # constants
 $sectionLogsMenu = 'Logs'
 $logPageSingle = 'Single'
-$logsPerPage = 5 # todo why is it showing 6?
+$logPageNotes = 'Notes'
+$logPageEditNotes = 'EditNotes'
+$promptEditLogNotes = 'EditLogNotes';
+$logsPerPage = 5
 
 function Get-CurrentTransactions {
   $transactions = $Global:transactions
@@ -82,5 +85,50 @@ function Initialize-LogSingle {
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
+  $Global:showSelect = $true
+}
+
+function Initialize-LogNotes {
+  $Global:subPage = $logPageNotes
+  $Global:menuPositionY = 0
+  $Global:maxMenuPositionsY = 0
+  $Global:canChangeMenuPositionX = $false
+  $Global:canChangeMenuPositionY = $false
+  $Global:showSelect = $true
+  $Global:currentPrompt = ''
+}
+
+function Initialize-LogEditNotes {
+  $Global:subPage = $logPageEditNotes
   $Global:showSelect = $false
+  $Global:currentPrompt = $promptEditLogNotes
+}
+
+function Read-EditNotesInputVal {
+  $inputVal = $Global:inputValue
+  $quit = $false
+
+  if ($inputVal -eq $false) {
+    $quit = $true
+  } else {
+    $transaction = $global:currentTransaction
+    $transaction.Note = $inputVal
+    $global:currentTransaction = $transaction
+
+    # have to call this directly due to bug where transaction isn't forwarded correctly
+    Set-TransactionDb $transaction
+    $Global:transactions = Get-Transactions
+    $quit = $true
+  }
+
+  if ($quit) {
+    Initialize-LogNotes
+  }
+}
+
+function Read-LogsPromptInputVals {
+  $subPage = $Global:subPage
+  if ($subPage -eq $logPageEditNotes) {
+    Read-EditNotesInputVal
+  }
 }

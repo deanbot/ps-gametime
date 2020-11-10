@@ -95,6 +95,7 @@ function Read-DemoContentInputVal {
   $pos = $menuPositionY
   if ($inputVal -eq 'y') {
     Add-DemoContent $pos
+    Show-Notice "Demo Content installed successfully!"
     Initialize-OptionsMenu
     $Global:menuPositionY = $global:prevMenuPositionY
   }

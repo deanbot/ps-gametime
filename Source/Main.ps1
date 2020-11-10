@@ -13,11 +13,16 @@ else {
 # UI Labels
 $Global:unit = "pts"
 
-Import-Module $Global:ScriptRoot\Constants.psm1 -Force
-Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
-Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
-Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
-Import-Module $Global:ScriptRoot\ViewEngine.psm1 -Force
+try {
+  Import-Module $Global:ScriptRoot\Constants.psm1 -Force
+  Import-Module $Global:ScriptRoot\DataAccess.psm1 -Force
+  Import-Module $Global:ScriptRoot\Controllers\Controllers.psm1 -Force
+  Import-Module $Global:ScriptRoot\Utilities.psm1 -Force
+  Import-Module $Global:ScriptRoot\ViewEngine.psm1 -Force
+} catch {
+  throw $_
+  pause
+}
 
 function Main {
   try {
@@ -33,8 +38,6 @@ function Main {
 
     # start at main menu page
     Initialize-MainMenu
-
-    # pause
 
     # main loop
     [bool]$repaint = $true

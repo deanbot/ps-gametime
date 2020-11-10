@@ -230,31 +230,35 @@ function Get-TransactionsDb {
   $transactions = @()
   if (Test-Path $csvFile -PathType Leaf) {
     foreach ($item in Import-Csv $csvFile) {
-      $transactions += [PSCustomObject]@{
-        Date   = $item.Date
+      $obj = [PSCustomObject]@{
+        Date = $item.Date
         JobId  = [int]$item.JobId
         Change = [decimal]$item.Change
         Log    = $item.Log
         Note   = $item.Note
       }
+      $transactions += $obj
     }
   }
 
   # Sort by date value descending
   $transactions = $transactions | Sort-Object @{Expression = {
-    $date = $_.Date
-    try {
-      # return formatted date
-      $newDate = [datetime]::ParseExact($date, 'yyyyMMddTHHmmssffff', $null)
-      $_.Date = '{0:MM/dd/yyyy}' -f $newDate
-      $newDate
-    } catch {
-      # fall back to old date format
-      [datetime]::ParseExact($date, 'MM/dd/yyyy', $null)
-    }
+    $_.Date
   }; Ascending = $false }
 
   return , $transactions
+}
+
+function Set-TransactionsDb {
+  param (
+    [Parameter(Mandatory = $true, Position = 0)]
+    [array]
+    $Transactions
+  )
+  $csvFile = Get-TransactionCsvPath
+  Initialize-Path $csvFile
+  $Transactions | Export-Csv $csvFile -NoTypeInformation -Force
+  $true
 }
 
 function Add-TransactionDb {
@@ -267,4 +271,32 @@ function Add-TransactionDb {
   Initialize-Path $csvFile
   $Transaction | Export-Csv $csvFile -NoTypeInformation -Force -Append
   $true
+}
+
+function Set-TransactionDb {
+  Param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    $Item
+  )
+  $log = $Item
+  $transactionFound = $false
+  $transactions = Get-TransactionsDb
+  foreach ($_transaction in $transactions) {
+    if ($_transaction.Date -eq $log.Date) {
+      $transactionFound = $true
+      $_transaction.JobId = $log.JobId
+      $_transaction.Log = $log.Log
+      $_transaction.Note = $log.Note
+      $_transaction.Change = $log.Change
+    }
+  }
+
+  if ($transactionFound) {
+    Set-TransactionsDb $transactions
+    $true
+  }
+  else {
+    # write-host "transaction not found"
+    $false
+  }
 }

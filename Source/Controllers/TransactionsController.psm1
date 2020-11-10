@@ -79,7 +79,7 @@ function New-JobTransaction {
   $isDaily = $job.Type -eq $JobTypeDaily
   $isRare = $job.Type -eq $JobTypeRare
   $dailyJobAlreadyAdded = $false
-  $date = Get-Date -format 'MM/dd/yyyy'
+  $date = Get-Date -format 'yyyyMMddTHHmmssffff'
   if ($isDaily) {
     # check transactions for same day same job id
     $transactions = Get-TransactionsDb
@@ -191,4 +191,12 @@ function New-DeductTransaction {
       }
     }
   }
+}
+
+function Set-Transaction {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Transaction
+  )
+  Set-TransactionDb $Transaction
 }

@@ -43,7 +43,7 @@ function Show-LogCheckBoxes {
     $logText = ""
     $unit = $Global:unit
     $changeAmount = $log.Change
-    $date = $log.Date
+    $date = Get-FormattedDate $log.Date
     $dateText = "($date)"
     $availableSpace = $width - 8
     if ($changeAmount -gt 0) {

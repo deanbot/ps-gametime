@@ -26,6 +26,8 @@ $jobPageRemove = 'Remove'
 $jobPageEdit = 'Edit'
 $gamePageSpend = 'Spend'
 $logPageSingle = 'Single'
+$logPageNotes = 'Notes'
+$logPageEditNotes = 'EditNotes'
 $optionsPageDemoContent = 'DemoContent'
 $optionsPageConfirmDemoContent = 'ConfirmDemoContent'
 $optionsPageResetPoints = 'ResetPoints'
@@ -38,6 +40,7 @@ $promptGameSpend = 'GameSpend'
 $promptDemoContent = 'DemoContent'
 $promptResetPoints = 'ResetPoints'
 $promptFactoryReset = 'FactoryReset'
+$promptEditLogNotes = 'EditLogNotes';
 
 function Initialize-Variables {
   $Global:quit = $false
@@ -135,6 +138,8 @@ function Read-PromptInput {
     }
   } elseif ($section -eq $sectionOptionsMenu) {
     Read-OptionsPromptInputVals
+  } elseif ($section -eq $sectionLogsMenu) {
+    Read-LogsPromptInputVals
   }
 }
 
@@ -284,8 +289,20 @@ function Read-Input {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           # init logs menu and restore page
           Initialize-LogsMenu $Global:prevMenuPositionX
-          $foundMatch = $true
           $Global:prevMenuPositionX = 0
+          $foundMatch = $true
+        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+          Initialize-LogNotes
+          $foundMatch = $true
+        }
+      } elseif ($subPage -eq $logPageNotes) {
+        if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
+          # init logs menu and restore page
+          Initialize-LogSingle
+          $foundMatch = $true
+        } elseif ($character -eq [System.ConsoleKey]::Enter) {
+          Initialize-LogEditNotes
+          $foundMatch = $true
         }
       }
     }
@@ -405,6 +422,10 @@ function Show-BodyContent {
       Show-LogsMenu
     } elseif ($subPage -eq $logPageSingle) {
       Show-LogSingle
+    } elseif ($subPage -eq $logPageNotes) {
+      Show-LogNotes
+    } elseif ($subPage -eq $logPageEditNotes) {
+      Show-LogEditNotes
     }
   }
   elseif ($section -eq $sectionOptionsMenu) {
@@ -440,6 +461,8 @@ function Show-Prompt {
     Show-PromptOptionsFactoryReset
   } elseif ($prompt -eq $promptDemoContent) {
     Show-PromptOptionsDemoContent
+  } elseif ($prompt -eq $promptEditLogNotes) {
+    Show-PromptEditLogNotes
   }
 }
 

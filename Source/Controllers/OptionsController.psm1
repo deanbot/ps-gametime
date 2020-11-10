@@ -31,7 +31,6 @@ function Reset-GameTime {
   Remove-JobsDb
 }
 
-
 function Add-DemoContent {
   param (
     [Parameter(Mandatory=$true, Position=0)]

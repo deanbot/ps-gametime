@@ -84,3 +84,15 @@ function Get-MessageTransactionLog {
   }
   $message
 }
+
+function Get-FormattedDate {
+  Param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    $DateStamp
+  )
+  try {
+    $Date = [datetime]::ParseExact($DateStamp, 'yyyyMMddTHHmmssffff', $null)
+    $formattedDate = '{0:MM/dd/yyyy}' -f $date
+  } catch {}
+  $formattedDate
+}

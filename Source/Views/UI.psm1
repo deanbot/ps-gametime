@@ -94,3 +94,32 @@ function Show-Heading {
   Write-Host "   /$(Get-PaddedString $(Get-TextExcerpt $Text ($width-6)) -Center $true -Width ($width-2))\  "
   Write-Host "  |$(Get-PaddedString -Fill "-" )|  "
 }
+
+function Show-Notice {
+  param(
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Heading,
+    [Parameter(Mandatory = $false, Position = 1)]
+    [string]$Message
+  )
+  $width = $global:containerWidth
+
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString "  $Heading")|  "
+  if ($Message -ne '') {
+    Write-Host "  |$(Get-PaddedString)|  "
+    $textLines = Get-TextLines $Message ($width - 4)
+    foreach ($line in $textLines) {
+      Write-Host "  |$(Get-PaddedString "  $line" )|  "
+    }
+  }
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "  |$(Get-PaddedString -Fill '_')|  "
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
