@@ -8,9 +8,7 @@ function Show-JobTitleWarning {
   Write-Host "  |$(Get-PaddedString "  Enter a $Label_Single_Quest_Lower title")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue... " -NoNewline
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobRateWarning {
@@ -24,10 +22,7 @@ function Show-JobRateWarning {
   Write-Host "  |$(Get-PaddedString "  ... i.e. 1 or .25")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host "  "
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobCheckBoxes {

@@ -128,10 +128,7 @@ function Show-JobNewFailed {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobNewSuccess {
@@ -142,8 +139,5 @@ function Show-JobNewSuccess {
   Write-Host "  |$(Get-PaddedString "  $Label_Single_Quest created successfully!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }

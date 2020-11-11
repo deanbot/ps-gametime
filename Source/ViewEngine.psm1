@@ -32,6 +32,7 @@ $optionsPageDemoContent = 'DemoContent'
 $optionsPageConfirmDemoContent = 'ConfirmDemoContent'
 $optionsPageResetPoints = 'ResetPoints'
 $optionsPageFactoryReset = 'FactoryReset'
+$optionsPageStorageLocation = 'StorageLocation'
 $promptNewJob = 'NewJob'
 $promptCompleteJob = 'CompleteJob'
 $promptEditJob = 'EditJob'
@@ -439,6 +440,8 @@ function Show-BodyContent {
       Show-OptionsDemoContentMenu
     } elseif ($subPage -eq $optionsPageConfirmDemoContent) {
       Show-OptionsConfirmDemoContent
+    } elseif ($subPage -eq $optionsPageStorageLocation) {
+      Show-OptionsStorageLocation
     }
   }
 }

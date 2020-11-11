@@ -42,10 +42,7 @@ function Show-JobRemoveFailed {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobRemoveSuccess {
@@ -56,8 +53,5 @@ function Show-JobRemoveSuccess {
   Write-Host "  |$(Get-PaddedString "  $Label_Single_Quest removed successfully!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }

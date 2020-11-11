@@ -118,8 +118,5 @@ function Show-Notice {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }

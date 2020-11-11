@@ -101,10 +101,7 @@ function Show-GameSpendFailed {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-GameSpendSuccess {
@@ -123,8 +120,5 @@ function Show-GameSpendSuccess {
   Write-Host "  |$(Get-PaddedString "  Have fun!")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }

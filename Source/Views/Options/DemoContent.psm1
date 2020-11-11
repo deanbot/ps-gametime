@@ -17,7 +17,6 @@ function Show-OptionsDemoContentMenu {
   Write-Host "  |$(Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))Writing a book")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
 }
 
 function Show-OptionsConfirmDemoContent {

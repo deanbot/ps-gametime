@@ -6,6 +6,17 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
+function Show-BlockingPressAnyKey {
+  param(
+    [Parameter(Mandatory=$false, Position=0)]
+    [bool]$Blocking = $true
+  )
+  Write-Host ""
+  Write-Host "  Press [any key] to continue..."
+  Write-Host ""
+  $char = Read-Character -Blocking $true
+}
+
 function Show-PromptBool  {
   param (
     [string]$Prompt = ""
@@ -63,7 +74,7 @@ function Read-InputLine {
     $Host.UI.RawUI.FlushInputBuffer()
   }
   Catch {
-    
+
   }
 
   # display initial prompt

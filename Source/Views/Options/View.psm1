@@ -10,12 +10,23 @@ function Show-OptionsMenu {
   $demoContentLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Install Demo Content"
   $resetPointsLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Reset Points"
   $factoryResetLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 2))Factory Reset"
+  $storageLocationLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 3))Storage Location"
   Write-Host "  |$demoContentLine|  "
   Write-Host "  |$resetPointsLine|  "
   Write-Host "  |$factoryResetLine|  "
+  Write-Host "  |$storageLocationLine|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
   Write-Host ""
+}
+
+function Show-OptionsStorageLocation {
+  Clear-Host
+  Write-Host ""
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
+  Write-Host "  |$(Get-PaddedString "Storage Location: $($global:storageLocation))|  "
+  Write-Host "  |$(Get-PaddedString)|  "
+  Write-Host "   $(Get-PaddedString -Fill '_')  "
 }
 
 function Show-OptionsConfirmResetPoints {
