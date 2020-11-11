@@ -29,19 +29,6 @@ function Show-PromptCompleteJob {
     $notes = Read-InputLine "  Notes (optional): "
     $Global:inputValue = $notes
   }
-  # Uncomment to add confirm step
-  #  else {
-  #   Write-Host ""
-  #   Write-Host "   $(Get-PaddedString "Press [Esc] to return" -Right $true)"
-  #   Write-Host ""
-  #   Write-Host "  Press [any key] to continue..."
-  #   Write-Host ""
-  #   do {
-  #     $char = Read-Character
-  #   } until ($char -eq [System.ConsoleKey]::Enter `
-  #     -or $char -eq [System.ConsoleKey]::Escape)
-  #   $Global:inputValue = $char
-  # }
 }
 
 function Show-JobConfirmComplete {
@@ -104,10 +91,7 @@ function Show-JobCompleteSuccess {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobCompleteFailed {
@@ -126,10 +110,7 @@ function Show-JobCompleteFailed {
   }
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
 
 function Show-JobCompleteDurationWarning {
@@ -143,8 +124,5 @@ function Show-JobCompleteDurationWarning {
   Write-Host "  |$(Get-PaddedString "  ... i.e. 1 or .25")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString -Fill '_')|  "
-  Write-Host ""
-  Write-Host "  Press [any key] to continue..."
-  Write-Host ""
-  $char = Read-Character -Blocking $true
+  Show-BlockingPressAnyKey
 }
