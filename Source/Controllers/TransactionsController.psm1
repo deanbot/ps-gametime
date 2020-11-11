@@ -5,11 +5,6 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-$JobTypeQuest = 'Quest'
-$JobTypeQuestTimed = 'Quest-Timed'
-$JobTypeDaily = 'Daily'
-$JobTypeRare = 'Rare'
-
 function Get-Transactions {
   Get-TransactionsDb
 }

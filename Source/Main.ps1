@@ -28,13 +28,13 @@ try {
 # pause
 
 function Main {
+  # set up constants
+  Initialize-Constants
+  Initialize-Labels
+
   try {
     # set up console and store initial settings
     Initialize-Display
-
-    # set up constants
-    Initialize-Constants
-    Initialize-Labels
 
     # initialzie view engine variables
     Initialize-Variables

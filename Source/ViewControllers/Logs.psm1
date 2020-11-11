@@ -6,11 +6,6 @@ else {
 }
 
 # constants
-$sectionLogsMenu = 'Logs'
-$logPageSingle = 'Single'
-$logPageNotes = 'Notes'
-$logPageEditNotes = 'EditNotes'
-$promptEditLogNotes = 'EditLogNotes';
 $logsPerPage = 5
 
 function Get-CurrentTransactions {
@@ -37,7 +32,7 @@ function Initialize-LogsMenu {
     [Parameter(Mandatory = $false, Position = 0)]
     [int32]$menuPositionX = 0
   )
-  $Global:section = $sectionLogsMenu
+  $Global:section = $Section_Logs
   $Global:subPage = ''
   $Global:menuPositionX = $menuPositionX
   $Global:menuPositionY = 0
@@ -80,7 +75,7 @@ function Initialize-LogsPage {
 }
 
 function Initialize-LogSingle {
-  $Global:subPage = $logPageSingle
+  $Global:subPage = $Page_Log_Single
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
@@ -89,7 +84,7 @@ function Initialize-LogSingle {
 }
 
 function Initialize-LogNotes {
-  $Global:subPage = $logPageNotes
+  $Global:subPage = $Page_Log_Notes
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
@@ -99,9 +94,9 @@ function Initialize-LogNotes {
 }
 
 function Initialize-LogEditNotes {
-  $Global:subPage = $logPageEditNotes
+  $Global:subPage = $Page_Log_Edit
   $Global:showSelect = $false
-  $Global:currentPrompt = $promptEditLogNotes
+  $Global:currentPrompt = $Prompt_Options_EditLogNotes
 }
 
 function Read-EditNotesInputVal {
@@ -128,7 +123,7 @@ function Read-EditNotesInputVal {
 
 function Read-LogsPromptInputVals {
   $subPage = $Global:subPage
-  if ($subPage -eq $logPageEditNotes) {
+  if ($subPage -eq $Page_Log_Edit) {
     Read-EditNotesInputVal
   }
 }

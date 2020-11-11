@@ -5,14 +5,8 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-
-# constants
-$sectionGameMenu = 'Game Time'
-$gamePageSpend = 'Spend'
-$promptGameSpend = 'GameSpend'
-
 function Initialize-GameMenu {
-  $Global:section = $sectionGameMenu
+  $Global:section = $Section_Game
   $Global:subPage = ''
   $Global:menuPositionX = 0
   $Global:menuPositionY = 0
@@ -41,10 +35,10 @@ function Initialize-GameMenu {
 function Initialize-GameConfirmPage {
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
-  $Global:subPage = $gamePageSpend
+  $Global:subPage = $Page_Game_Spend
   $Global:showReturn = $true
   $Global:hideFooter = $true
-  $Global:currentPrompt = $promptGameSpend
+  $Global:currentPrompt = $Prompt_Game_Spend
 }
 
 function Read-GameConfirmInputVal {

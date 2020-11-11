@@ -82,3 +82,7 @@ function Show-PromptOptionsFactoryReset {
 function Show-PromptOptionsResetPoints {
   Show-PromptBool "Reset Points?"
 }
+
+function Show-PromptOptionsStorageLocation {
+  Show-BlockingPressAnyKey
+}

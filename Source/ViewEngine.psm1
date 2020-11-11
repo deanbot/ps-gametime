@@ -11,37 +11,30 @@ else {
 }
 
 Import-Module $Global:ScriptRoot\Views\Views.psm1 -Force
+Import-Module $Global:ScriptRoot\Views\Pages.psm1 -Force
+Import-Module $Global:ScriptRoot\Views\Prompts.psm1 -Force
 Import-Module $Global:ScriptRoot\ViewControllers\ViewControllers.psm1 -Force
 
 # constants
-$sectionMainMenu = 'Main Menu'
-$sectionJobsMenu = 'Jobs'
-$sectionGameMenu = 'Game Time'
-$sectionLogsMenu = 'Logs'
-$sectionOptionsMenu = 'Options'
-$jobPageSingle = 'Single'
-$jobPageNew = 'New'
-$jobPageComplete = 'Complete'
-$jobPageRemove = 'Remove'
-$jobPageEdit = 'Edit'
-$gamePageSpend = 'Spend'
-$logPageSingle = 'Single'
-$logPageNotes = 'Notes'
-$logPageEditNotes = 'EditNotes'
-$optionsPageDemoContent = 'DemoContent'
-$optionsPageConfirmDemoContent = 'ConfirmDemoContent'
-$optionsPageResetPoints = 'ResetPoints'
-$optionsPageFactoryReset = 'FactoryReset'
-$optionsPageStorageLocation = 'StorageLocation'
-$promptNewJob = 'NewJob'
-$promptCompleteJob = 'CompleteJob'
-$promptEditJob = 'EditJob'
-$promptRemoveJob = 'RemoveJob'
-$promptGameSpend = 'GameSpend'
-$promptDemoContent = 'DemoContent'
-$promptResetPoints = 'ResetPoints'
-$promptFactoryReset = 'FactoryReset'
-$promptEditLogNotes = 'EditLogNotes';
+  $Section_Main = 'Main Menu'
+  $Section_Jobs = 'Jobs'
+  $Section_Game = 'Game Time'
+  $Section_Logs = 'Logs'
+  $Section_Options = 'Options'
+  $Page_Job_Single = 'Single'
+  $Page_Job_New = 'New'
+  $Page_Job_Complete = 'Complete'
+  $Page_Job_Remove = 'Remove'
+  $Page_Job_Edit = 'Edit'
+  $Page_Game_Spend = 'Spend'
+  $Page_Log_Single = 'Single'
+  $Page_Log_Notes = 'Notes'
+  $Page_Log_Edit = 'EditNotes'
+  $Page_Options_DemoContent = 'DemoContent'
+  $Page_Options_ConfirmDemoContent = 'ConfirmDemoContent'
+  $Page_Options_ResetPoints = 'ResetPoints'
+  $Page_Options_FactoryReset = 'FactoryReset'
+  $Page_Options_StorageLocation = 'StorageLocation'
 
 function Initialize-Variables {
   $Global:quit = $false
@@ -120,30 +113,6 @@ function Read-PositionInput {
   $foundMatch
 }
 
-function Read-PromptInput {
-  $section = $Global:section
-  $subPage = $Global:subPage
-  if ($section -eq $sectionJobsMenu) {
-    if ($subPage -eq $jobPageNew) {
-      Read-NewJobInputVal
-    } elseif ($subPage -eq $jobPageComplete) {
-      Read-JobCompleteInputVal
-    } elseif ($subPage -eq $jobPageRemove) {
-      Read-JobRemoveInputVal
-    } elseif ($subPage -eq $jobPageEdit) {
-      Read-JobEditInputVal
-    }
-  } elseif ($section -eq $sectionGameMenu) {
-    if ($subPage -eq $gamePageSpend) {
-      Read-GameConfirmInputVal
-    }
-  } elseif ($section -eq $sectionOptionsMenu) {
-    Read-OptionsPromptInputVals
-  } elseif ($section -eq $sectionLogsMenu) {
-    Read-LogsPromptInputVals
-  }
-}
-
 function Read-Input {
   $character = Read-Character
   $foundMatch = Read-PositionInput $character
@@ -154,7 +123,7 @@ function Read-Input {
   if (!$foundMatch) {
 
     #  main menu
-    if ($section -eq $sectionMainMenu) {
+    if ($section -eq $Section_Main) {
       if ($character -eq [System.ConsoleKey]::Enter) {
         $Global:prevMainMenuPositionY = $Global:menuPositionY
         switch ($Global:menuPositionY) {
@@ -172,7 +141,7 @@ function Read-Input {
       }
     }
     #  jobs menu
-    elseif ($section -eq $sectionJobsMenu) {
+    elseif ($section -eq $Section_Jobs) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-MainMenu $Global:prevMainMenuPositionY
@@ -197,7 +166,7 @@ function Read-Input {
           }
         }
       }
-      elseif ($subPage -eq $jobPageSingle) {
+      elseif ($subPage -eq $Page_Job_Single) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           # init jobs menu and restore menu section
           Initialize-JobsMenu $Global:prevMenuPositionX
@@ -219,7 +188,7 @@ function Read-Input {
           }
         }
       }
-      elseif ($subPage -eq $jobPageEdit) {
+      elseif ($subPage -eq $Page_Job_Edit) {
         if ($character -eq [System.ConsoleKey]::Enter) {
           # uncomment if including cancel option
           # if ($Global:menuPositionY -eq $Global:maxMenuPositionsY - 1) {
@@ -234,11 +203,11 @@ function Read-Input {
           $foundMatch = $true
         }
       }
-      elseif ($subPage -eq $jobPageNew) {
+      elseif ($subPage -eq $Page_Job_New) {
       }
     }
     # game menu
-    elseif ($section -eq $sectionGameMenu) {
+    elseif ($section -eq $Section_Game) {
       $hasAvailableBalance = Get-AvailableBalance -gt 0
       if ($hasAvailableBalance) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
@@ -272,7 +241,7 @@ function Read-Input {
       }
     }
     # logs menu
-    elseif ($section -eq $sectionLogsMenu) {
+    elseif ($section -eq $Section_Logs) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-MainMenu $Global:prevMainMenuPositionY
@@ -286,7 +255,7 @@ function Read-Input {
             $foundMatch = $true
           }
         }
-      } elseif ($subPage -eq $logPageSingle) {
+      } elseif ($subPage -eq $Page_Log_Single) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           # init logs menu and restore page
           Initialize-LogsMenu $Global:prevMenuPositionX
@@ -296,7 +265,7 @@ function Read-Input {
           Initialize-LogNotes
           $foundMatch = $true
         }
-      } elseif ($subPage -eq $logPageNotes) {
+      } elseif ($subPage -eq $Page_Log_Notes) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           # init logs menu and restore page
           Initialize-LogSingle
@@ -308,7 +277,7 @@ function Read-Input {
       }
     }
     # options menu
-    elseif ($section -eq $sectionOptionsMenu) {
+    elseif ($section -eq $Section_Options) {
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-MainMenu $Global:prevMainMenuPositionY
@@ -330,7 +299,7 @@ function Read-Input {
           }
         }
       }
-      elseif ($subPage -eq $optionsPageDemoContent) {
+      elseif ($subPage -eq $Page_Options_DemoContent) {
         if ($character -eq [System.ConsoleKey]::Escape -or $character -eq [System.ConsoleKey]::Backspace) {
           Initialize-OptionsMenu
           $Global:menuPositionY = $global:prevMenuPositionY
@@ -345,7 +314,7 @@ function Read-Input {
   }
   else {
     # found direction instruction
-    if ($section -eq $sectionJobsMenu) {
+    if ($section -eq $Section_Jobs) {
       # get jobs for current section
       if (!$subPage) {
         if ($character -eq [System.ConsoleKey]::LeftArrow `
@@ -354,7 +323,7 @@ function Read-Input {
         }
       }
     }
-    elseif ($section -eq $sectionGameMenu) {
+    elseif ($section -eq $Section_Game) {
       if ($Global:menuPositionY -gt 0) {
         $Global:showSelect = $true
       }
@@ -362,7 +331,7 @@ function Read-Input {
         $Global:showSelect = $false
       }
     }
-    elseif ($section -eq $sectionLogsMenu) {
+    elseif ($section -eq $Section_Logs) {
       if ($character -eq [System.ConsoleKey]::LeftArrow `
           -or $character -eq [System.ConsoleKey]::RightArrow) {
         Initialize-LogsPage
@@ -376,97 +345,6 @@ function Read-Input {
     }
   }
   $foundMatch
-}
-
-# view body content routing
-function Show-BodyContent {
-  $section = $Global:section
-  $subPage = $Global:subPage
-  if ($section -eq $sectionMainMenu) {
-    Show-MainMenu
-  }
-  elseif ($section -eq $sectionJobsMenu) {
-    if (!$subPage) {
-      Show-JobsMenu
-    }
-    elseif ($subPage -eq $jobPageSingle) {
-      Show-JobSingle
-    }
-    elseif ($subPage -eq $jobPageNew) {
-      Show-JobNew
-    }
-    elseif ($subPage -eq $jobPageComplete) {
-      Show-JobConfirmComplete
-    }
-    elseif ($subPage -eq $jobPageRemove) {
-      Show-JobConfirmRemove
-    }
-    elseif ($subPage -eq $jobPageEdit) {
-      if ($Global:currentField) {
-        Show-JobField
-      }
-      else {
-        Show-JobEdit
-      }
-    }
-  }
-  elseif ($section -eq $sectionGameMenu) {
-    if (!$subPage) {
-      Show-GameMenu
-    }
-    elseif ($subPage -eq $gamePageSpend) {
-      Show-GameConfirmSpend
-    }
-  }
-  elseif ($section -eq $sectionLogsMenu) {
-    if (!$subPage) {
-      Show-LogsMenu
-    } elseif ($subPage -eq $logPageSingle) {
-      Show-LogSingle
-    } elseif ($subPage -eq $logPageNotes) {
-      Show-LogNotes
-    } elseif ($subPage -eq $logPageEditNotes) {
-      Show-LogEditNotes
-    }
-  }
-  elseif ($section -eq $sectionOptionsMenu) {
-    if (!$subPage) {
-      Show-OptionsMenu
-    } elseif ($subPage -eq $optionsPageFactoryReset) {
-      Show-OptionsConfirmFactoryReset
-    } elseif ($subPage -eq $optionsPageResetPoints) {
-      Show-OptionsConfirmResetPoints
-    } elseif ($subPage -eq $optionsPageDemoContent) {
-      Show-OptionsDemoContentMenu
-    } elseif ($subPage -eq $optionsPageConfirmDemoContent) {
-      Show-OptionsConfirmDemoContent
-    } elseif ($subPage -eq $optionsPageStorageLocation) {
-      Show-OptionsStorageLocation
-    }
-  }
-}
-
-function Show-Prompt {
-  $prompt = $Global:currentPrompt
-  if ($prompt -eq $promptNewJob) {
-    Show-PromptNewJob
-  } elseif ($prompt -eq $promptCompleteJob) {
-    Show-PromptCompleteJob
-  } elseif ($prompt -eq $promptEditJob) {
-    Show-PromptEditJob
-  } elseif ($prompt -eq $promptRemoveJob) {
-    Show-PromptRemoveJob
-  } elseif ($prompt -eq $promptGameSpend) {
-    Show-PromptSpend
-  } elseif ($prompt -eq $promptResetPoints) {
-    Show-PromptOptionsResetPoints
-  } elseif ($prompt -eq $promptFactoryReset) {
-    Show-PromptOptionsFactoryReset
-  } elseif ($prompt -eq $promptDemoContent) {
-    Show-PromptOptionsDemoContent
-  } elseif ($prompt -eq $promptEditLogNotes) {
-    Show-PromptEditLogNotes
-  }
 }
 
 # full layout

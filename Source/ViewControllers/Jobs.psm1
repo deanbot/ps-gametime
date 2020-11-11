@@ -5,23 +5,6 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-# constants
-$sectionJobsMenu = 'Jobs'
-$jobPageSingle = 'Single'
-$jobPageNew = 'New'
-$jobPageComplete = 'Complete'
-$jobPageRemove = 'Remove'
-$jobPageEdit = 'Edit'
-$JobTypeQuest = 'Quest'
-$JobTypeQuestTimed = 'Quest-Timed'
-$JobTypeDaily = 'Daily'
-$JobTypeRare = 'Rare'
-$promptNewJob = 'NewJob'
-$promptCompleteJob = 'CompleteJob'
-$promptEditJob = 'EditJob'
-$promptRemoveJob = 'RemoveJob'
-
-
 function Get-JobTypeByPosition {
   param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -66,7 +49,7 @@ function Initialize-JobsMenu {
     [Parameter(Mandatory = $false, Position = 0)]
     [int32]$menuPositionX = 0
   )
-  $Global:section = $sectionJobsMenu
+  $Global:section = $Section_Jobs
   $Global:subPage = ''
   $Global:currentJob = ''
   $Global:currentJobType = ''
@@ -84,7 +67,7 @@ function Initialize-JobsMenu {
 }
 
 function Initialize-JobEdit {
-  $Global:subPage = $jobPageEdit
+  $Global:subPage = $Page_Job_Edit
   $Global:menuPositionY = 0
 
   $current = $Global:currentJob
@@ -155,7 +138,7 @@ function Initialize-JobEditField {
 
   if ($field) {
     $Global:currentField = $field
-    $Global:currentPrompt = $promptEditJob
+    $Global:currentPrompt = $Prompt_Job_Edit
     if ($field -eq 'Type') {
       $Global:showQuit = $false
     }
@@ -163,7 +146,7 @@ function Initialize-JobEditField {
 }
 
 function Initialize-JobNew {
-  $Global:subPage = $jobPageNew
+  $Global:subPage = $Page_Job_New
   $Global:canChangeMenuPositionX = $false
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
@@ -172,20 +155,20 @@ function Initialize-JobNew {
   $Global:newJobTitle = ""
   $Global:newJobSubtype = ""
   $Global:newJobRate = 0
-  $Global:currentPrompt = $promptNewJob
+  $Global:currentPrompt = $Prompt_Job_New
 }
 
 function Initialize-JobRemove {
-  $Global:subPage = $jobPageRemove
+  $Global:subPage = $Page_Job_Remove
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
-  $Global:currentPrompt = $promptRemoveJob
+  $Global:currentPrompt = $Prompt_Job_Remove
 }
 
 function Initialize-JobComplete {
-  $Global:subPage = $jobPageComplete
+  $Global:subPage = $Page_Job_Complete
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 0
   $Global:canChangeMenuPositionX = $false
@@ -199,11 +182,11 @@ function Initialize-JobComplete {
   else {
     $Global:duration = 0
   }
-  $Global:currentPrompt = $promptCompleteJob
+  $Global:currentPrompt = $Prompt_Job_Complete
 }
 
 function Initialize-JobSingle {
-  $Global:subPage = $jobPageSingle
+  $Global:subPage = $Page_Job_Single
   $Global:menuPositionY = 0
   $Global:maxMenuPositionsY = 3
   $Global:canChangeMenuPositionX = $false

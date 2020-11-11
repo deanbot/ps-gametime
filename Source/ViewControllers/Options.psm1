@@ -1,14 +1,5 @@
-$setionOptionsMenu = 'Options'
-$promptResetPoints = 'ResetPoints'
-$promptFactoryReset = 'FactoryReset'
-$promptDemoContent = 'DemoContent'
-$optionsPageResetPoints = 'ResetPoints'
-$optionsPageFactoryReset = 'FactoryReset'
-$optionsPageDemoContent = 'DemoContent'
-$optionsPageConfirmDemoContent = 'ConfirmDemoContent'
-
 function Initialize-OptionsMenu {
-  $global:section = $setionOptionsMenu
+  $global:section = $Section_Options
   $global:subPage = ''
   $Global:menuPositionX = 0
   $Global:menuPositionY = 0
@@ -23,7 +14,7 @@ function Initialize-OptionsMenu {
 }
 
 function Initialize-OptionsDemoContent {
-  $global:subPage = $optionsPageDemoContent
+  $global:subPage = $Page_Options_DemoContent
   $Global:currentPrompt = ''
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $true
@@ -32,22 +23,22 @@ function Initialize-OptionsDemoContent {
 }
 
 function Initialize-OptionsConfirmDemoContent {
-  $global:subPage = $optionsPageConfirmDemoContent
-  $Global:currentPrompt = $promptDemoContent
+  $global:subPage = $Page_Options_ConfirmDemoContent
+  $Global:currentPrompt = $Prompt_Options_DemoContent
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
 }
 
 function Initialize-OptionsResetPoints {
-  $global:subPage = $optionsPageResetPoints
-  $Global:currentPrompt = $promptResetPoints
+  $global:subPage = $Page_Options_ResetPoints
+  $Global:currentPrompt = $Prompt_Options_ResetPoints
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
 }
 
 function Initialize-OptionsFactoryReset {
-  $global:subPage = $optionsPageFactoryReset
-  $Global:currentPrompt = $promptFactoryReset
+  $global:subPage = $Page_Options_FactoryReset
+  $Global:currentPrompt = $Prompt_Options_FactoryReset
   $Global:canChangeMenuPositionX = $false
   $Global:canChangeMenuPositionY = $false
 }
@@ -110,11 +101,11 @@ function Read-DemoContentInputVal {
 
 function Read-OptionsPromptInputVals {
   $subPage = $Global:subPage
-  if ($subPage -eq $optionsPageResetPoints) {
+  if ($subPage -eq $Page_Options_ResetPoints) {
     Read-ResetPointsInputVal
-  } elseif ($subPage -eq $optionsPageFactoryReset) {
+  } elseif ($subPage -eq $Page_Options_FactoryReset) {
     Read-FactoryResetInputVal
-  } elseif ($subPage -eq $optionsPageConfirmDemoContent) {
+  } elseif ($subPage -eq $Page_Options_ConfirmDemoContent) {
     Read-DemoContentInputVal
   }
 }

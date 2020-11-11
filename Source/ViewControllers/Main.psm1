@@ -5,15 +5,12 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-# constants
-$sectionMainMenu = 'Main Menu'
-
 function Initialize-MainMenu {
   param(
     [Parameter(Mandatory = $false, Position = 0)]
     [int32]$menuPositionY = 0
   )
-  $Global:section = $sectionMainMenu
+  $Global:section = $Section_Main
   $Global:subPage = ''
   $Global:menuPositionX = 0
   $Global:menuPositionY = $menuPositionY
