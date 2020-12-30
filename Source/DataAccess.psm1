@@ -120,26 +120,12 @@ function Add-JobDb {
     $Job
   )
 
-  # get next id for job
-  [int]$newId = 0;
-  $Jobs = Get-JobsDb
-  if ($Jobs.Length -gt 0) {
-    foreach ($_job in $Jobs) {
-      $id = $_job.Id
-      if ($id -gt $newId) {
-        $newId = $id
-      }
-    }
-  }
-
-  # set job id
-  $newId++
-  $Job.Id = ($newId)
+  $Job.Id = Get-Date -format 'yyMMddTHHmmss'
 
   # add to csv
   $csvFile = Get-JobCsvPath
   $Job | Export-Csv $csvFile -NoTypeInformation -Append -Force
-  $newId
+  $Job.Id
 }
 
 function Set-JobDb {
@@ -272,6 +258,20 @@ function Add-TransactionDb {
   )
   $csvFile = Get-TransactionCsvPath
   Initialize-Path $csvFile
+
+  # TODO fail if transaction is daily and same job same day transaction exists
+  $job = Get-JobDb $Transaction.JobId
+  if ($job.Type -eq $JobTypeDaily) {
+    # check transactions for same day same job id
+    $today = Get-Date -format 'yyyyMMdd'
+    $transactions = Get-TransactionsDb
+    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $JobId }
+    if ($foundTransaction) {
+      Throw "Daily transaction already created for $($job.Title)"
+      return $false
+    }
+  }
+
   $Transaction | Export-Csv $csvFile -NoTypeInformation -Force -Append
   $true
 }

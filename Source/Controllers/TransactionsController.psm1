@@ -80,10 +80,11 @@ function New-JobTransaction {
   $isRare = $job.Type -eq $JobTypeRare
   $dailyJobAlreadyAdded = $false
   $date = Get-Date -format 'yyyyMMddTHHmmssffff'
+  $today = Get-Date -format 'yyyyMMdd'
   if ($isDaily) {
     # check transactions for same day same job id
     $transactions = Get-TransactionsDb
-    $foundTransaction = $transactions | Where-Object { $_.Date -eq $date -and $_.JobId -eq $JobId }
+    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $JobId }
     if ($foundTransaction) {
       $dailyJobAlreadyAdded = $true
       $valid = $false
@@ -138,7 +139,7 @@ function New-JobTransaction {
       Throw $(Get-MessageNoJobFound $JobId)
     }
     elseif ($dailyJobAlreadyAdded) {
-      Throw "Daily transaction already created for date: $date"
+      Throw "Daily transaction already created for $($job.Title)"
     }
     Write-Debug "Transaction not created."
     if (!$Global:SilentStatusReturn) {

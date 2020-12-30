@@ -318,9 +318,12 @@ function Read-JobCompleteInputVal {
       $notes = $Global:notes
       $duration = $Global:duration
       $transaction = $false
+      $err = ""
       try {
         $transaction = New-JobTransaction $jobId $duration $notes
-      } catch {}
+      } catch {
+        $err = $_.Exception.Message
+      }
       if ($transaction) {
         if ($transaction.Change -ne 1) {
           $heading = "You gained $($transaction.Change) points!"
@@ -336,7 +339,7 @@ function Read-JobCompleteInputVal {
         $quit = $true
       }
       else {
-        Show-JobCompleteFailed
+        Show-JobCompleteFailed $err
         $quit = $true
       }
     }
