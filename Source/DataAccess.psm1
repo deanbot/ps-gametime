@@ -259,7 +259,6 @@ function Add-TransactionDb {
   $csvFile = Get-TransactionCsvPath
   Initialize-Path $csvFile
 
-  # TODO fail if transaction is daily and same job same day transaction exists
   $job = Get-JobDb $Transaction.JobId
   if ($job.Type -eq $JobTypeDaily) {
     # check transactions for same day same job id

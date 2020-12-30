@@ -6,11 +6,19 @@ function Show-JobSingle {
   $jobRate = $job.Rate
   # $width = $global:containerWidth
 
+  $isDailyCompleted = $false
+  if ($jobType -eq $JobTypeDaily) {
+    $isDailyCompleted = Get-HasDailyJobCompleted $job
+  }
+
   Write-Host ""
   Show-JobHeading $jobTitle $jobType $jobRate
   Write-Host "  |$(Get-PaddedString "  Options:")|  "
   Write-Host "  |$(Get-PaddedString)|  "
   $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Complete"
+  IF ($isDailyCompleted) {
+    $completeLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 0))Completed - Great Job!"
+  }
   Write-Host "  |$completeLine|  "
   $editLine = Get-PaddedString "  $(Get-CheckBox ($pos -eq 1))Edit"
   Write-Host "  |$editLine|  "

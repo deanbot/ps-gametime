@@ -5,11 +5,6 @@ else {
   $DebugPreference = "SilentlyContinue"
 }
 
-$JobTypeQuest = 'Quest'
-$JobTypeQuestTimed = 'Quest-Timed'
-$JobTypeDaily = 'Daily'
-$JobTypeRare = 'Rare'
-
 function Get-Transactions {
   Get-TransactionsDb
 }
@@ -55,6 +50,29 @@ function New-Transaction {
   }
 }
 
+function Get-HasDailyJobCompleted {
+  param (
+    [Parameter(Mandatory = $true, Position = 0)]
+    $Job
+  )
+
+  $isDaily = $Job.Type -eq $JobTypeDaily
+  if ($isDaily) {
+    $dailyJobAlreadyAdded = $false
+    $today = Get-Date -format 'yyyyMMdd'
+    # check transactions for same day same job id
+    $transactions = Get-TransactionsDb
+    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $Job.Id }
+    if ($foundTransaction) {
+      $dailyJobAlreadyAdded = $true
+    }
+    return $dailyJobAlreadyAdded
+  } else {
+    return $false
+  }
+}
+
+
 function New-JobTransaction {
   Param(
     # id of job being performed. use -1 to deduct from balance instead
@@ -76,19 +94,11 @@ function New-JobTransaction {
   if (!$job) {
     $valid = $false
   }
-  $isDaily = $job.Type -eq $JobTypeDaily
   $isRare = $job.Type -eq $JobTypeRare
-  $dailyJobAlreadyAdded = $false
   $date = Get-Date -format 'yyyyMMddTHHmmssffff'
-  $today = Get-Date -format 'yyyyMMdd'
-  if ($isDaily) {
-    # check transactions for same day same job id
-    $transactions = Get-TransactionsDb
-    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $JobId }
-    if ($foundTransaction) {
-      $dailyJobAlreadyAdded = $true
-      $valid = $false
-    }
+  $dailyJobAlreadyAdded = Get-HasDailyJobCompleted $job
+  if($dailyJobAlreadyAdded) {
+    $valid = $false
   }
 
   if ($valid) {
@@ -139,7 +149,7 @@ function New-JobTransaction {
       Throw $(Get-MessageNoJobFound $JobId)
     }
     elseif ($dailyJobAlreadyAdded) {
-      Throw "Daily transaction already created for $($job.Title)"
+      Throw "Daily transaction already created for '$($job.Title)'"
     }
     Write-Debug "Transaction not created."
     if (!$Global:SilentStatusReturn) {

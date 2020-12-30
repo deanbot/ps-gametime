@@ -121,6 +121,7 @@ function Show-JobCompleteFailed {
   Write-Host "   $(Get-PaddedString -Fill '_')  "
   Write-Host "  |$(Get-PaddedString)|  "
   Write-Host "  |$(Get-PaddedString "  Job not completed.")|  "
+  Write-Host "  |$(Get-PaddedString)|  "
   if ($reason) {
     $width = $global:containerWidth
     $textLines = Get-TextLines $reason ($width - 4)
