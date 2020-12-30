@@ -259,12 +259,13 @@ function Add-TransactionDb {
   $csvFile = Get-TransactionCsvPath
   Initialize-Path $csvFile
 
-  $job = Get-JobDb $Transaction.JobId
+  $jobId = $Transaction.JobId
+  $job = Get-JobDb $jobId
   if ($job.Type -eq $JobTypeDaily) {
     # check transactions for same day same job id
     $today = Get-Date -format 'yyyyMMdd'
     $transactions = Get-TransactionsDb
-    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $JobId }
+    $foundTransaction = $transactions | Where-Object { $_.Date.ToString().SubString(0, 8) -eq $today -and $_.JobId -eq $jobId }
     if ($foundTransaction) {
       Throw "Daily transaction already created for $($job.Title)"
       return $false
