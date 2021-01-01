@@ -85,7 +85,7 @@ function Get-JobsDb {
     foreach ($job in $imported) {
       $jobs += [PSCustomObject]@{
         Type  = $job.Type
-        Id    = [int]$job.Id
+        Id    = $job.Id
         Title = $job.Title
         Rate  = [decimal]$job.Rate
       }
