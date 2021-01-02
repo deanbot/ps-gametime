@@ -34,7 +34,7 @@ gametime /c/Users/me/OneDrive/GameTime
 
 ## Install
 
-1. Copy ps-gametime.
+1. Download or clone ps-gametime.
 2. Add `./bin` to `PATH`.
 
 I.e., in bash, add the following line to `~/.bashrc`:
