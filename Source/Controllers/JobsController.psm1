@@ -13,7 +13,7 @@ function Get-Job {
   Param(
     # id of job to get
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
+    $JobId
   )
   $Job = Get-JobDb $JobId
   if ($Job) {
@@ -86,7 +86,7 @@ function Edit-Job {
   Param(
     # id of job to edit
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
+    $JobId,
 
     # title of job
     [Parameter(Mandatory = $false, Position = 1)]
@@ -150,7 +150,7 @@ function Remove-Job {
   Param(
     # id of job to remove
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
+    $JobId
   )
 
   $success = Remove-JobDb $JobId

@@ -29,7 +29,7 @@ function New-Transaction {
   Param(
     # id of job being performed. use -1 to deduct from balance instead
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
+    $JobId,
 
     # duration (hours) job is performed (for quest type jobs)
     [Parameter(Mandatory = $false, Position = 1)]
@@ -77,7 +77,7 @@ function New-JobTransaction {
   Param(
     # id of job being performed. use -1 to deduct from balance instead
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
+    $JobId,
 
     # todo move degree to 3rd param
     # duration (hours) job is performed (for quest type jobs)

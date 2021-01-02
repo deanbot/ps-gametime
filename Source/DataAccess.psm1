@@ -132,7 +132,7 @@ function Set-JobDb {
   Param(
     # id of job to edit
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId,
+    $JobId,
 
     # new job
     [Parameter(Mandatory = $true, Position = 1)]
@@ -164,7 +164,7 @@ function Get-JobDb {
   Param(
     # id of job to get
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
+    $JobId
   )
 
   $Jobs = Get-JobsDb
@@ -183,7 +183,7 @@ function Remove-JobDb {
   Param(
     # id of job to remove
     [Parameter(Mandatory = $true, Position = 0)]
-    [int]$JobId
+    $JobId
   )
 
   # build new jobs array without specified job
