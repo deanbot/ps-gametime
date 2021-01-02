@@ -14,7 +14,7 @@ _Productivity ensues._
 
 ### Specify storage location
 
-The directory Game Time uses to store data (by default `<path/to/gametime>/Database`) can be customized via the optional *storage location* parameter, i.e. `gametime <storage location absolute pate>`.
+The directory Game Time uses to store data (by default `<path/to/gametime>/Database`) can be customized via the optional *storage location* parameter, i.e. `gametime <storage location absolute path>`.
 
 #### Synchronize across devices
 
