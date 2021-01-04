@@ -32,7 +32,7 @@ function Show-OptionsConfirmDemoContent {
   foreach ($line in $textLines) {
     Write-Host "  |$(Get-PaddedString "  $line" )|  "
   }
-  if ($heading && $Main) {
+  if ($heading -and $Main) {
     Write-Host "  |$(Get-PaddedString)|  "
   }
   $textLines = Get-TextLines $main ($width - 4)
