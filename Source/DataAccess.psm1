@@ -221,7 +221,7 @@ function Get-TransactionsDb {
     foreach ($item in Import-Csv $csvFile) {
       $obj = [PSCustomObject]@{
         Date = $item.Date
-        JobId  = [int]$item.JobId
+        JobId  = $item.JobId
         Change = [decimal]$item.Change
         Log    = $item.Log
         Note   = $item.Note

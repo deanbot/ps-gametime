@@ -14,7 +14,7 @@ _Productivity ensues._
 
 ### Specify storage location
 
-The directory Game Time uses to store data (by default `<path/to/gametime>/Database`) can be customized via the optional *storage location* parameter, i.e. `gametime <storage location absolute pate>`.
+The directory Game Time uses to store data (by default `<path/to/gametime>/Database`) can be customized via the optional *storage location* parameter, i.e. `gametime <storage location absolute path>`.
 
 #### Synchronize across devices
 
@@ -34,7 +34,7 @@ gametime /c/Users/me/OneDrive/GameTime
 
 ## Install
 
-1. Copy ps-gametime.
+1. Download or clone ps-gametime.
 2. Add `./bin` to `PATH`.
 
 I.e., in bash, add the following line to `~/.bashrc`:
